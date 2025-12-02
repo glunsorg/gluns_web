@@ -1,6 +1,5 @@
 'use client'
 import React from 'react'
-import Image from 'next/image'
 // icons
 import { VscActivateBreakpoints } from 'react-icons/vsc'
 
