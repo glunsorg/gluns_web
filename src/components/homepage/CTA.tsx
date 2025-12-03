@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export default function CTA() {
   return (
-    <section className="relative bg-[#104179] rounded-t-3xl -mt-7 z-30 overflow-hidden border-t border-white">
+    <section className="relative bg-[#104179] rounded-t-3xl -mt-7 z-30 overflow-hidden">
 
       {/* Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-white/30 to-transparent"></div>
