@@ -1,105 +1,117 @@
 import React from 'react'
+import { FiArrowRight } from 'react-icons/fi'
+import { IoLocationSharp } from "react-icons/io5";
 import Image from 'next/image'
-import { VscActivateBreakpoints } from 'react-icons/vsc'
-
+import Link from 'next/link';
+import { GrLinkNext } from 'react-icons/gr';
 
 export default function Events() {
-
   const events = [
     {
-      title: "Opening Ceremony",
-      desc: "A grand kick-off featuring keynote speakers, cultural performances, and the unveiling of GLUNS' global vision.",
-      img: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=1200&q=80",
-      link: "#opening-ceremony"
+      title: 'GLUNS Leadership Summit',
+      country:'Kenya',
+      date: 'Mar 18, 2025',
+      desc: 'A high-energy summit where students explore global diplomacy through expert-led workshops.',
+      img: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80',
     },
     {
-      title: "Committee Sessions",
-      desc: "Engage in structured debates, draft resolutions, and collaborate on innovative policy solutions.",
-      img: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80",
-      link: "#committee-sessions"
+      title: 'Global Policy Debate',
+      country:'Kenya',
+      date: 'Apr 05, 2025',
+      desc: 'Interactive debate sessions focusing on current global conflicts and international cooperation.',
+      img: 'https://images.unsplash.com/photo-1551836022-1655a2ddc8c6?auto=format&fit=crop&w=1200&q=80',
     },
     {
-      title: "Workshops & Training",
-      desc: "Skill-building workshops on diplomacy, leadership, research, and global communication.",
-      img: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80",
-      link: "#workshops"
+      title: 'Cultural Exchange Night',
+      country:'Kenya',
+      date: 'Jun 12, 2025',
+      desc: 'A celebration of global diversity through music, art, dance, and collaborative performances.',
+      img: 'https://images.unsplash.com/photo-1515165562835-c4c7b5de7f77?auto=format&fit=crop&w=1200&q=80',
     },
     {
-      title: "Cultural Night",
-      desc: "A celebration of diversity through music, fashion, food, and performances from around the world.",
-      img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80",
-      link: "#cultural-night"
+      title: 'Diplomacy Masterclass',
+      country:'Kenya',
+      date: 'Jul 22, 2025',
+      desc: 'A professional masterclass led by international relations experts and former UN delegates.',
+      img: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=1200&q=80',
     },
     {
-      title: "Networking Mixer",
-      desc: "Connect with delegates, mentors, and diplomats in a relaxed, professional environment.",
-      img: "https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=1200&q=80",
-      link: "#networking"
+      title: 'Resolution Writing Workshop',
+      country:'Kenya',
+      date: 'Aug 09, 2025',
+      desc: 'Learn the art of drafting compelling and effective UN-style resolutions.',
+      img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80',
     },
     {
-      title: "Closing Awards",
-      desc: "Honoring outstanding delegates and celebrating the success of the symposium.",
-      img: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80",
-      link: "#closing-awards"
+      title: 'Closing Awards Ceremony',
+      country:'Kenya',
+      date: 'Nov 21, 2025',
+      desc: 'Honoring outstanding young diplomats and celebrating GLUNS achievements.',
+      img: 'https://images.unsplash.com/photo-1485217988980-11786ced9454?auto=format&fit=crop&w=1200&q=80',
     },
   ]
 
   return (
-    <section className="relative bg-[#104179] min-h-screen rounded-t-3xl -mt-7 z-30 px-6 md:px-12 pt-20 pb-24 overflow-hidden border-t border-white">
-
+    <section className="relative bg-[#ffffff] min-h-screen md:min-h-[60vh] lg:min-h-screen rounded-t-3xl -mt-7 z-30 px-6 md:px-12 py-12 overflow-hidden">
       {/* Header */}
       <div className="flex flex-col justify-center items-center text-center mb-16">
-        <h3 className="text-[#ffffff] text-sm tracking-widest border border-white rounded-xl w-1/2 md:w-[10%]">Events</h3>
-        <h2 className="text-white text-4xl md:text-5xl font-bold mt-2">
-          Experience the GLUNS Journey
-        </h2>
-        <p className="text-gray-200 max-w-2xl mx-auto mt-4 text-lg">
-          A vibrant mix of debates, cultural activities, workshops, and global collaborations designed
-          to inspire every delegate.
+        <h3 className="text-[#104179] text-xs tracking-widest border border-[#104179] rounded-xl px-4 py-1">
+          Events
+        </h3>
+        <h2 className="text-[#104179] text-4xl md:text-5xl font-bold mt-3">Upcoming Events</h2>
+        <p className="text-[#104179] max-w-2xl mx-auto mt-4 text-lg">
+          Join hundreds of young delegates in a dynamic, interactive, professionally organized Model
+          UN experience.
         </p>
       </div>
 
       {/* Events Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
         {events.map((event, index) => (
-          <div key={index} className="group block bg-white border border-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform"
+          <div
+            key={index}
+            className="rounded-3xl overflow-hidden shadow-md bg-[#104179]/5 border border-[#85c226] hover:shadow-xl transition-all duration-300"
           >
-            {/* Image Container */}
-            <div className="relative h-56 overflow-hidden">
+            {/* Image */}
+            <div className="h-64 w-full overflow-hidden rounded-b-3xl shadow-lg shadow-[#000000]/20 border-b-2 border-[#85c226]">
               <Image
-              fill
+                width={500}
+                height={500}
                 src={event.img}
                 alt={event.title}
-                className="w-full h-full object-cover transition-transform duration-700"
+                className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
               />
-              {/* Decorative corner accent */}
-              <div className="absolute top-0 right-0 w-20 h-20 bg-[#104179] transition-opacity duration-300" style={{clipPath: 'polygon(100% 0, 100% 100%, 0 0)'}}></div>
             </div>
 
             {/* Content */}
-            <div className="p-6 bg-white">
-              {/* Title with accent line */}
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-1 h-8 bg-[#85c226] transition-all duration-300"></div>
-                <h3 className="text-[#104179] text-xl font-semibold transition-colors duration-300">
-                  {event.title}
-                </h3>
+            <div className="p-6 flex justify-center items-center gap-3">
+              {/* Date + Title */}
+              <div className="flex items-center justify-between">
+                <span className="text-[#104179] font-semibold text-xl">{event.date}</span>
               </div>
 
-              {/* Description */}
-              <p className="text-gray-600 text-base leading-relaxed mb-4">
-                {event.desc}
-              </p>
-            </div>
+              <div className='w-0.5 h-14 bg-[#85c226]'></div>
 
-            {/* Bottom accent bar */}
-            <div className="h-1 bg-[#104179] w-0 group-hover:w-full transition-all duration-500"></div>
+              <div>
+                <h2 className='flex items-center gap-1 text-[#104179]'><span><IoLocationSharp className='text-[#85c226]' /></span>{event.country}</h2>
+                <h3 className="text-xl font-semibold text-[#104179]">{event.title}</h3>
+                <p className='text-sm'>{event.desc}</p>
+              </div>
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Decorative elements */}
-      <div className="absolute bottom-40 right-10 w-40 h-40 border-4 border-white opacity-5 rounded-full pointer-events-none"></div>
+      {/* links */}
+      <div className='flex justify-center items-center mt-12'>
+        <Link
+          href="#"
+          className="flex items-center justify-center gap-2 border border-[#104179] text-[#104179] text-xl rounded-xl px-4 py-2 hover:scale-105 transition-transform delay-200"
+        >
+         Explore All Events
+          <GrLinkNext className="-rotate-45" />
+        </Link>
+      </div>
     </section>
   )
 }

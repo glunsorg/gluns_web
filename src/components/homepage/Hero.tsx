@@ -15,12 +15,12 @@ export default function Hero() {
       <div className="relative z-10 w-full md:max-w-2xl lg:max-w-3xl py-20">
         <h3 className="text-[#ffffff] font-semibold text-xl flex items-center">
             <span>
-                <SiUnitednations className="inline-block mr-2 text-3xl mb-1" />
+                <SiUnitednations className="inline-block mr-2 text-3xl 2xl:text-4xl mb-1" />
             </span>Welcome to GLUNS</h3>
-        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white text-left z-10">
+        <h1 className="text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-bold text-white text-left z-10">
           Empowering the Next Generation of <span className="text-[#ffffff]">Global Leaders</span>
         </h1>
-        <p className="mt-4 text-lg md:text-xl text-white text-left z-10">
+        <p className="mt-4 text-lg md:text-xl 2xl:text-2xl text-white text-left z-10">
           At the Global Leaders United Nations Symposium (GLUNS), high school delegates step into
           the world of diplomacy, leadership, and international affairs - learning to debate global
           issues, negotiate solutions, and build a better tomorrow.{' '}
