@@ -11,8 +11,8 @@ export default function CTA() {
       <div className="absolute -bottom-32 -left-20 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
 
       {/* Main Content */}
-      <div className="relative px-6 md:px-8 py-12 md:py-16">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+      <div className="relative px-6 md:px-8 2xl:px-24 py-12 md:py-16 2xl:py-24">
+        <div className="max-w-6xl 2xl:max-w-full mx-auto grid md:grid-cols-2 gap-12 items-center">
 
           {/* LEFT COLUMN */}
           <div className="space-y-6">

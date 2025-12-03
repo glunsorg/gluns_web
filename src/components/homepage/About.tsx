@@ -7,7 +7,7 @@ export default function About() {
     <section className="relative bg-white min-h-[70vh] md:min-h-[55vh] lg:min-h-[70vh] rounded-t-3xl -mt-7 z-30 overflow-hidden border-t border-white">
       <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
         {/* IMAGE WITH OVERLAY */}
-        <div className="relative h-[50vh] md:h-auto order-2 md:order-1 lg:order-1">
+        <div className="relative h-[50vh] 2xl:h-[70vh] md:h-auto order-2 md:order-1 lg:order-1">
           <div className="absolute inset-0">
             <Image
               fill
@@ -43,10 +43,9 @@ export default function About() {
           {/* Header with decorative element */}
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-1 bg-[#104179] rounded-full"></div>
-              <span className="text-sm font-semibold text-[#104179]/70 uppercase tracking-wider">
-                Who We Are
-              </span>
+               <h3 className="text-[#104179] text-xs tracking-widest border border-[#104179] rounded-xl px-4 py-1">
+          Who We Are
+        </h3>
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#104179] leading-tight">
               About GLUNS

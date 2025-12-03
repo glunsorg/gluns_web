@@ -1,108 +1,133 @@
 import React from 'react'
-import Image from 'next/image'
 
 export default function Process() {
   const events = [
     {
+      number: '01',
       title: 'Opening Ceremony',
-      desc: "A grand kick-off featuring keynote speakers, cultural performances, and the unveiling of GLUNS' global vision.",
-      img: 'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=1200&q=80',
-      link: '#opening-ceremony',
+      desc: "Grand kick-off with keynote speakers, cultural performances, and unveiling GLUNS' global vision.",
+      time: 'Day 1',
     },
     {
+      number: '02',
       title: 'Committee Sessions',
-      desc: 'Engage in structured debates, draft resolutions, and collaborate on innovative policy solutions.',
-      img: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80',
-      link: '#committee-sessions',
+      desc: 'Structured debates, draft resolutions, and collaborate on innovative policy solutions.',
+      time: 'Day 1-3',
     },
     {
+      number: '03',
       title: 'Workshops & Training',
-      desc: 'Skill-building workshops on diplomacy, leadership, research, and global communication.',
-      img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80',
-      link: '#workshops',
+      desc: 'Skill-building on diplomacy, leadership, research, and global communication.',
+      time: 'Day 2',
     },
     {
+      number: '04',
       title: 'Cultural Night',
-      desc: 'A celebration of diversity through music, fashion, food, and performances from around the world.',
-      img: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80',
-      link: '#cultural-night',
+      desc: 'Celebration of diversity through music, fashion, food, and world performances.',
+      time: 'Day 2',
     },
     {
+      number: '05',
       title: 'Networking Mixer',
-      desc: 'Connect with delegates, mentors, and diplomats in a relaxed, professional environment.',
-      img: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=1200&q=80',
-      link: '#networking',
+      desc: 'Connect with delegates, mentors, and diplomats in a professional environment.',
+      time: 'Day 3',
     },
     {
+      number: '06',
       title: 'Closing Awards',
-      desc: 'Honoring outstanding delegates and celebrating the success of the symposium.',
-      img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80',
-      link: '#closing-awards',
+      desc: 'Honoring outstanding delegates and celebrating symposium success.',
+      time: 'Day 3',
     },
   ]
 
   return (
-    <section className="relative bg-[#104179] min-h-screen rounded-t-3xl -mt-7 z-30 px-6 md:px-12 pt-20 pb-24 overflow-hidden border-t border-white">
+    <section className="relative bg-[#104179] rounded-t-3xl -mt-7 z-30 px-6 md:px-12 py-20 overflow-hidden border-t border-white">
       {/* Header */}
-      <div className="flex flex-col justify-center items-center text-center mb-16">
-        <h3 className="text-[#ffffff] text-xs tracking-widest border border-[#ffffff] rounded-xl px-4 py-1">
+      <div className="flex flex-col justify-center items-center text-center mb-16 md:mb-4 max-w-3xl mx-auto">
+        <h3 className="text-white text-xs tracking-widest border border-white rounded-xl px-4 py-1">
           How We Do It
-        </h3>{' '}
-        <h2 className="text-white text-4xl md:text-5xl font-bold mt-2">
+        </h3>
+        <h2 className="text-white text-4xl md:text-5xl font-bold mt-4 leading-tight">
           Experience the GLUNS Journey
         </h2>
-        <p className="text-gray-200 max-w-2xl mx-auto mt-4 text-lg">
-          A vibrant mix of debates, cultural activities, workshops, and global collaborations
-          designed to inspire every delegate.
+        <p className="text-gray-200 mt-4 text-base">
+          A vibrant mix of debates, cultural activities, workshops, and global collaborations.
         </p>
       </div>
 
-      {/* Events Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-        {events.map((event, index) => (
-          <div
-            key={index}
-            className="group block bg-white border border-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform"
-          >
-            {/* Image Container */}
-            <div className="relative h-56 overflow-hidden">
-              <Image
-                fill
-                src={event.img}
-                alt={event.title}
-                className="w-full h-full object-cover transition-transform duration-700"
-              />
-              {/* Decorative corner accent */}
-              <div
-                className="absolute top-0 right-0 w-20 h-20 bg-[#104179] transition-opacity duration-300"
-                style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 0)' }}
-              ></div>
-            </div>
+      {/* Horizontal Timeline */}
+      <div className="max-w-7xl 2xl:max-w-full mx-auto">
+        {/* Desktop View - Horizontal */}
+        <div className="hidden lg:block relative">
+          {/* Horizontal Line */}
+          <div className="absolute top-12 left-0 right-0 h-0.5 bg-linear-to-r from-white/20 via-white/50 to-white/20"></div>
 
-            {/* Content */}
-            <div className="p-6 bg-white">
-              {/* Title with accent line */}
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-1 h-8 bg-[#85c226] transition-all duration-300"></div>
-                <h3 className="text-[#104179] text-xl font-semibold transition-colors duration-300">
-                  {event.title}
-                </h3>
+          {/* Events */}
+          <div className="grid grid-cols-6 gap-4">
+            {events.map((event, index) => (
+              <div key={index} className="relative">
+                {/* Dot */}
+                <div className="absolute top-12 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full border-4 border-[#104179] z-10 shadow-lg">
+                  <div className="absolute inset-0 rounded-full bg-white animate-pulse opacity-30"></div>
+                </div>
+
+                {/* Content */}
+                <div
+                  className={`pt-24 ${index % 2 === 0 ? '' : 'pb-24 md:pb-4 pt-0 flex flex-col-reverse'}`}
+                >
+                  <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-5 hover:bg-white/15 transition-all duration-300">
+                    {/* Number */}
+                    <div className="text-3xl font-bold text-white/30 mb-2">{event.number}</div>
+
+                    {/* Title */}
+                    <h3 className="text-white text-3xl font-bold mb-2 leading-tight">
+                      {event.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-gray-200 text-sm 2xl:text-base leading-relaxed mb-3">{event.desc}</p>
+                  </div>
+                </div>
               </div>
-
-              {/* Description */}
-              <p className="text-gray-600 text-base leading-relaxed mb-4">{event.desc}</p>
-            </div>
-
-            {/* Bottom accent bar */}
-            <div className="h-1 bg-[#104179] w-0 group-hover:w-full transition-all duration-500"></div>
+            ))}
           </div>
-        ))}
+        </div>
+
+        {/* Mobile/Tablet View - Vertical */}
+        <div className="lg:hidden relative">
+          {/* Vertical Line */}
+          <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-linear-to-b from-white/20 via-white/50 to-white/20"></div>
+
+          {/* Events */}
+          <div className="space-y-8">
+            {events.map((event, index) => (
+              <div key={index} className="relative flex gap-6">
+                {/* Dot */}
+                <div className="relative shrink-0">
+                  <div className="w-12 h-12 bg-white rounded-full border-4 border-[#104179] flex items-center justify-center shadow-lg z-10">
+                    <span className="text-[#104179] text-sm font-bold">{event.number}</span>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 pb-4">
+                  <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 hover:bg-white/15 transition-all duration-300">
+                    {/* Title */}
+                    <h3 className="text-white text-2xl font-bold mb-2">{event.title}</h3>
+
+                    {/* Description */}
+                    <p className="text-gray-200 text-base leading-relaxed mb-3">{event.desc}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Decorative elements */}
-      <div className="absolute -top-10 -left-10 w-60 h-60 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
-      <div className="absolute bottom-0 right-1/4 w-32 h-32 bg-[#ffffff]/10 rounded-full blur-xl pointer-events-none"></div>
-      <div className="absolute top-0 right-1/4 w-32 h-32 bg-[#ffffff]/10 rounded-full blur-xl pointer-events-none"></div>
+      {/* Decorative Elements */}
+      <div className="absolute top-20 -left-20 w-60 h-60 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute bottom-20 -right-20 w-60 h-60 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
     </section>
   )
 }
