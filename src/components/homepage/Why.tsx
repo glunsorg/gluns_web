@@ -60,6 +60,11 @@ export default function Why() {
           ))}
         </div>       
       </div>
+
+
+      <div className="absolute -top-10 -left-10 w-60 h-60 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
+      <div className="absolute bottom-0 right-1/4 w-32 h-32 bg-[#ffffff]/10 rounded-full blur-xl pointer-events-none"></div>
+      <div className="absolute top-0 right-1/4 w-32 h-32 bg-[#ffffff]/10 rounded-full blur-xl pointer-events-none"></div>
     </section>
   )
 }

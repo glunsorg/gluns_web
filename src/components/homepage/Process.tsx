@@ -100,7 +100,9 @@ export default function Process() {
       </div>
 
       {/* Decorative elements */}
-      <div className="absolute bottom-40 right-10 w-40 h-40 border-4 border-white opacity-5 rounded-full pointer-events-none"></div>
+      <div className="absolute -top-10 -left-10 w-60 h-60 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
+      <div className="absolute bottom-0 right-1/4 w-32 h-32 bg-[#ffffff]/10 rounded-full blur-xl pointer-events-none"></div>
+      <div className="absolute top-0 right-1/4 w-32 h-32 bg-[#ffffff]/10 rounded-full blur-xl pointer-events-none"></div>
     </section>
   )
 }
