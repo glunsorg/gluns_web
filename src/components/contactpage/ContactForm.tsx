@@ -182,8 +182,8 @@ export default function ContactForm() {
                   ${
                     errors.name
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
-                      : 'border-gray-200 dark:border-gray-700 focus:border-[#85c226] focus:ring-[#85c226]'
-                  } focus:ring-4 focus:outline-none`}
+                      : 'border-gray-200 dark:border-gray-700 focus:border-[#85c226]'
+                  } focus:outline-none`}
                 placeholder="John Doe"
               />
               {errors.name && (
@@ -214,8 +214,8 @@ export default function ContactForm() {
                   ${
                     errors.email
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
-                      : 'border-gray-200 dark:border-gray-700 focus:border-[#104179] dark:focus:border-purple-500 focus:ring-purple-100 dark:focus:ring-purple-900'
-                  } focus:ring-4 focus:outline-none`}
+                      : 'border-gray-200 focus:border-[#85c226]'
+                  } focus:outline-none`}
                 placeholder="john@example.com"
               />
               {errors.email && (
@@ -246,8 +246,8 @@ export default function ContactForm() {
               ${
                 errors.subject
                   ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
-                  : 'border-gray-200 dark:border-gray-700 focus:border-[#104179] dark:focus:border-purple-500 focus:ring-purple-100 dark:focus:ring-purple-900'
-              } focus:ring-4 focus:outline-none`}
+                  : 'border-gray-200 focus:border-[#85c226]'
+              } focus:outline-none`}
             placeholder="What is your inquiry about?"
           />
           {errors.subject && (
@@ -278,8 +278,8 @@ export default function ContactForm() {
                 ${
                   errors.message
                     ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
-                    : 'border-gray-200 dark:border-gray-700 focus:border-[#104179] dark:focus:border-purple-500 focus:ring-purple-100 dark:focus:ring-purple-900'
-                } focus:ring-4 focus:outline-none`}
+                    : 'border-gray-200 focus:border-[#85c226]'
+                } focus:outline-none`}
               placeholder="Provide details about your inquiry or request"
             />
             {errors.message && (
@@ -306,7 +306,7 @@ export default function ContactForm() {
               ${
                 isSubmitting
                   ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
-                  : 'bg-[#104179] hover:from-purple-700 hover:to-[#104179] text-white shadow-purple-500/25 hover:shadow-xl'
+                  : 'bg-[#104179] hover:from-purple-700 hover:to-[#104179] text-white'
               }`}
           >
             {isSubmitting ? (
