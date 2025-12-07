@@ -120,7 +120,7 @@ export default function CommitteeList() {
           </p>
           <Link 
             href="/register" 
-            className="inline-flex items-center gap-3 bg-white text-[#104179] px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-xl"
+            className="inline-flex items-center gap-3 bg-white text-[#104179] px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-xl"
           >
             Register Now
             <HiArrowRight className="text-xl" />
