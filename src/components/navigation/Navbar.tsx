@@ -6,7 +6,6 @@ import Image from 'next/image'
 import { HiMenuAlt2 } from 'react-icons/hi'
 import { RiCloseLargeLine } from 'react-icons/ri'
 
-
 // Social Icons
 import { IoLogoTiktok, IoLogoInstagram, IoLogoWhatsapp } from 'react-icons/io5'
 import { FaFacebookF } from 'react-icons/fa6'
@@ -19,6 +18,7 @@ export default function Navbar() {
   const menuItems = [
     { name: 'Home', link: '/' },
     { name: 'About', link: '/about' },
+    { name: 'The Secretariat', link: '/the-secretariat' },
     { name: 'Events', link: '/events' },
     { name: 'Committees', link: '/committees' },
     { name: 'Resources', link: '/resources' },
@@ -28,7 +28,7 @@ export default function Navbar() {
   return (
     <>
       {/* Main Navbar */}
-      <nav className="bg-[#ffffff] px-4 md:px-8 py-4 md:py-6 lg:py-4">
+      <nav className="bg-[#ffffff] px-4 md:px-8 py-4 md:py-6 lg:py-4 2xl:py-6">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link href="/">
@@ -37,17 +37,17 @@ export default function Navbar() {
               alt="GLUNS Logo"
               width={500}
               height={500}
-              className="w-32 md:w-32"
+              className="w-32 md:w-32 2xl:w-40"
             />
           </Link>
 
           {/* Desktop Links */}
-          <div className="hidden md:flex mx-4 gap-6 items-center">
+          <div className="hidden md:flex mx-4 gap-6 2xl:gap-24 items-center">
             {menuItems.map((item) => (
               <Link
                 key={item.name}
                 href={item.link}
-                className="mx-2 font-semibold text-[#104179] tracking-wide text-lg hover:text-[#85c226] transition-colors duration-300"
+                className="mx-2 font-semibold text-[#104179] tracking-wide text-lg 2xl:text-2xl hover:text-[#85c226] transition-colors duration-300"
               >
                 {item.name}
               </Link>
@@ -69,7 +69,7 @@ export default function Navbar() {
     hover:text-[#fffff6]
   "
             >
-              <span className="relative z-10">Registration</span>
+              <span className="relative z-10 2xl:text-2xl">Registration</span>
             </Link>
 
             {/* Mobile Menu Button */}
