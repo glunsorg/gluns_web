@@ -4,10 +4,10 @@ import { VscActivateBreakpoints } from 'react-icons/vsc'
 
 export default function About() {
   return (
-    <section className="relative bg-white min-h-[70vh] md:min-h-[55vh] lg:min-h-[70vh] rounded-t-3xl -mt-7 z-30 overflow-hidden border-t border-white">
+    <section className="relative bg-white min-h-[70vh] md:min-h-[55vh] lg:min-h-[70vh] 2xl:min-h-[80vh]  rounded-t-3xl -mt-7 z-30 overflow-hidden border-t border-white">
       <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
         {/* IMAGE WITH OVERLAY */}
-        <div className="relative h-[50vh] 2xl:h-[70vh] md:h-auto order-2 md:order-1 lg:order-1">
+        <div className="relative h-[50vh] 2xl:h-[80vh] md:h-auto order-2 md:order-1 lg:order-1">
           <div className="absolute inset-0">
             <Image
               fill
@@ -26,12 +26,12 @@ export default function About() {
             <div className="flex items-start gap-3">
               <div className="shrink-0 w-1 h-full bg-[#104179] rounded-full"></div>
               <div>
-                <p className="text-[#104179] font-semibold text-base md:text-lg leading-relaxed">
+                <p className="text-[#104179] font-semibold text-base md:text-lg 2xl:text-2xl leading-relaxed">
                   &quot;Shaping tomorrow{"'"}s diplomats through real-world global dialogue.&quot;
                 </p>
                 <div className="mt-3 flex items-center gap-2">
                   <div className="h-px flex-1 bg-lineaer-to-r from-[#104179]/30 to-transparent"></div>
-                  <span className="text-xs text-[#104179]/60 font-medium">GLUNS 2025</span>
+                  <span className="text-xs 2xl:text-lg text-[#104179]/60 font-medium">GLUNS 2025</span>
                 </div>
               </div>
             </div>
@@ -39,11 +39,11 @@ export default function About() {
         </div>
 
         {/* TEXT SECTION */}
-        <div className="order-1 md:order-2 lg:order-2 px-6 md:px-10 py-12 md:py-16 flex flex-col justify-center space-y-8">
+        <div className="order-1 md:order-2 lg:order-2 px-6 md:px-10 2xl:px-16 py-12 md:py-16 flex flex-col justify-center space-y-8">
           {/* Header with decorative element */}
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-               <h3 className="text-[#104179] text-xs tracking-widest border border-[#104179] rounded-xl px-4 py-1">
+               <h3 className="text-[#104179] text-xs 2xl:text-lg tracking-widest border border-[#104179] rounded-xl px-4 py-1">
           Who We Are
         </h3>
             </div>
@@ -52,7 +52,7 @@ export default function About() {
             </h2>
           </div>
 
-          <p className="text-base md:text-lg text-gray-700 leading-relaxed">
+          <p className="text-base md:text-lg 2xl:text-2xl text-gray-700 leading-relaxed">
             The Global Leaders United Nations Symposium (GLUNS) is a platform created to empower
             high school students with the skills and confidence to engage in meaningful global
             conversations. Through structured debates, policy discussions, and leadership-based
@@ -66,7 +66,7 @@ export default function About() {
               <div className="flex items-start gap-4">
                 <div className="shrink-0 w-10 h-10 bg-[#104179]/10 rounded-lg flex items-center justify-center group-hover:bg-[#104179]/20 transition-colors duration-300">
                   <svg
-                    className="w-5 h-5 text-white"
+                    className="w-5 h-5 2xl:w-8 2xl:h-8 text-white"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -80,7 +80,7 @@ export default function About() {
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl md:text-2xl font-semibold text-white mb-3">
+                  <h3 className="text-xl md:text-2xl 2xl:text-3xl font-semibold text-white mb-3">
                     Our Focus Areas
                   </h3>
                   <ul className="space-y-2">
@@ -92,7 +92,7 @@ export default function About() {
                     ].map((item, index) => (
                       <li
                         key={index}
-                        className="flex items-start gap-3 text-white/80 text-sm md:text-base"
+                        className="flex items-start gap-3 text-white/80 text-sm md:text-base 2xl:text-2xl"
                       >
                         <VscActivateBreakpoints size={20} className="text-[#85c226]" />{' '}
                         <span>{item}</span>

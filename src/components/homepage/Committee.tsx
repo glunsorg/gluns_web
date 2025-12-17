@@ -38,7 +38,7 @@ export default function Committee() {
   ]
 
   return (
-    <section className="relative bg-[#ffffff] min-h-screen md:min-h-[60vh] lg:min-h-screen 2xl:min-h-auto rounded-t-3xl -mt-7 z-30 px-6 md:px-12 py-20 overflow-hidden">
+    <section className="relative bg-[#ffffff] min-h-screen md:min-h-[60vh] lg:min-h-screen 2xl:min-h-auto rounded-t-3xl -mt-7 z-30 px-6 md:px-12 2xl:px-16 py-20 overflow-hidden">
       {/* Section Header */}
       <div className="flex flex-col justify-center items-center text-center mb-16">
         <h3 className="text-[#104179] text-xs tracking-widest border border-[#104179] rounded-xl px-4 py-1">
@@ -47,7 +47,7 @@ export default function Committee() {
         <h2 className="text-4xl md:text-5xl text-[#104179] mt-2 font-semibold">
           Explore Our Specialized Committees
         </h2>
-        <p className="text-gray-600 max-w-2xl mx-auto mt-4 text-lg leading-relaxed">
+        <p className="text-gray-600 max-w-2xl mx-auto mt-4 text-lg 2xl:text-2xl leading-relaxed">
           GLUNS provides diverse committees that challenge students to debate, negotiate, and solve
           real-world issues from a global perspective.
         </p>
@@ -67,7 +67,7 @@ export default function Committee() {
               <div className="flex justify-center items-center gap-4">
                 <div className="p-3 bg-[#104179]/10 rounded-xl">{com.icon}</div>
 
-                <h3 className="text-xl font-semibold text-[#104179] leading-tight">{com.name}</h3>
+                <h3 className="text-xl 2xl:text-2xl font-semibold text-[#104179] leading-tight">{com.name}</h3>
               </div>
 
               <div className="mt-2 h-[3px] w-32 group-hover:w-full bg-[#85c226] transition-all duration-500"></div>
@@ -79,7 +79,7 @@ export default function Committee() {
       <div className="flex justify-center items-center mt-8">
         <Link
           href="#"
-          className="flex items-center justify-center gap-4 border border-[#104179] text-[#104179] text-xl rounded-xl px-4 py-2 hover:scale-105 transition-transform delay-200"
+          className="flex items-center justify-center gap-4 border border-[#104179] text-[#104179] text-xl 2xl:text-2xl rounded-xl px-4 py-2 hover:scale-105 transition-transform delay-200"
         >
           Explore Committees
           <GrLinkNext className="-rotate-45" />

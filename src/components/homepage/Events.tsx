@@ -54,7 +54,7 @@ export default function Events() {
     <section className="relative bg-[#ffffff] min-h-screen md:min-h-[60vh] lg:min-h-screen rounded-t-3xl -mt-7 z-30 px-6 md:px-12 2xl:px-18 py-12 overflow-hidden">
       {/* Header */}
       <div className="flex flex-col justify-center items-center text-center mb-16">
-        <h3 className="text-[#104179] text-xs tracking-widest border border-[#104179] rounded-xl px-4 py-1">
+        <h3 className="text-[#104179] text-xs 2xl:text-lg tracking-widest border border-[#104179] rounded-xl px-4 py-1">
           Events
         </h3>
         <h2 className="text-[#104179] text-4xl md:text-5xl font-bold mt-3">Upcoming Events</h2>
@@ -86,15 +86,15 @@ export default function Events() {
             <div className="p-6 flex justify-center items-center gap-3">
               {/* Date + Title */}
               <div className="flex items-center justify-between">
-                <span className="text-[#104179] font-semibold text-xl">{event.date}</span>
+                <span className="text-[#104179] font-semibold text-xl 2xl:text-3xl">{event.date}</span>
               </div>
 
               <div className='w-0.5 h-14 bg-[#85c226]'></div>
 
               <div>
-                <h2 className='flex items-center gap-1 text-[#104179]'><span><IoLocationSharp className='text-[#85c226]' /></span>{event.country}</h2>
-                <h3 className="text-xl font-semibold text-[#104179]">{event.title}</h3>
-                <p className='text-sm'>{event.desc}</p>
+                <h2 className='flex items-center gap-1 text-[#104179] 2xl:text-2xl'><span><IoLocationSharp className='text-[#85c226]'/></span>{event.country}</h2>
+                <h3 className="text-xl 2xl:text-3xl font-semibold text-[#104179]">{event.title}</h3>
+                <p className='text-sm 2xl:text-xl'>{event.desc}</p>
               </div>
             </div>
           </div>

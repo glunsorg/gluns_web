@@ -23,7 +23,7 @@ export default function Why() {
   ]
 
   return (
-    <section className="relative bg-[#104179] min-h-screen 2xl:min-h-auto rounded-t-3xl -mt-7 z-30 px-6 md:px-8 pt-4 pb-16 md:pb-12 overflow-hidden border-t border-white">
+    <section className="relative bg-[#104179] min-h-screen 2xl:min-h-auto rounded-t-3xl -mt-7 z-30 px-6 md:px-8 2xl:px-16 pt-4 pb-16 md:pb-12 overflow-hidden border-t border-white">
       <div className="grid grid-cols-1 md:grid-cols-2 md:gap-12 w-full">
         {/* LEFT SIDE */}
         <div className="py-12 flex flex-col gap-2">
@@ -36,7 +36,7 @@ export default function Why() {
             increasingly interconnected world.
           </h2>
 
-          <p className="mt-4 text-white/80 text-lg leading-relaxed">
+          <p className="mt-4 text-white/80 text-lg 2xl:text-2xl leading-relaxed">
             At GLUNS, students don{"'"}t just participate—they transform. Through immersive debates,
             real-world policy simulations, and collaborative diplomacy, participants learn to think
             critically, negotiate with purpose, and lead with empathy. GLUNS equips young people

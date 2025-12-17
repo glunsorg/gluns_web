@@ -28,7 +28,7 @@ export default function Navbar() {
   return (
     <>
       {/* Main Navbar */}
-      <nav className="bg-[#ffffff] px-4 md:px-8 py-4 md:py-6 lg:py-4 2xl:py-6">
+      <nav className="bg-[#ffffff] px-4 md:px-8 2xl:px-16 py-4 md:py-6 lg:py-4 2xl:py-6">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link href="/">

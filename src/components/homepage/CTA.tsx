@@ -20,7 +20,7 @@ export default function CTA() {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2">
               <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-              <span className="text-white text-xs font-medium tracking-wide">JOIN THE MOVEMENT</span>
+              <span className="text-white text-xs 2xl:text-lg font-medium tracking-wide">JOIN THE MOVEMENT</span>
             </div>
 
             {/* Heading */}
@@ -29,7 +29,7 @@ export default function CTA() {
             </h2>
 
             {/* Description */}
-            <p className="text-gray-200 text-lg leading-relaxed max-w-lg">
+            <p className="text-gray-200 text-lg 2xl:text-2xl leading-relaxed max-w-lg">
               Be part of a transformative experience that empowers young minds to lead, influence, 
               and impact the world through diplomacy and collaboration.
             </p>
@@ -38,15 +38,15 @@ export default function CTA() {
             <div className="flex gap-10 pt-4">
               <div>
                 <p className="text-3xl font-bold text-white">500+</p>
-                <p className="text-sm text-gray-300">Delegates</p>
+                <p className="text-sm 2xl:text-lg text-gray-300">Delegates</p>
               </div>
               <div>
                 <p className="text-3xl font-bold text-white">15+</p>
-                <p className="text-sm text-gray-300">Countries</p>
+                <p className="text-sm 2xl:text-lg text-gray-300">Countries</p>
               </div>
               <div>
                 <p className="text-3xl font-bold text-white">100%</p>
-                <p className="text-sm text-gray-300">Impact</p>
+                <p className="text-sm 2xl:text-lg text-gray-300">Impact</p>
               </div>
             </div>
           </div>
@@ -57,8 +57,8 @@ export default function CTA() {
 
               {/* Card Header */}
               <div className="space-y-2">
-                <h3 className="text-white text-2xl font-bold">Start Your Journey</h3>
-                <p className="text-gray-200 text-sm">
+                <h3 className="text-white text-2xl 2xl:text-3xl font-bold">Start Your Journey</h3>
+                <p className="text-gray-200 text-sm 2xl:text-2xl">
                   Secure your spot in the next generation of global changemakers.
                 </p>
               </div>
@@ -67,14 +67,14 @@ export default function CTA() {
               <div className="space-y-3">
                 <Link
                   href="/registration"
-                  className="block w-full px-6 py-4 bg-white text-[#104179] font-bold text-center rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
+                  className="block w-full px-6 py-4 bg-white text-[#104179] font-bold text-center rounded-xl 2xl:text-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
                 >
                   Register Now →
                 </Link>
 
                 <Link
                   href="/about"
-                  className="block w-full px-6 py-4 border-2 border-white text-white font-semibold text-center rounded-xl hover:bg-white hover:text-[#104179] transition-all duration-300"
+                  className="block w-full px-6 py-4 border-2 border-white text-white font-semibold text-center rounded-xl 2xl:text-2xl hover:bg-white hover:text-[#104179] transition-all duration-300"
                 >
                   Learn More
                 </Link>
@@ -82,7 +82,7 @@ export default function CTA() {
 
               {/* Footer Note */}
               <div className="pt-4 border-t border-white/20">
-                <p className="text-gray-300 text-xs text-center">
+                <p className="text-gray-300 text-xs text-center 2xl:text-2xl">
                   Limited spots available for 2025 conference
                 </p>
               </div>

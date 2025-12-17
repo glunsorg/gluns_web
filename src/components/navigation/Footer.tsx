@@ -28,21 +28,21 @@ export default function Footer() {
               />
             </Link>
 
-            <p className="text-gray-600 text-base leading-relaxed max-w-sm">
+            <p className="text-gray-600 text-base 2xl:text-2xl leading-relaxed max-w-sm">
               Empowering the next generation of global leaders through diplomacy, collaboration, and
               world-class Model UN experiences.
             </p>
 
             {/* Newsletter Signup */}
             <div className="space-y-3">
-              <h4 className="text-[#104179] font-semibold text-sm">Stay Updated</h4>
+              <h4 className="text-[#104179] font-semibold text-sm 2xl:text-2xl">Stay Updated</h4>
               <div className="flex gap-2">
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="flex-1 px-4 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#104179]/20 focus:border-[#104179]"
+                  className="flex-1 px-4 py-2.5 text-sm 2xl:text-2xl border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#104179]/20 focus:border-[#104179]"
                 />
-                <button className="px-5 py-2.5 bg-[#104179] text-white font-medium text-sm rounded-lg hover:bg-[#104179]/90 transition-colors duration-300">
+                <button className="px-5 py-2.5 bg-[#104179] text-white font-medium text-sm 2xl:text-2xl rounded-lg hover:bg-[#104179]/90 transition-colors duration-300">
                   Subscribe
                 </button>
               </div>
@@ -53,7 +53,7 @@ export default function Footer() {
           <div className="md:col-span-8 grid grid-cols-2 sm:grid-cols-3 gap-8">
             {/* Quick Links */}
             <div>
-              <h3 className="text-[#104179] font-bold text-base mb-5 flex items-center gap-2">
+              <h3 className="text-[#104179] font-bold text-base 2xl:text-2xl mb-5 flex items-center gap-2">
                 <span className="w-1 h-4 bg-[#104179] rounded-full"></span>
                 Quick Links
               </h3>
@@ -67,7 +67,7 @@ export default function Footer() {
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-gray-600 hover:text-[#104179] transition-colors duration-200 text-sm flex items-center gap-2 group"
+                      className="text-gray-600 hover:text-[#104179] transition-colors duration-200 text-sm 2xl:text-2xl flex items-center gap-2 group"
                     >
                       <span className="w-0 h-px bg-[#104179] group-hover:w-4 transition-all duration-300"></span>
                       {link.name}
@@ -79,7 +79,7 @@ export default function Footer() {
 
             {/* Resources */}
             <div>
-              <h3 className="text-[#104179] font-bold text-base mb-5 flex items-center gap-2">
+              <h3 className="text-[#104179] font-bold text-base 2xl:text-2xl mb-5 flex items-center gap-2">
                 <span className="w-1 h-4 bg-[#104179] rounded-full"></span>
                 Resources
               </h3>
@@ -93,7 +93,7 @@ export default function Footer() {
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-gray-600 hover:text-[#104179] transition-colors duration-200 text-sm flex items-center gap-2 group"
+                      className="text-gray-600 hover:text-[#104179] transition-colors duration-200 text-sm 2xl:text-2xl flex items-center gap-2 group"
                     >
                       <span className="w-0 h-px bg-[#104179] group-hover:w-4 transition-all duration-300"></span>
                       {link.name}
@@ -105,54 +105,54 @@ export default function Footer() {
 
             {/* Connect */}
             <div>
-              <h3 className="text-[#104179] font-bold text-base mb-5 flex items-center gap-2">
+              <h3 className="text-[#104179] font-bold text-base 2xl:text-2xl mb-5 flex items-center gap-2">
                 <span className="w-1 h-4 bg-[#104179] rounded-full"></span>
                 Connect
               </h3>
 
-              <p className="text-gray-600 text-sm mb-5 leading-relaxed">
+              <p className="text-gray-600 text-sm 2xl:text-2xl mb-5 leading-relaxed">
                 Join our community and stay connected with global leaders
               </p>
 
-              <div className="flex gap-3">
+              <div className="flex gap-3 2xl:gap-8">
                 {/* Facebook */}
                 <Link
                   href="#"
                   aria-label="Facebook"
-                  className="w-11 h-11 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 
+                  className="w-11 h-11 2xl:w-16 2xl:h-16 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 
     hover:bg-[#104179] hover:text-white hover:scale-110 transition-all duration-300 shadow-sm"
                 >
-                  <FaFacebookF size={18} />
+                  <FaFacebookF size={18} className='w-6 h-6 2xl:w-9 2xl:h-9'/>
                 </Link>
 
                 {/* Instagram */}
                 <Link
                   href="#"
                   aria-label="Instagram"
-                  className="w-11 h-11 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 
+                  className="w-11 h-11 2xl:w-16 2xl:h-16 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 
     hover:bg-[#104179] hover:text-white hover:scale-110 transition-all duration-300 shadow-sm"
                 >
-                  <FaInstagram size={18} />
+                  <FaInstagram size={18} className='w-6 h-6 2xl:w-9 2xl:h-9'/>
                 </Link>
 
                 {/* X (Twitter) */}
                 <Link
                   href="#"
                   aria-label="Twitter / X"
-                  className="w-11 h-11 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 
+                  className="w-11 h-11 2xl:w-16 2xl:h-16 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 
     hover:bg-[#104179] hover:text-white hover:scale-110 transition-all duration-300 shadow-sm"
                 >
-                  <FaXTwitter size={18} />
+                  <FaXTwitter size={18} className='w-6 h-6 2xl:w-9 2xl:h-9'/>
                 </Link>
 
                 {/* LinkedIn */}
                 <Link
                   href="#"
                   aria-label="LinkedIn"
-                  className="w-11 h-11 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 
+                  className="w-11 h-11 2xl:w-16 2xl:h-16 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 
     hover:bg-[#104179] hover:text-white hover:scale-110 transition-all duration-300 shadow-sm"
                 >
-                  <FaLinkedinIn size={18} />
+                  <FaLinkedinIn size={18} className='w-6 h-6 2xl:w-9 2xl:h-9'/>
                 </Link>
               </div>
             </div>
@@ -162,23 +162,23 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="border-t border-gray-200 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 text-sm 2xl:text-2xl">
               © {new Date().getFullYear()} GLUNS. All Rights Reserved.
             </p>
 
             <div className="flex gap-6 text-sm">
               <Link
                 href="/privacy"
-                className="text-gray-500 hover:text-[#104179] transition-colors"
+                className="text-gray-500 hover:text-[#104179] 2xl:text-2xl transition-colors"
               >
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="text-gray-500 hover:text-[#104179] transition-colors">
+              <Link href="/terms" className="text-gray-500 hover:text-[#104179] 2xl:text-2xl transition-colors">
                 Terms of Service
               </Link>
               <Link
                 href="/cookies"
-                className="text-gray-500 hover:text-[#104179] transition-colors"
+                className="text-gray-500 hover:text-[#104179] 2xl:text-2xl transition-colors"
               >
                 Cookies
               </Link>
