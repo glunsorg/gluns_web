@@ -4,7 +4,7 @@ import { VscActivateBreakpoints } from 'react-icons/vsc'
 
 export default function About() {
   return (
-    <section className="relative bg-white min-h-[70vh] md:min-h-[55vh] lg:min-h-[70vh] 2xl:min-h-[80vh]  rounded-t-3xl -mt-7 z-30 overflow-hidden border-t border-white">
+    <section className="relative bg-white min-h-[70vh] md:min-h-[55vh] lg:min-h-[70vh] 2xl:min-h-[80vh]  rounded-t-3xl -mt-7 z-20 overflow-hidden border-t border-white">
       <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
         {/* IMAGE WITH OVERLAY */}
         <div className="relative h-[50vh] 2xl:h-[80vh] md:h-auto order-2 md:order-1 lg:order-1">
