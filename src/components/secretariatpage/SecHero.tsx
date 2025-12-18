@@ -6,7 +6,7 @@ import Link from 'next/link'
 export default function SecHero() {
   return (
     <section className="w-full px-6 md:px-8 2xl:px-16 pt-4 pb-12 md:pt-8 md:pb-16">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl 2xl:max-w-full mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left Content */}
           <div className="lg:col-span-7 space-y-8">
