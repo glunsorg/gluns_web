@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import { IoIosArrowForward } from "react-icons/io";
 import { SiUnitednations } from "react-icons/si";
-
+import Image from 'next/image';
 
 export default function Hero() {
   return (
@@ -47,7 +47,7 @@ export default function Hero() {
           <Link
             href="/registration"
             className="mt-8 inline-block relative overflow-hidden border border-[#ffffff] text-[#ffffff] px-6 md:px-8 py-3 font-semibold rounded-md transition-colors duration-300 before:absolute before:inset-0 before:bg-[#ffffff] before:translate-y-full before:transition-transform before:duration-300 hover:before:translate-y-0 hover:text-[#104179]">
-            <span className="relative z-10 text-lg md:text-xl 2xl:text-2xl">Register Now</span>
+            <span className="relative z-10 text-lg md:text-xl 2xl:text-2xl">Delegation Portal</span>
           </Link>
 
           <Link
@@ -58,6 +58,7 @@ export default function Hero() {
           </Link>
         </div>
       </div>
+
     </section>
   )
 }
