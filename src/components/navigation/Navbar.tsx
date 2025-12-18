@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { HiMenuAlt2 } from 'react-icons/hi'
@@ -13,7 +13,20 @@ import { FaFacebookF } from 'react-icons/fa6'
 export default function Navbar() {
   const [isMenuOpen, setMenuOpen] = useState(false)
 
-  const toggleMenu = () => setMenuOpen(!isMenuOpen)
+  const toggleMenu = () => {
+    setMenuOpen(!isMenuOpen)
+  }
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isMenuOpen])
 
   const menuItems = [
     { name: 'Home', link: '/' },
