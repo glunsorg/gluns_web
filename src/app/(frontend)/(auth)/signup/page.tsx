@@ -1,10 +1,10 @@
 import React from 'react'
-import SignUp from '@/components/authentication/SignUp'
+import AuthSection from '@/components/authentication/AuthSection'
 
 export default function page() {
   return (
     <>
-      <SignUp />
+      <AuthSection />
     </>
   )
 }
