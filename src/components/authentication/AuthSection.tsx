@@ -15,15 +15,15 @@ export default function AuthSection() {
       <div className="grid grid-cols-1 lg:grid-cols-2 md:min-h-screen">
         {/* Left side - Logo and branding */}
         <div className="relative hidden lg:flex flex-col justify-center items-center p-8 bg-[url('/images/hero.jpg')] bg-bottom bg-cover">
-          <div className="absolute inset-0 bg-linear-to-b from-white to-white/40"></div>
+          <div className="absolute inset-0 bg-linear-to-b from-white to-black/50"></div>
           <div className="z-30">
             <div className="w-24 h-24 flex items-center justify-center">
-              <Image src="/logos/2.png" alt="GLUNS logo" width={500} height={500} />
+              <Image src="/logos/4.png" alt="GLUNS logo" width={500} height={500} />
             </div>
           </div>
           <div className="text-center max-w-lg z-30">
-            <h2 className="text-5xl font-bold text-[#104179] mb-4">Welcome to GLUNS</h2>
-            <p className="text-[#104179] text-lg">
+            <h2 className="text-5xl font-bold text-[#ffffff] mb-4">Welcome to GLUNS</h2>
+            <p className="text-[#ffffff] text-xl">
               GLUNS is your gateway to international diplomacy and academic collaboration. Our
               platform empowers delegations to organize, communicate, and participate in global
               conferences with clarity, efficiency, and confidence.{' '}
