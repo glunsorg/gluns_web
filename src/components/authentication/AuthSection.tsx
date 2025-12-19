@@ -11,7 +11,7 @@ export default function AuthSection() {
   }
 
   return (
-    <section className="h-[90vh] md:min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
+    <section className="h-[80vh] md:min-h-[115vh] bg-linear-to-br from-gray-50 to-gray-100">
       <div className="grid grid-cols-1 lg:grid-cols-2 md:min-h-screen">
         {/* Left side - Logo and branding */}
         <div className="relative hidden lg:flex flex-col justify-center items-center p-8 bg-[url('/images/hero.jpg')] bg-bottom bg-cover">
@@ -32,7 +32,7 @@ export default function AuthSection() {
         </div>
 
         {/* Right side - Auth form */}
-        <div className="bg-[#104179] relative md:min-h-screen flex flex-col justify-center items-center py-12 sm:p-8 lg:p-12">
+        <div className="bg-[#104179] relative md:min-h-screen flex flex-col justify-center items-center py-12 sm:p-8 lg:px-12 lg:py-12">
           <div className="w-full max-w-md">
             <div className="w-28 h-28 flex md:hidden items-center justify-center mx-auto mb-4">
               <Image src="/logos/4.png" alt="GLUNS logo" width={500} height={500} />
