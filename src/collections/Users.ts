@@ -8,10 +8,9 @@ export const Users: CollectionConfig = {
   },
   auth: true,
   access: {
+    create: () => true,
     read: canUpdateUser,
-    create: canUpdateUser,
     delete: canUpdateUser,
-    update: canUpdateUser,
   },
   fields: [
     {
@@ -24,6 +23,14 @@ export const Users: CollectionConfig = {
         { label: 'Teacher', value: 'teacher' },
       ],
       defaultValue: 'teacher',
+    },
+    {
+      name: 'delegationName',
+      type: 'text',
+      required: true,
+      admin: {
+        condition: (data, { user }) => !!user && user.roles === 'teacher',
+      },
     },
   ],
   hooks: {},
