@@ -1,8 +1,8 @@
 // app/api/delegation/[id]/route.ts
 import { NextResponse } from 'next/server'
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-  const { id } = params
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: number }> }) {
+  const { id } = await params
   const body = await req.json()
 
   if (!id) return NextResponse.json({ message: 'Delegation ID is required' }, { status: 400 })
