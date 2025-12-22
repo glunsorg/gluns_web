@@ -262,6 +262,7 @@ export interface Delegate {
   firstName: string;
   lastName: string;
   email: string;
+  phoneNumber: number;
   paymentStatus?: ('unpaid' | 'paid') | null;
   updatedAt: string;
   createdAt: string;
@@ -482,6 +483,7 @@ export interface DelegatesSelect<T extends boolean = true> {
   firstName?: T;
   lastName?: T;
   email?: T;
+  phoneNumber?: T;
   paymentStatus?: T;
   updatedAt?: T;
   createdAt?: T;

@@ -1,8 +1,11 @@
 import { CollectionConfig } from 'payload'
-import { enforceDelegateOwnership } from './hooks/DelegateOwnership'
 
-export const Delegates: CollectionConfig = {
-  slug: 'delegates',
+export const Faculty: CollectionConfig = {
+  slug: 'faculty',
+  labels: {
+    singular: 'Faculty Advisor',
+    plural: 'Faculty Advisors',
+  },
   admin: {
     useAsTitle: 'email',
   },
@@ -10,9 +13,6 @@ export const Delegates: CollectionConfig = {
     read: ({ req }) => req.user?.roles === 'admin' || req.user?.roles === 'teacher',
     create: ({ req }) => req.user?.roles === 'teacher',
     update: ({ req, data }) => req.user?.roles === 'admin' || req.user?.id === data?.teacher,
-  },
-  hooks: {
-    beforeChange: [enforceDelegateOwnership],
   },
   fields: [
     {
@@ -25,7 +25,6 @@ export const Delegates: CollectionConfig = {
       name: 'delegation',
       type: 'relationship',
       relationTo: 'delegations',
-
       required: true,
     },
     {
@@ -42,20 +41,6 @@ export const Delegates: CollectionConfig = {
       name: 'email',
       type: 'email',
       required: true,
-    },
-    {
-      name: 'phoneNumber',
-      type: 'number',
-      required: true,
-    },
-    {
-      name: 'paymentStatus',
-      type: 'select',
-      defaultValue: 'unpaid',
-      options: [
-        { label: 'Unpaid', value: 'unpaid' },
-        { label: 'Paid', value: 'paid' },
-      ],
     },
   ],
 }
