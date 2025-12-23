@@ -1,49 +1,137 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client'
+
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { FacultyAdvisor } from '@/app/types/types'
+import { useAuthStore } from '@/app/store/authStore'
 
-export function DialogDemo() {
+type Props = {
+  open: boolean
+  advisor: FacultyAdvisor | null
+  onClose: () => void
+  onSaved: (advisor: FacultyAdvisor) => void
+}
+
+export default function FacultyForm({ open, advisor, onClose, onSaved }: Props) {
+  const { setUser } = useAuthStore()
+  const [saving, setSaving] = useState(false)
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+  })
+
+  // Populate form when editing
+  useEffect(() => {
+    if (advisor) {
+      setFormData({
+        firstName: advisor.firstName,
+        lastName: advisor.lastName,
+        email: advisor.email,
+        phoneNumber: advisor.phoneNumber,
+      })
+    } else {
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
+      })
+    }
+  }, [advisor])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }))
+  }
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    setSaving(true)
+
+    try {
+      const method = advisor?.id ? 'PATCH' : 'POST'
+      const url = advisor?.id ? `/api/faculty-advisors/${advisor.id}` : '/api/faculty-advisors'
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+
+      if (res.status === 401) {
+        setUser(null)
+        return
+      }
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to save faculty advisor')
+      }
+
+      onSaved(data)
+    } catch (err: any) {
+      alert(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
   return (
-    <Dialog>
-      <form>
-        <DialogTrigger asChild>
-          <Button variant="outline">Open Dialog</Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+      <DialogContent className="sm:max-w-[425px]">
+        <form onSubmit={handleSave}>
           <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
+            <DialogTitle>{advisor ? 'Edit Faculty Advisor' : 'Add Faculty Advisor'}</DialogTitle>
             <DialogDescription>
-              Make changes to your profile here. Click save when you&apos;re done.
+              {advisor
+                ? "Update your faculty advisor's information."
+                : 'Add a new faculty advisor.'}
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4">
-            <div className="grid gap-3">
-              <Label htmlFor="name-1">Name</Label>
-              <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
-            </div>
-            <div className="grid gap-3">
-              <Label htmlFor="username-1">Username</Label>
-              <Input id="username-1" name="username" defaultValue="@peduarte" />
-            </div>
+
+          <div className="grid gap-4 py-4">
+            {['firstName', 'lastName', 'email', 'phoneNumber'].map((field) => (
+              <div key={field} className="grid gap-2">
+                <Label htmlFor={field}>{field.replace(/([A-Z])/g, ' $1')}</Label>
+                <Input
+                  id={field}
+                  name={field}
+                  value={(formData as any)[field]}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            ))}
           </div>
+
           <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button type="submit">Save changes</Button>
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={saving}>
+              {saving ? 'Saving...' : 'Save'}
+            </Button>
           </DialogFooter>
-        </DialogContent>
-      </form>
+        </form>
+      </DialogContent>
     </Dialog>
   )
 }

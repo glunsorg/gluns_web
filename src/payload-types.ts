@@ -75,6 +75,7 @@ export interface Config {
     delegations: Delegation;
     delegates: Delegate;
     'faculty-advisors': FacultyAdvisor;
+    payments: Payment;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -90,6 +91,7 @@ export interface Config {
     delegations: DelegationsSelect<false> | DelegationsSelect<true>;
     delegates: DelegatesSelect<false> | DelegatesSelect<true>;
     'faculty-advisors': FacultyAdvisorsSelect<false> | FacultyAdvisorsSelect<true>;
+    payments: PaymentsSelect<false> | PaymentsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -265,7 +267,6 @@ export interface Delegate {
   lastName: string;
   email: string;
   phoneNumber: number;
-  paymentStatus?: ('unpaid' | 'paid') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -280,6 +281,21 @@ export interface FacultyAdvisor {
   lastName: string;
   email: string;
   phoneNumber: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payments".
+ */
+export interface Payment {
+  id: number;
+  teacher: number | User;
+  delegation: number | Delegation;
+  delegateSlotsPurchased: number;
+  amount: number;
+  status?: ('pending' | 'paid' | 'failed') | null;
+  reference?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -338,6 +354,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'faculty-advisors';
         value: number | FacultyAdvisor;
+      } | null)
+    | ({
+        relationTo: 'payments';
+        value: number | Payment;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -504,7 +524,6 @@ export interface DelegatesSelect<T extends boolean = true> {
   lastName?: T;
   email?: T;
   phoneNumber?: T;
-  paymentStatus?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -518,6 +537,20 @@ export interface FacultyAdvisorsSelect<T extends boolean = true> {
   lastName?: T;
   email?: T;
   phoneNumber?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payments_select".
+ */
+export interface PaymentsSelect<T extends boolean = true> {
+  teacher?: T;
+  delegation?: T;
+  delegateSlotsPurchased?: T;
+  amount?: T;
+  status?: T;
+  reference?: T;
   updatedAt?: T;
   createdAt?: T;
 }

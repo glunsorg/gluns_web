@@ -6,15 +6,27 @@ export const Payments: CollectionConfig = {
     useAsTitle: 'reference',
   },
   access: {
-    read: ({ req }) => req.user?.roles === 'admin',
-    create: () => false, // webhook only
+    read: () => true,
+    create: () => false,
     update: () => false,
+    delete: () => true,
   },
   fields: [
     {
-      name: 'delegate',
+      name: 'teacher',
       type: 'relationship',
-      relationTo: 'delegates',
+      relationTo: 'users',
+      required: true,
+    },
+    {
+      name: 'delegation',
+      type: 'relationship',
+      relationTo: 'delegations',
+      required: true,
+    },
+    {
+      name: 'delegateSlotsPurchased',
+      type: 'number',
       required: true,
     },
     {
@@ -23,22 +35,15 @@ export const Payments: CollectionConfig = {
       required: true,
     },
     {
-      name: 'currency',
-      type: 'text',
-      defaultValue: 'KES',
-    },
-    {
-      name: 'reference',
-      type: 'text',
-      required: true,
-    },
-    {
       name: 'status',
       type: 'select',
+      defaultValue: 'pending',
       options: [
-        { label: 'Success', value: 'success' },
+        { label: 'Pending', value: 'pending' },
+        { label: 'Paid', value: 'paid' },
         { label: 'Failed', value: 'failed' },
       ],
     },
+    { name: 'reference', type: 'text' }, // Paystack transaction reference
   ],
 }

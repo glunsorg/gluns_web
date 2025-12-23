@@ -23,7 +23,9 @@ import {
 import { Sidebar } from './Sidebar'
 import DelegateForm from './DelegateForm'
 import FacultyForm from './FacultyForm'
-import { FacultyAdvisor } from '@/app/types/types'
+import { Delegate, FacultyAdvisor } from '@/app/types/types'
+import PaymentForm from '../payment/PaymentForm'
+import { Button } from '@/components/ui/button'
 
 type Delegation = {
   id?: string
@@ -75,6 +77,8 @@ export default function DelegationPortal() {
   const maxAdvisors = formData.numberOfFacultyAdvisors
   const advisorCount = facultyAdvisors.length
   const canAddAdvisor = advisorCount < maxAdvisors
+
+  const [editingDelegate, setEditingDelegate] = useState<Delegate | null>(null)
 
   const steps = [
     { title: 'Basic Info', icon: Users },
@@ -235,6 +239,35 @@ export default function DelegationPortal() {
       setCurrentStep(currentStep - 1)
     }
   }
+
+  // check payment status
+  const [paymentStatus, setPaymentStatus] = useState<'pending' | 'paid' | 'failed'>('pending')
+  const [delegates, setDelegates] = useState<any[]>([]) // replace any with your delegate type
+
+  // Fetch payment status and delegates
+  useEffect(() => {
+    if (!delegation?.id) return
+
+    const fetchPaymentAndDelegates = async () => {
+      try {
+        // 1. Check payment status
+        const paymentRes = await fetch(`/api/payments/status?delegationId=${user?.id}`)
+        const paymentData = await paymentRes.json()
+        setPaymentStatus(paymentData.status || 'pending')
+
+        // 2. Fetch delegates only if payment is done
+        if (paymentData.status === 'paid') {
+          const delegatesRes = await fetch(`/api/delegates?delegationId=${user?.id}`)
+          const delegatesData = await delegatesRes.json()
+          setDelegates(delegatesData.delegates || [])
+        }
+      } catch (err) {
+        console.error('Failed to fetch payment or delegates', err)
+      }
+    }
+
+    fetchPaymentAndDelegates()
+  }, [delegation?.id])
 
   // get faculty advisors list from delegation id
 
@@ -653,14 +686,80 @@ export default function DelegationPortal() {
           {/* Delegates Section */}
           {activeSection === 'delegates' && (
             <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
-              <div className="text-center py-12">
-                <UserPlus className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Add Delegates</h3>
-                <p className="text-gray-600 mb-6">
-                  Register your delegation members here once your application is approved.
-                </p>
-                <DelegateForm />
-              </div>
+              {activeSection === 'delegates' && (
+                <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
+                  <div className="text-center py-12">
+                    <UserPlus className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Add Delegates</h3>
+                    <p className="text-gray-600 mb-6">
+                      Register your delegation members here once your application is approved.
+                    </p>
+
+                    {!delegation?.id ? (
+                      <p className="text-gray-600">Please complete your application first.</p>
+                    ) : paymentStatus !== 'paid' ? (
+                      <PaymentForm
+                        numberOfDelegates={formData.numberOfDelegates}
+                        teacherId={user.id}
+                        delegationId={delegation.id}
+                        onPaymentSuccess={() => setPaymentStatus('paid')}
+                      />
+                    ) : (
+                      <>
+                        <Button onClick={() => setEditingDelegate({} as Delegate)} className="mb-4">
+                          Add Delegate
+                        </Button>
+
+                        <DelegateForm
+                          open={!!editingDelegate}
+                          delegate={editingDelegate}
+                          onClose={() => setEditingDelegate(null)}
+                          onSaved={(updatedDelegate) => {
+                            setDelegates((prev) => {
+                              const exists = prev.find((d) => d.id === updatedDelegate.id)
+                              if (exists) {
+                                return prev.map((d) =>
+                                  d.id === updatedDelegate.id ? updatedDelegate : d,
+                                )
+                              }
+                              return [...prev, updatedDelegate]
+                            })
+                            setEditingDelegate(null)
+                          }}
+                        />
+
+                        <div className="mt-6">
+                          <h3 className="text-lg font-semibold mb-4">Registered Delegates</h3>
+                          {delegates.length > 0 ? (
+                            <ul className="divide-y">
+                              {delegates.map((delegate) => (
+                                <li
+                                  key={delegate.id}
+                                  className="py-2 flex justify-between items-center"
+                                >
+                                  <span>
+                                    {delegate.firstName} {delegate.lastName}
+                                  </span>
+                                  <span className="text-gray-500">{delegate.email}</span>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setEditingDelegate(delegate)}
+                                  >
+                                    Edit
+                                  </Button>
+                                </li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p className="text-gray-600">No delegates registered yet.</p>
+                          )}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

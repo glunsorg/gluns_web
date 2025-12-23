@@ -16,6 +16,8 @@ import { Delegates } from './collections/Delegates'
 
 import { Faculty } from './collections/Faculty'
 
+import { Payments } from './collections/Payments'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -35,6 +37,7 @@ export default buildConfig({
     Delegations,
     Delegates,
     Faculty,
+    Payments,
   ],
   serverURL: 'http://localhost:3000',
   editor: lexicalEditor(),

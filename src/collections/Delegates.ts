@@ -1,5 +1,6 @@
 import { CollectionConfig } from 'payload'
 import { enforceDelegateOwnership } from './hooks/DelegateOwnership'
+import { ensurePaidSlots } from './hooks/EnsurePaidSlots'
 
 export const Delegates: CollectionConfig = {
   slug: 'delegates',
@@ -12,7 +13,7 @@ export const Delegates: CollectionConfig = {
     update: ({ req, data }) => req.user?.roles === 'admin' || req.user?.id === data?.teacher,
   },
   hooks: {
-    beforeChange: [enforceDelegateOwnership],
+    beforeChange: [enforceDelegateOwnership, ensurePaidSlots],
   },
   fields: [
     {
@@ -25,7 +26,6 @@ export const Delegates: CollectionConfig = {
       name: 'delegation',
       type: 'relationship',
       relationTo: 'delegations',
-
       required: true,
     },
     {
@@ -47,15 +47,6 @@ export const Delegates: CollectionConfig = {
       name: 'phoneNumber',
       type: 'number',
       required: true,
-    },
-    {
-      name: 'paymentStatus',
-      type: 'select',
-      defaultValue: 'unpaid',
-      options: [
-        { label: 'Unpaid', value: 'unpaid' },
-        { label: 'Paid', value: 'paid' },
-      ],
     },
   ],
 }
