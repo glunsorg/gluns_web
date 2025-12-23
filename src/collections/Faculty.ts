@@ -57,6 +57,7 @@ export const Faculty: CollectionConfig = {
       name: 'phoneNumber',
       type: 'text',
       required: true,
+      unique: true,
     },
   ],
 }

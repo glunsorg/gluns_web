@@ -66,9 +66,15 @@ export default function DelegationPortal() {
   const [activeSection, setActiveSection] = useState('application')
   const [authReady, setAuthReady] = useState(false)
 
+  const [editingAdvisor, setEditingAdvisor] = useState<FacultyAdvisor | null>(null)
+  const [showFacultyForm, setShowFacultyForm] = useState(false)
+
   const [delegation, setDelegation] = useState<Delegation | null>(null)
   const [formData, setFormData] = useState<Delegation>(EMPTY_DELEGATION)
   const [facultyAdvisors, setFacultyAdvisors] = useState<FacultyAdvisor[]>([])
+  const maxAdvisors = formData.numberOfFacultyAdvisors
+  const advisorCount = facultyAdvisors.length
+  const canAddAdvisor = advisorCount < maxAdvisors
 
   const steps = [
     { title: 'Basic Info', icon: Users },
@@ -111,7 +117,6 @@ export default function DelegationPortal() {
         const res = await fetch('/api/delegation')
 
         if (res.status === 401) {
-          setUser(null)
           return
         }
 
@@ -241,7 +246,7 @@ export default function DelegationPortal() {
 
     const fetchFacultyAdvisors = async () => {
       try {
-        const res = await fetch(`/api/faculty-advisors`)
+        const res = await fetch('/api/faculty-advisors')
 
         if (res.status === 401) {
           setUser(null)
@@ -250,8 +255,8 @@ export default function DelegationPortal() {
 
         const data = await res.json()
 
-        if (data.facultyAdvisor) {
-          setFacultyAdvisors([data.facultyAdvisor])
+        if (Array.isArray(data.facultyAdvisors)) {
+          setFacultyAdvisors(data.facultyAdvisors)
         }
       } catch (error) {
         console.error('Failed to fetch faculty advisors', error)
@@ -695,6 +700,10 @@ export default function DelegationPortal() {
                           {/* Right side: actions */}
                           <div className="flex gap-2 shrink-0">
                             <button
+                              onClick={() => {
+                                setEditingAdvisor(advisor)
+                                setShowFacultyForm(true)
+                              }}
                               className="p-2 text-blue-600 hover:bg-blue-50 rounded"
                               aria-label="Edit advisor"
                             >
@@ -716,7 +725,44 @@ export default function DelegationPortal() {
                 ) : (
                   <p className="text-gray-600 mb-6">You have not added any faculty advisors yet.</p>
                 )}
-                <FacultyForm />
+                {showFacultyForm && (
+                  <FacultyForm
+                    advisor={editingAdvisor}
+                    onClose={() => {
+                      setEditingAdvisor(null)
+                      setShowFacultyForm(false)
+                    }}
+                    open={showFacultyForm}
+                    onSaved={(updatedAdvisor) => {
+                      setFacultyAdvisors((prev) => {
+                        const exists = prev.find((a) => a.id === updatedAdvisor.id)
+
+                        if (exists) {
+                          // EDIT
+                          return prev.map((a) => (a.id === updatedAdvisor.id ? updatedAdvisor : a))
+                        }
+
+                        // CREATE
+                        return [...prev, updatedAdvisor]
+                      })
+
+                      setEditingAdvisor(null)
+                      setShowFacultyForm(false)
+                    }}
+                  />
+                )}
+
+                {!showFacultyForm && canAddAdvisor && (
+                  <button
+                    onClick={() => {
+                      setEditingAdvisor(null)
+                      setShowFacultyForm(true)
+                    }}
+                    className="mt-4 px-4 py-2 bg-[#104179] text-white rounded-lg"
+                  >
+                    Add Faculty Advisor
+                  </button>
+                )}
               </div>
             </div>
           )}

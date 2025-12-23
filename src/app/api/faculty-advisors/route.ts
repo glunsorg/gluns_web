@@ -1,8 +1,11 @@
-// app/api/faculty-advisors/route.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
+/**
+ * GET: Return all faculty advisors for the authenticated teacher
+ */
 export async function GET(req: Request) {
   const payload = await getPayload({ config })
 
@@ -22,17 +25,22 @@ export async function GET(req: Request) {
           equals: user.id,
         },
       },
+      sort: 'createdAt',
     })
 
     return NextResponse.json({
-      facultyAdvisor: result.docs[0] || null,
+      facultyAdvisors: result.docs,
+      total: result.totalDocs,
     })
   } catch (error) {
-    console.error('Error fetching faculty advisor:', error)
-    return NextResponse.json({ message: 'Failed to fetch faculty advisor' }, { status: 500 })
+    console.error('Error fetching faculty advisors:', error)
+    return NextResponse.json({ message: 'Failed to fetch faculty advisors' }, { status: 500 })
   }
 }
 
+/**
+ * POST: Create a faculty advisor (up to delegation limit)
+ */
 export async function POST(req: Request) {
   const payload = await getPayload({ config })
 
@@ -54,8 +62,35 @@ export async function POST(req: Request) {
   try {
     const body = await req.json()
 
-    // Check if teacher already has a faculty advisor
-    const existing = await payload.find({
+    /**
+     * 1. Fetch approved delegation
+     */
+    const delegation = await payload.find({
+      collection: 'delegation-applications',
+      where: {
+        user: {
+          equals: user.id,
+        },
+        status: {
+          equals: 'approved',
+        },
+      },
+      limit: 1,
+    })
+
+    if (!delegation.docs.length) {
+      return NextResponse.json(
+        { message: 'No approved delegation application found' },
+        { status: 400 },
+      )
+    }
+
+    const maxAdvisors = delegation.docs[0].numberOfFacultyAdvisors
+
+    /**
+     * 2. Count existing advisors
+     */
+    const existingAdvisors = await payload.find({
       collection: 'faculty-advisors',
       where: {
         teacher: {
@@ -64,13 +99,18 @@ export async function POST(req: Request) {
       },
     })
 
-    if (existing.docs.length > 0) {
+    if (existingAdvisors.totalDocs >= maxAdvisors) {
       return NextResponse.json(
-        { message: 'Faculty advisor already exists. Use PATCH to update.' },
+        {
+          message: `You can only add ${maxAdvisors} faculty advisor(s).`,
+        },
         { status: 400 },
       )
     }
 
+    /**
+     * 3. Create advisor
+     */
     const facultyAdvisor = await payload.create({
       collection: 'faculty-advisors',
       data: {
@@ -78,13 +118,14 @@ export async function POST(req: Request) {
         lastName: body.lastName,
         email: body.email,
         phoneNumber: body.phoneNumber,
-        teacher: user.id, // Enforce server-side
+        teacher: user.id,
       },
     })
 
     return NextResponse.json(facultyAdvisor, { status: 201 })
   } catch (error: any) {
     console.error('Error creating faculty advisor:', error)
+
     return NextResponse.json(
       { message: error.message || 'Failed to create faculty advisor' },
       { status: 400 },
