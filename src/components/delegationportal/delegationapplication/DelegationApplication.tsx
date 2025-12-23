@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import React, { useEffect, useState } from 'react'
@@ -63,6 +64,7 @@ export default function DelegationPortal() {
   const [currentStep, setCurrentStep] = useState(0)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('application')
+  const [authReady, setAuthReady] = useState(false)
 
   const [delegation, setDelegation] = useState<Delegation | null>(null)
   const [formData, setFormData] = useState<Delegation>(EMPTY_DELEGATION)
@@ -78,27 +80,25 @@ export default function DelegationPortal() {
     const hydrate = async () => {
       try {
         const res = await fetch('/api/me', { cache: 'no-store' })
-
         if (!res.ok) {
           setUser(null)
           return
         }
-
         const { user } = await res.json()
         setUser(user)
       } finally {
-        setFetching(false)
+        setAuthReady(true)
       }
     }
 
     hydrate()
-  }, [setUser])
+  }, [])
 
   useEffect(() => {
-    if (!fetching && !user) {
+    if (authReady && !user) {
       router.replace('/signup')
     }
-  }, [user, fetching, router])
+  }, [authReady, user])
 
   useEffect(() => {
     if (!user) {
