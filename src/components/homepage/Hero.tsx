@@ -5,7 +5,7 @@ import { SiUnitednations } from 'react-icons/si'
 
 export default function Hero() {
   return (
-    <section className="relative bg-[#051220] md:min-h-[60vh] lg:min-h-screen 2xl:min-h-[120vh] flex px-6 md:px-8 2xl:px-16 items-center overflow-hidden">
+    <section className="relative bg-[#051220] md:min-h-[60vh] lg:min-h-screen 2xl:min-h-[90vh] flex px-6 md:px-8 2xl:px-16 items-center overflow-hidden">
       {/* gradient overlay */}
       <div className="absolute inset-0 bg-[url(/images/background.jpg)] bg-cover bg-center" />
 
@@ -18,10 +18,10 @@ export default function Hero() {
           </span>
           Welcome to GLUNS
         </h3>
-        <h1 className="text-5xl md:text-6xl lg:text-7xl 2xl:text-[8rem] font-bold text-white text-left z-10">
+        <h1 className="text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-bold text-white text-left z-10">
           Empowering the Next Generation of <span className="text-[#ffffff]">Global Leaders</span>
         </h1>
-        <p className="mt-4 text-lg md:text-xl 2xl:text-4xl text-white text-left z-10">
+        <p className="mt-4 text-lg md:text-xl 2xl:text-3xl text-white text-left z-10">
           At the Global Leaders United Nations Symposium (GLUNS), high school delegates step into
           the world of diplomacy, leadership, and international affairs - learning to debate global
           issues, negotiate solutions, and build a better tomorrow.{' '}

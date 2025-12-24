@@ -94,7 +94,7 @@ export default function DelegationPortal() {
 
   useEffect(() => {
     if (!checkingAuth && !user) {
-      router.replace('/signup')
+      router.replace('/authentication')
     }
   }, [checkingAuth, user, router])
 
@@ -153,7 +153,7 @@ export default function DelegationPortal() {
     setLoggingOut(true)
     try {
       await authLogout()
-      router.replace('/signup')
+      router.replace('/authentication')
     } finally {
       setLoggingOut(false)
     }

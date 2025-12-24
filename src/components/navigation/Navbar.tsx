@@ -70,19 +70,10 @@ export default function Navbar() {
           {/* Right Section */}
           <div className="flex gap-2 items-center">
             <Link
-              href="/registration"
-              className="hidden md:flex 
-    relative overflow-hidden 
-    border border-[#104179] text-[#104179]
-    px-6 md:px-4 py-2 md:py-1 lg:py-2 font-semibold ml-4 rounded-md 
-    transition-colors duration-300
-    before:absolute before:inset-0 before:bg-[#104179]
-    before:translate-y-full before:transition-transform before:duration-300
-    hover:before:translate-y-0
-    hover:text-[#fffff6]
-  "
+              href="/delegation-portal"
+              className="hidden md:flex relative overflow-hidden border border-[#104179] text-[#104179] px-6 md:px-4 py-2 md:py-1 lg:py-2 font-semibold ml-4 rounded-md transition-colors duration-300 before:absolute before:inset-0 before:bg-[#104179] before:translate-y-full before:transition-transform before:duration-300 hover:before:translate-y-0 hover:text-[#fffff6]"
             >
-              <span className="relative z-10 2xl:text-xl">Registration</span>
+              <span className="relative z-10 2xl:text-xl">Delegation Portal</span>
             </Link>
 
             {/* Mobile Menu Button */}
