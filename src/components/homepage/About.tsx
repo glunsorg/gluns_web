@@ -31,7 +31,9 @@ export default function About() {
                 </p>
                 <div className="mt-3 flex items-center gap-2">
                   <div className="h-px flex-1 bg-lineaer-to-r from-[#104179]/30 to-transparent"></div>
-                  <span className="text-xs 2xl:text-lg text-[#104179]/60 font-medium">GLUNS 2025</span>
+                  <span className="text-xs 2xl:text-lg text-[#104179]/60 font-medium">
+                    GLUNS {new Date().getFullYear()}
+                  </span>
                 </div>
               </div>
             </div>
@@ -43,9 +45,9 @@ export default function About() {
           {/* Header with decorative element */}
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-               <h3 className="text-[#104179] text-xs 2xl:text-lg tracking-widest border border-[#104179] rounded-xl px-4 py-1">
-          Who We Are
-        </h3>
+              <h3 className="text-[#104179] text-xs 2xl:text-lg tracking-widest border border-[#104179] rounded-xl px-4 py-1">
+                Who We Are
+              </h3>
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#104179] leading-tight">
               About GLUNS
