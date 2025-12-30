@@ -6,17 +6,19 @@ import Committee from '@/components/homepage/Committee'
 import Process from '@/components/homepage/Process'
 import Events from '@/components/homepage/Events'
 import CTA from '@/components/homepage/CTA'
+import WelcomeNote from '@/components/homepage/WelcomeNote'
 
 export default function page() {
   return (
     <>
       <Hero />
       <About />
-      <Why/>
-      <Committee/>
-      <Process/>
-      <Events/>
-      <CTA/>
+      <Why />
+      <Committee />
+      <Process />
+      <Events />
+      <WelcomeNote />
+      <CTA />
     </>
   )
 }

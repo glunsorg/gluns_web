@@ -3,24 +3,22 @@ import Link from 'next/link'
 
 export default function CTA() {
   return (
-    <section className="relative bg-[#104179] rounded-t-3xl -mt-7 z-30 overflow-hidden">
-
+    <section className="relative bg-[#104179] rounded-t-3xl -mt-7 z-30 overflow-hidden border-t border-white">
       {/* Decorative Elements */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-white/30 to-transparent"></div>
       <div className="absolute -top-24 -right-20 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
       <div className="absolute -bottom-32 -left-20 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
 
       {/* Main Content */}
       <div className="relative px-6 md:px-8 2xl:px-24 py-12 md:py-16 2xl:py-24">
         <div className="max-w-6xl 2xl:max-w-full mx-auto grid md:grid-cols-2 gap-12 items-center">
-
           {/* LEFT COLUMN */}
           <div className="space-y-6">
-
             {/* Badge */}
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2">
               <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-              <span className="text-white text-xs 2xl:text-lg font-medium tracking-wide">JOIN THE MOVEMENT</span>
+              <span className="text-white text-xs 2xl:text-lg font-medium tracking-wide">
+                JOIN THE MOVEMENT
+              </span>
             </div>
 
             {/* Heading */}
@@ -30,7 +28,7 @@ export default function CTA() {
 
             {/* Description */}
             <p className="text-gray-200 text-lg 2xl:text-2xl leading-relaxed max-w-lg">
-              Be part of a transformative experience that empowers young minds to lead, influence, 
+              Be part of a transformative experience that empowers young minds to lead, influence,
               and impact the world through diplomacy and collaboration.
             </p>
 
@@ -54,7 +52,6 @@ export default function CTA() {
           {/* RIGHT COLUMN – CTA CARD */}
           <div className="relative">
             <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 shadow-2xl space-y-6">
-
               {/* Card Header */}
               <div className="space-y-2">
                 <h3 className="text-white text-2xl 2xl:text-3xl font-bold">Start Your Journey</h3>
@@ -91,10 +88,8 @@ export default function CTA() {
               <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
             </div>
           </div>
-
         </div>
       </div>
-      
     </section>
   )
 }
