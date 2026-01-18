@@ -85,7 +85,7 @@ export default function Committee() {
 
       <div className="flex justify-center items-center mt-8">
         <Link
-          href="#"
+          href="/committees"
           className="flex items-center justify-center gap-4 border border-[#104179] text-[#104179] text-xl 2xl:text-2xl rounded-xl px-4 py-2 hover:scale-105 transition-transform delay-200"
         >
           Explore Committees

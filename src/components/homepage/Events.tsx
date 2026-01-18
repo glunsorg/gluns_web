@@ -1,49 +1,49 @@
 import React from 'react'
-import { IoLocationSharp } from "react-icons/io5";
+import { IoLocationSharp } from 'react-icons/io5'
 import Image from 'next/image'
-import Link from 'next/link';
-import { GrLinkNext } from 'react-icons/gr';
+import Link from 'next/link'
+import { GrLinkNext } from 'react-icons/gr'
 
 export default function Events() {
   const events = [
     {
       title: 'GLUNS Leadership Summit',
-      country:'Kenya',
+      country: 'Kenya',
       date: 'Mar 18, 2025',
       desc: 'A high-energy summit where students explore global diplomacy through expert-led workshops.',
       img: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80',
     },
     {
       title: 'Global Policy Debate',
-      country:'Kenya',
+      country: 'Kenya',
       date: 'Apr 05, 2025',
       desc: 'Interactive debate sessions focusing on current global conflicts and international cooperation.',
       img: 'https://images.unsplash.com/photo-1551836022-1655a2ddc8c6?auto=format&fit=crop&w=1200&q=80',
     },
     {
       title: 'Cultural Exchange Night',
-      country:'Kenya',
+      country: 'Kenya',
       date: 'Jun 12, 2025',
       desc: 'A celebration of global diversity through music, art, dance, and collaborative performances.',
       img: 'https://images.unsplash.com/photo-1515165562835-c4c7b5de7f77?auto=format&fit=crop&w=1200&q=80',
     },
     {
       title: 'Diplomacy Masterclass',
-      country:'Kenya',
+      country: 'Kenya',
       date: 'Jul 22, 2025',
       desc: 'A professional masterclass led by international relations experts and former UN delegates.',
       img: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=1200&q=80',
     },
     {
       title: 'Resolution Writing Workshop',
-      country:'Kenya',
+      country: 'Kenya',
       date: 'Aug 09, 2025',
       desc: 'Learn the art of drafting compelling and effective UN-style resolutions.',
       img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80',
     },
     {
       title: 'Closing Awards Ceremony',
-      country:'Kenya',
+      country: 'Kenya',
       date: 'Nov 21, 2025',
       desc: 'Honoring outstanding young diplomats and celebrating GLUNS achievements.',
       img: 'https://images.unsplash.com/photo-1485217988980-11786ced9454?auto=format&fit=crop&w=1200&q=80',
@@ -86,15 +86,22 @@ export default function Events() {
             <div className="p-6 flex justify-center items-center gap-3">
               {/* Date + Title */}
               <div className="flex items-center justify-between">
-                <span className="text-[#104179] font-semibold text-xl 2xl:text-3xl">{event.date}</span>
+                <span className="text-[#104179] font-semibold text-xl 2xl:text-3xl">
+                  {event.date}
+                </span>
               </div>
 
-              <div className='w-0.5 h-14 bg-[#85c226]'></div>
+              <div className="w-0.5 h-14 bg-[#85c226]"></div>
 
               <div>
-                <h2 className='flex items-center gap-1 text-[#104179] 2xl:text-2xl'><span><IoLocationSharp className='text-[#85c226]'/></span>{event.country}</h2>
+                <h2 className="flex items-center gap-1 text-[#104179] 2xl:text-2xl">
+                  <span>
+                    <IoLocationSharp className="text-[#85c226]" />
+                  </span>
+                  {event.country}
+                </h2>
                 <h3 className="text-xl 2xl:text-3xl font-semibold text-[#104179]">{event.title}</h3>
-                <p className='text-sm 2xl:text-xl'>{event.desc}</p>
+                <p className="text-sm 2xl:text-xl">{event.desc}</p>
               </div>
             </div>
           </div>
@@ -102,12 +109,12 @@ export default function Events() {
       </div>
 
       {/* links */}
-      <div className='flex justify-center items-center mt-12'>
+      <div className="flex justify-center items-center mt-12">
         <Link
-          href="#"
+          href="/events"
           className="flex items-center justify-center gap-2 border border-[#104179] text-[#104179] text-xl rounded-xl px-4 py-2 hover:scale-105 transition-transform delay-200"
         >
-         Explore All Events
+          Explore All Events
           <GrLinkNext className="-rotate-45" />
         </Link>
       </div>

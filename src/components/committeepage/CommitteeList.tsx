@@ -118,7 +118,7 @@ export default function CommitteeList() {
             conference and choose your committee.
           </p>
           <Link
-            href="/register"
+            href="/authentication"
             className="inline-flex items-center gap-3 bg-white text-[#104179] px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-xl"
           >
             Register Now
