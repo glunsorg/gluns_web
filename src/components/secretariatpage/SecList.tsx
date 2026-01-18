@@ -193,11 +193,13 @@ Through strategic outreach initiatives and sustained engagement with partner ins
                 height={200}
                 src={selectedMember.photo}
                 alt={selectedMember.name}
-                className="w-44 h-44 md:w-64 md:h-64 object-cover object-center absolute left-4 top-4 md:right-28 md:bottom-8 rounded-3xl"
+                className="w-44 h-44 md:w-72 md:h-72 object-cover object-center absolute left-4 top-4 md:right-28 md:bottom-8 rounded-3xl border border-white"
               />
 
-              <div className="absolute -bottom-8 md:bottom-0 -left-6 md:left-0 md:right-0 p-12 text-white">
-                <h3 className="text-3xl md:text-5xl font-black md:mb-3 tracking-wider">{selectedMember.name}</h3>
+              <div className="absolute -bottom-8 md:bottom-0 -left-6 md:left-80 p-12 text-white">
+                <h3 className="text-4xl md:text-5xl font-black md:mb-3 tracking-wider">
+                  {selectedMember.name}
+                </h3>
                 <p className="text-2xl font-medium">{selectedMember.role}</p>
               </div>
             </div>
