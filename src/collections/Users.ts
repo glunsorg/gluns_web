@@ -11,6 +11,7 @@ export const Users: CollectionConfig = {
     create: () => true,
     read: () => true,
     delete: isAdmin,
+    update: isAdmin,
   },
   fields: [
     {
