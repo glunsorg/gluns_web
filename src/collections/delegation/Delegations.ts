@@ -4,6 +4,7 @@ export const Delegations: CollectionConfig = {
   slug: 'delegations',
   admin: {
     useAsTitle: 'name',
+    group: 'Delegation Management',
   },
   access: {
     read: ({ req }) =>

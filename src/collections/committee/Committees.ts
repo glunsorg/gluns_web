@@ -3,6 +3,10 @@ import slugify from 'slugify'
 
 export const Committees: CollectionConfig = {
   slug: 'committees',
+  admin: {
+    useAsTitle: 'title',
+    group: 'Committee Management',
+  },
   access: {
     read: ({ req }) => req.user?.roles === 'admin',
     delete: () => true,
@@ -16,16 +20,16 @@ export const Committees: CollectionConfig = {
       required: true,
     },
     {
+      name: 'description',
+      type: 'textarea',
+      required: true,
+    },
+    {
       name: 'committee_photo',
       label: 'Committee BG',
       type: 'upload',
       relationTo: 'media',
       required: false,
-    },
-    {
-      name: 'summary',
-      type: 'richText',
-      required: true,
     },
     {
       name: 'slug',
@@ -43,23 +47,29 @@ export const Committees: CollectionConfig = {
       },
     },
     {
-      name: 'director_name',
-      label: "Director's Name",
+      name: 'committee_category',
+      label: 'Committee Category',
+      type: 'select',
+      options: [
+        { label: 'Politics', value: 'politics' },
+        { label: 'Economics', value: 'economics' },
+        { label: 'Social', value: 'social' },
+        { label: 'Environment', value: 'environment' },
+        { label: 'Specialized', value: 'specialized' },
+      ],
+      required: true,
+    },
+    {
+      name: 'committee_code',
+      label: 'Committee Code',
       type: 'text',
-      required: false,
+      required: true,
+      unique: true,
     },
     {
-      name: 'director_photo',
-      label: "Director's Photo",
-      type: 'upload',
-      relationTo: 'portraits',
-      required: false,
-    },
-    {
-      name: 'director_statement',
-      label: "Director's Statement",
+      name: 'summary',
       type: 'richText',
-      required: false,
+      required: true,
     },
   ],
 }

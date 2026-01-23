@@ -1,10 +1,11 @@
 import type { CollectionConfig } from 'payload'
-import { createDelegationOnApproval } from './hooks/DelegationCreate'
+import { createDelegationOnApproval } from '../hooks/DelegationCreate'
 
 export const DelegationApplications: CollectionConfig = {
   slug: 'delegation-applications',
   admin: {
     useAsTitle: 'delegationName',
+    group: 'Delegation Management',
   },
   access: {
     create: ({ req }) => req.user?.roles === 'teacher',

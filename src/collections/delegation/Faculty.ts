@@ -9,6 +9,7 @@ export const Faculty: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'email',
+    group: 'Delegation Management',
   },
   access: {
     read: ({ req }) => {

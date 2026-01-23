@@ -1,11 +1,12 @@
 import { CollectionConfig } from 'payload'
-import { enforceDelegateOwnership } from './hooks/DelegateOwnership'
-import { ensurePaidSlots } from './hooks/EnsurePaidSlots'
+import { enforceDelegateOwnership } from '../hooks/DelegateOwnership'
+import { ensurePaidSlots } from '../hooks/EnsurePaidSlots'
 
 export const Delegates: CollectionConfig = {
   slug: 'delegates',
   admin: {
     useAsTitle: 'email',
+    group: 'Delegation Management',
   },
   access: {
     read: ({ req }) => req.user?.roles === 'admin' || req.user?.roles === 'teacher',

@@ -7,17 +7,21 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
 import { Users } from './collections/Users'
-import { Media } from './collections/Media'
-import { Documents } from './collections/Documents'
+import { Media } from './collections/media/Media'
+import { Documents } from './collections/media/Documents'
 import { Portraits } from './collections/Portraits'
-import { DelegationApplications } from './collections/DelegationApplication'
-import { Delegations } from './collections/Delegations'
-import { Delegates } from './collections/Delegates'
+import { DelegationApplications } from './collections/delegation/DelegationApplication'
+import { Delegations } from './collections/delegation/Delegations'
+import { Delegates } from './collections/delegation/Delegates'
 
 import Blog from './collections/Blog'
-import { Committees } from './collections/Committees'
 
-import { Faculty } from './collections/Faculty'
+// committees
+import { Committees } from './collections/committee/Committees'
+import { CommitteeCategories } from './collections/committee/CommitteeCategories'
+import { CommitteeTeam } from './collections/committee/CommitteeTeam'
+
+import { Faculty } from './collections/delegation/Faculty'
 
 import { Payments } from './collections/Payments'
 
@@ -43,6 +47,8 @@ export default buildConfig({
     Payments,
     Blog,
     Committees,
+    CommitteeCategories,
+    CommitteeTeam,
   ],
   serverURL: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
   editor: lexicalEditor(),

@@ -78,6 +78,8 @@ export interface Config {
     payments: Payment;
     blog: Blog;
     committees: Committee;
+    'committee-categories': CommitteeCategory;
+    'committee-team': CommitteeTeam;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -96,6 +98,8 @@ export interface Config {
     payments: PaymentsSelect<false> | PaymentsSelect<true>;
     blog: BlogSelect<false> | BlogSelect<true>;
     committees: CommitteesSelect<false> | CommitteesSelect<true>;
+    'committee-categories': CommitteeCategoriesSelect<false> | CommitteeCategoriesSelect<true>;
+    'committee-team': CommitteeTeamSelect<false> | CommitteeTeamSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -352,7 +356,11 @@ export interface Blog {
 export interface Committee {
   id: number;
   title: string;
+  description: string;
   committee_photo?: (number | null) | Media;
+  slug?: string | null;
+  committee_category: 'politics' | 'economics' | 'social' | 'environment' | 'specialized';
+  committee_code: string;
   summary: {
     root: {
       type: string;
@@ -368,24 +376,34 @@ export interface Committee {
     };
     [k: string]: unknown;
   };
-  slug?: string | null;
-  director_name?: string | null;
-  director_photo?: (number | null) | Portrait;
-  director_statement?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "committee-categories".
+ */
+export interface CommitteeCategory {
+  id: number;
+  name: string;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "committee-team".
+ */
+export interface CommitteeTeam {
+  id: number;
+  name: string;
+  position: string;
+  /**
+   * Lower numbers appear first
+   */
+  rank: number;
+  photo?: (number | null) | Portrait;
+  committee: number | Committee;
   updatedAt: string;
   createdAt: string;
 }
@@ -456,6 +474,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'committees';
         value: number | Committee;
+      } | null)
+    | ({
+        relationTo: 'committee-categories';
+        value: number | CommitteeCategory;
+      } | null)
+    | ({
+        relationTo: 'committee-team';
+        value: number | CommitteeTeam;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -673,12 +699,35 @@ export interface BlogSelect<T extends boolean = true> {
  */
 export interface CommitteesSelect<T extends boolean = true> {
   title?: T;
+  description?: T;
   committee_photo?: T;
-  summary?: T;
   slug?: T;
-  director_name?: T;
-  director_photo?: T;
-  director_statement?: T;
+  committee_category?: T;
+  committee_code?: T;
+  summary?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "committee-categories_select".
+ */
+export interface CommitteeCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "committee-team_select".
+ */
+export interface CommitteeTeamSelect<T extends boolean = true> {
+  name?: T;
+  position?: T;
+  rank?: T;
+  photo?: T;
+  committee?: T;
   updatedAt?: T;
   createdAt?: T;
 }
