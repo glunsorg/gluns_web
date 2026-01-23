@@ -15,6 +15,7 @@ import { Delegations } from './collections/Delegations'
 import { Delegates } from './collections/Delegates'
 
 import Blog from './collections/Blog'
+import { Committees } from './collections/Committees'
 
 import { Faculty } from './collections/Faculty'
 
@@ -41,8 +42,9 @@ export default buildConfig({
     Faculty,
     Payments,
     Blog,
+    Committees,
   ],
-  serverURL: process.env.NEXT_PUBLIC_PAYLOAD_URL,
+  serverURL: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

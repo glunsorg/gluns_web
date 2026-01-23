@@ -44,6 +44,15 @@ export const Delegates: CollectionConfig = {
       required: true,
     },
     {
+      name: 'gradeLevel',
+      type: 'select',
+      options: Array.from({ length: 12 }, (_, i) => ({
+        label: `Grade ${i + 1}`,
+        value: `Grade ${i + 1}`,
+      })),
+      required: true,
+    },
+    {
       name: 'phoneNumber',
       type: 'number',
       required: true,

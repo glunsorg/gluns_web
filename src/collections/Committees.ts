@@ -3,6 +3,12 @@ import slugify from 'slugify'
 
 export const Committees: CollectionConfig = {
   slug: 'committees',
+  access: {
+    read: ({ req }) => req.user?.roles === 'admin',
+    delete: () => true,
+    create: () => true,
+    update: () => true,
+  },
   fields: [
     {
       name: 'title',

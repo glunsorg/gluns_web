@@ -6,7 +6,7 @@ export const Payments: CollectionConfig = {
     useAsTitle: 'reference',
   },
   access: {
-    read: () => true,
+    read: ({ req }) => req.user?.roles === 'admin',
     create: () => false,
     update: () => false,
     delete: () => true,

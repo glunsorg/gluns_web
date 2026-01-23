@@ -14,7 +14,7 @@ const Blog: CollectionConfig = {
     group: 'Content',
   },
   access: {
-    read: () => true,
+    read: ({ req }) => req.user?.roles === 'admin',
     delete: () => true,
     create: () => true,
     update: () => true,

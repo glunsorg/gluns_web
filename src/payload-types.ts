@@ -77,6 +77,7 @@ export interface Config {
     'faculty-advisors': FacultyAdvisor;
     payments: Payment;
     blog: Blog;
+    committees: Committee;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -94,6 +95,7 @@ export interface Config {
     'faculty-advisors': FacultyAdvisorsSelect<false> | FacultyAdvisorsSelect<true>;
     payments: PaymentsSelect<false> | PaymentsSelect<true>;
     blog: BlogSelect<false> | BlogSelect<true>;
+    committees: CommitteesSelect<false> | CommitteesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -138,7 +140,7 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
-  roles: 'admin' | 'teacher';
+  roles: 'admin' | 'secretariat' | 'editor' | 'teacher';
   delegationName?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -268,6 +270,19 @@ export interface Delegate {
   firstName: string;
   lastName: string;
   email: string;
+  gradeLevel:
+    | 'Grade 1'
+    | 'Grade 2'
+    | 'Grade 3'
+    | 'Grade 4'
+    | 'Grade 5'
+    | 'Grade 6'
+    | 'Grade 7'
+    | 'Grade 8'
+    | 'Grade 9'
+    | 'Grade 10'
+    | 'Grade 11'
+    | 'Grade 12';
   phoneNumber: number;
   updatedAt: string;
   createdAt: string;
@@ -332,6 +347,50 @@ export interface Blog {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "committees".
+ */
+export interface Committee {
+  id: number;
+  title: string;
+  committee_photo?: (number | null) | Media;
+  summary: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  slug?: string | null;
+  director_name?: string | null;
+  director_photo?: (number | null) | Portrait;
+  director_statement?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -393,6 +452,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'blog';
         value: number | Blog;
+      } | null)
+    | ({
+        relationTo: 'committees';
+        value: number | Committee;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -558,6 +621,7 @@ export interface DelegatesSelect<T extends boolean = true> {
   firstName?: T;
   lastName?: T;
   email?: T;
+  gradeLevel?: T;
   phoneNumber?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -602,6 +666,21 @@ export interface BlogSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "committees_select".
+ */
+export interface CommitteesSelect<T extends boolean = true> {
+  title?: T;
+  committee_photo?: T;
+  summary?: T;
+  slug?: T;
+  director_name?: T;
+  director_photo?: T;
+  director_statement?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

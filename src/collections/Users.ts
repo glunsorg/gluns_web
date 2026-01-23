@@ -7,9 +7,10 @@ export const Users: CollectionConfig = {
     useAsTitle: 'email',
   },
   auth: true,
+
   access: {
     create: () => true,
-    read: ({ req }) => req.user?.roles === 'admin' || req.user?.roles === 'teacher',
+    read: ({ req }) => req.user?.roles === 'admin',
     delete: canUpdateUser,
   },
   fields: [
@@ -20,6 +21,8 @@ export const Users: CollectionConfig = {
       saveToJWT: true,
       options: [
         { label: 'Admin', value: 'admin' },
+        { label: 'Secretariat', value: 'secretariat' },
+        { label: 'Editor', value: 'editor' },
         { label: 'Teacher', value: 'teacher' },
       ],
       defaultValue: 'teacher',
