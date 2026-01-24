@@ -37,7 +37,31 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components: {
+      graphics: {
+        Logo: './components/admin/Logo',
+        Icon: './components/admin/Icon',
+      },
+    },
+    meta: {
+      title: 'GLUNS Admin',
+      description: 'Global Leaders United Nations Symposium Admin Portal',
+      icons: [
+        {
+          rel: 'icon',
+          type: 'image/ico',
+          url: '/favicon.ico',
+        },
+        {
+          rel: 'apple-touch-icon',
+          type: 'image/png',
+          url: '/apple-icon.png',
+        },
+      ],
+      robots: 'noindex, nofollow',
+    },
   },
+
   collections: [
     Users,
     Media,
@@ -54,7 +78,7 @@ export default buildConfig({
     CommitteeTeam,
     Secretariat,
   ],
-  serverURL: process.env.NEXT_PUBLIC_PAYLOAD_URL,
+  serverURL: process.env.NEXT_PUBLIC_BASE_URL,
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

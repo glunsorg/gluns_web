@@ -1,0 +1,140 @@
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@layer theme {
+  :root {
+    --brand-primary: #104179;
+    --brand-primary-dark: #0c325c;
+    --brand-accent: #85c226;
+    --brand-accent-dark: #76ad1f;
+
+    --brand-bg: #ffffff;
+    --brand-bg-muted: #f5f7fa;
+    --brand-text: #000000;
+    --brand-border: #d1d5db;
+  }
+
+  [data-theme='dark'] {
+    --brand-bg: #104179;
+    --brand-bg-muted: #0c325c;
+    --brand-text: #ffffff;
+    --brand-border: #1b4f8a;
+  }
+}
+
+@layer base {
+  body {
+    background-color: var(--brand-bg);
+    color: var(--brand-text);
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+      'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+}
+
+
+@layer components {
+  input,
+  textarea,
+  select {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid var(--brand-border);
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--brand-accent);
+    box-shadow: 0 0 0 2px rgba(133, 194, 38, 0.4);
+  }
+
+  [data-theme='dark'] input,
+  [data-theme='dark'] textarea,
+  [data-theme='dark'] select {
+    background-color: var(--brand-bg-muted);
+    color: #ffffff;
+    border-color: var(--brand-border);
+  }
+}
+
+
+
+/* ------------------------------------------------------------
+   CARDS / PANELS
+------------------------------------------------------------ */
+@layer components {
+  .card,
+  .dashboard-panel {
+    background-color: #ffffff;
+    border: 1px solid var(--brand-border);
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  [data-theme='dark'] .card,
+  [data-theme='dark'] .dashboard-panel {
+    background-color: var(--brand-bg-muted);
+    border-color: var(--brand-border);
+  }
+}
+
+
+/* ------------------------------------------------------------
+   TABLES
+------------------------------------------------------------ */
+@layer components {
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead {
+    background-color: var(--brand-primary);
+    color: #ffffff;
+  }
+
+  th,
+  td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--brand-border);
+    text-align: left;
+  }
+
+  tbody tr:hover {
+    background-color: var(--brand-bg-muted);
+  }
+}
+
+/* ------------------------------------------------------------
+   UTILITIES
+------------------------------------------------------------ */
+@layer utilities {
+  .text-brand {
+    color: var(--brand-primary);
+  }
+
+  .bg-brand {
+    background-color: var(--brand-primary);
+  }
+
+  .bg-accent {
+    background-color: var(--brand-accent);
+  }
+
+  .ring-brand {
+    --tw-ring-color: var(--brand-accent);
+  }
+}
