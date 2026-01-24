@@ -5,7 +5,7 @@ export const Secretariat: CollectionConfig = {
   admin: {
     useAsTitle: 'full_name',
     description: 'Add Secretariat Member',
-    group: 'Secretariat Collection',
+    group: 'Administration',
   },
   fields: [
     {

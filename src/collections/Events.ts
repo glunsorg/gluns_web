@@ -6,7 +6,7 @@ export const Events: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     description: 'Add Event',
-    group: 'Events Collection',
+    group: 'Administration',
   },
   fields: [
     {

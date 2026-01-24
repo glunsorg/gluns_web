@@ -2,6 +2,11 @@ import { CollectionConfig } from 'payload'
 
 export const Resources: CollectionConfig = {
   slug: 'resources',
+  admin: {
+    useAsTitle: 'title',
+    description: 'Add Resource',
+    group: 'Publications',
+  },
   fields: [
     {
       name: 'title',

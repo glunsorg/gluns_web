@@ -11,7 +11,7 @@ const Blog: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'publishedDate', 'author', 'status'],
-    group: 'Content',
+    group: 'Publications',
   },
   access: {
     read: ({ req }) => req.user?.roles === 'admin',

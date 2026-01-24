@@ -80,6 +80,7 @@ export interface Config {
     committees: Committee;
     'committee-categories': CommitteeCategory;
     'committee-team': CommitteeTeam;
+    secretariat: Secretariat;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -100,6 +101,7 @@ export interface Config {
     committees: CommitteesSelect<false> | CommitteesSelect<true>;
     'committee-categories': CommitteeCategoriesSelect<false> | CommitteeCategoriesSelect<true>;
     'committee-team': CommitteeTeamSelect<false> | CommitteeTeamSelect<true>;
+    secretariat: SecretariatSelect<false> | SecretariatSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -410,6 +412,22 @@ export interface CommitteeTeam {
   createdAt: string;
 }
 /**
+ * Add Secretariat Member
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "secretariat".
+ */
+export interface Secretariat {
+  id: number;
+  full_name: string;
+  role: string;
+  photo?: (number | null) | Portrait;
+  email: string;
+  bio: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -484,6 +502,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'committee-team';
         value: number | CommitteeTeam;
+      } | null)
+    | ({
+        relationTo: 'secretariat';
+        value: number | Secretariat;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -729,6 +751,19 @@ export interface CommitteeTeamSelect<T extends boolean = true> {
   rank?: T;
   photo?: T;
   committee?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "secretariat_select".
+ */
+export interface SecretariatSelect<T extends boolean = true> {
+  full_name?: T;
+  role?: T;
+  photo?: T;
+  email?: T;
+  bio?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -24,3 +24,14 @@ export interface Delegation {
   delegates: Delegate[]
   facultyAdvisors: FacultyAdvisor[]
 }
+
+// app/types/types.ts
+export interface SecretariatMember {
+  id: number
+  name: string
+  role: string
+  email: string
+  bio: string
+  photoUrl: string
+  photoAlt?: string
+}

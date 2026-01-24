@@ -4,6 +4,7 @@ export const Payments: CollectionConfig = {
   slug: 'payments',
   admin: {
     useAsTitle: 'reference',
+    group: 'Administration',
   },
   access: {
     read: ({ req }) => req.user?.roles === 'admin',

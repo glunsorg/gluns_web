@@ -9,7 +9,7 @@ import sharp from 'sharp'
 import { Users } from './collections/Users'
 import { Media } from './collections/media/Media'
 import { Documents } from './collections/media/Documents'
-import { Portraits } from './collections/Portraits'
+import { Portraits } from './collections/media/Portraits'
 import { DelegationApplications } from './collections/delegation/DelegationApplication'
 import { Delegations } from './collections/delegation/Delegations'
 import { Delegates } from './collections/delegation/Delegates'
@@ -20,6 +20,9 @@ import Blog from './collections/Blog'
 import { Committees } from './collections/committee/Committees'
 import { CommitteeCategories } from './collections/committee/CommitteeCategories'
 import { CommitteeTeam } from './collections/committee/CommitteeTeam'
+
+// secretariat
+import { Secretariat } from './collections/Secretariat'
 
 import { Faculty } from './collections/delegation/Faculty'
 
@@ -49,6 +52,7 @@ export default buildConfig({
     Committees,
     CommitteeCategories,
     CommitteeTeam,
+    Secretariat,
   ],
   serverURL: process.env.NEXT_PUBLIC_PAYLOAD_URL,
   editor: lexicalEditor(),
