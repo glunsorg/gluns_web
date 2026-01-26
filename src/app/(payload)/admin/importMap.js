@@ -1,4 +1,3 @@
-import { default as default_e83a313cb38ee2171d465c2aa06a8837 } from '../../../admin/AssignCountriesButton'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { LexicalDiffComponent as LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -26,7 +25,6 @@ import { default as default_03ec9ad23b0bb66bfcac66241d9063eb } from '../../../co
 import { default as default_078be3ac59220a397a1074e5597d364f } from '../../../components/admin/Logo'
 
 export const importMap = {
-  "./admin/AssignCountriesButton#default": default_e83a313cb38ee2171d465c2aa06a8837,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#LexicalDiffComponent": LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e,

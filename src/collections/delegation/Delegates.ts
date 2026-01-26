@@ -7,9 +7,6 @@ export const Delegates: CollectionConfig = {
   admin: {
     useAsTitle: 'email',
     group: 'Delegation Management',
-    components: {
-      beforeList: ['./admin/AssignCountriesButton'],
-    },
     defaultColumns: ['firstName', 'lastName', 'email', 'delegation', 'country'],
   },
   access: {
@@ -68,6 +65,13 @@ export const Delegates: CollectionConfig = {
       relationTo: 'countries',
       required: false,
       unique: true, // ensures one country per delegate
+    },
+    {
+      name: 'committee',
+      type: 'relationship',
+      relationTo: 'committees',
+      required: false,
+      hasMany: true,
     },
     {
       name: 'positionPaper',

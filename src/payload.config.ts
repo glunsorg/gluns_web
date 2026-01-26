@@ -34,7 +34,6 @@ import { Faculty } from './collections/delegation/Faculty'
 import { Payments } from './collections/administration/Payments'
 
 // endpoints
-import { assignCountriesEndpoint } from './endpoints/assignCountries'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -69,7 +68,6 @@ export default buildConfig({
       robots: 'noindex, nofollow',
     },
   },
-  endpoints: [assignCountriesEndpoint],
 
   collections: [
     Users,
