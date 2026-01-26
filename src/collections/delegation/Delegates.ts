@@ -13,6 +13,7 @@ export const Delegates: CollectionConfig = {
     read: ({ req }) => req.user?.roles === 'admin' || req.user?.roles === 'teacher',
     create: ({ req }) => req.user?.roles === 'admin' || req.user?.roles === 'teacher',
     update: ({ req, data }) => req.user?.roles === 'admin' || req.user?.id === data?.teacher,
+    delete: ({ req, data }) => req.user?.roles === 'admin' || req.user?.id === data?.teacher,
   },
   hooks: {
     beforeChange: [enforceDelegateOwnership, ensurePaidSlots],

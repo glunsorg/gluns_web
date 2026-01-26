@@ -49,7 +49,8 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
         lastName: body.lastName,
         email: body.email,
         phoneNumber: body.phoneNumber,
-        // teacher field is NOT updated (enforced server-side)
+        committee: body.committee,
+        country: body.country,
       },
     })
 
