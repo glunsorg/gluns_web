@@ -90,7 +90,7 @@ export default buildConfig({
     PositionPapers,
     CommitteeAssignments,
   ],
-  serverURL: process.env.NEXT_PUBLIC_BASE_URL,
+  serverURL: process.env.NEXT_PUBLIC_PAYLOAD_URL,
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
