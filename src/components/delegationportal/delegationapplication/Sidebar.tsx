@@ -1,4 +1,4 @@
-import { Globe, FileText, UserPlus, Briefcase, Upload, X, AlertCircle } from 'lucide-react'
+import { Globe, FileText, UserPlus, Briefcase, X, AlertCircle } from 'lucide-react'
 
 type SidebarProps = {
   status: string

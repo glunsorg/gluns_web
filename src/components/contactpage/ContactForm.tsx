@@ -1,30 +1,28 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Send, CheckCircle, AlertCircle, User, Mail, MessageSquare } from 'lucide-react'
+import {
+  Send,
+  CheckCircle,
+  AlertCircle,
+  User,
+  Mail,
+  MessageSquare,
+  LoaderCircle,
+} from 'lucide-react'
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
-    name: '',
+    id: '',
+    full_name: '',
     email: '',
     subject: '',
     message: '',
-    budget: '',
-    timeline: '',
-    projectType: '',
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [errors, setErrors] = useState<{
-    name?: string
-    email?: string
-    subject?: string
-    message?: string
-    budget?: string
-    timeline?: string
-    projectType?: string
-  }>({})
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -42,64 +40,70 @@ export default function ContactForm() {
     }
   }
 
-  const validateForm = (): {
-    name?: string
-    email?: string
-    subject?: string
-    message?: string
-    budget?: string
-    timeline?: string
-    projectType?: string
-  } => {
-    const newErrors: {
-      name?: string
-      email?: string
-      subject?: string
-      message?: string
-      budget?: string
-      timeline?: string
-      projectType?: string
-    } = {}
+  const validateForm = (elements: HTMLFormControlsCollection) => {
+    const newErrors: Record<string, string> = {}
+    let isValid = true
 
-    if (!formData.name.trim()) newErrors.name = 'Name is required'
-    if (!formData.email.trim()) newErrors.email = 'Email is required'
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid'
-    if (!formData.subject.trim()) newErrors.subject = 'Subject is required'
-    if (!formData.message.trim()) newErrors.message = 'Message is required'
+    Array.from(elements)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .filter((el: any) => el.full_name && el.required)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .forEach((el: any) => {
+        if (!el.value.trim()) {
+          newErrors[el.full_name] = `${el.full_name} is required`
+          isValid = false
+        } else if (el.type === 'email' && !/^\S+@\S+\.\S+$/.test(el.value)) {
+          newErrors[el.full_name] = 'Please enter a valid email address'
+          isValid = false
+        }
+      })
 
-    return newErrors
+    setErrors(newErrors)
+    return isValid
   }
+
+  useEffect(() => {
+    fetch('/api/get-form')
+      .then((res) => res.json())
+      .then((data) => setFormData(data))
+      .catch(() => console.error('Could not load form data'))
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const formEl = e.currentTarget
 
-    const formErrors = validateForm()
-    if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors)
-      return
+    if (!validateForm(formEl.elements)) return
+
+    const payload = {
+      form: formData.id,
+      submissionData: Array.from(formEl.elements)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .filter((el: any) => el.name)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .map((el: any) => ({ field: el.name, value: el.value })),
     }
 
     setIsSubmitting(true)
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    setIsSubmitting(false)
-    setIsSubmitted(true)
-
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setIsSubmitted(false)
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
-        budget: '',
-        timeline: '',
-        projectType: '',
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/form-submissions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
       })
-    }, 3000)
+
+      if (res.ok) {
+        setIsSubmitted(true)
+        formEl.reset()
+      } else {
+        throw new Error('Form submission failed')
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      setErrors({ form: 'There was a problem submitting your form. Please try again.' })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const containerVariants = {
@@ -122,6 +126,19 @@ export default function ContactForm() {
       transition: { duration: 0.6 },
     },
   }
+
+  if (!formData)
+    return (
+      <section className="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+        <div className="bg-[#104179] border border-[#85cc26] rounded-lg p-6 sm:p-8 text-center flex flex-col items-center space-y-4 shadow-md max-w-md mx-auto">
+          <LoaderCircle className="w-10 h-10 text-white animate-spin" />
+          <h3 className="text-lg sm:text-xl font-semibold text-white">Please Wait!</h3>
+          <p className="text-gray-50 text-sm sm:text-base">
+            We{"'"}re loading the contact form for you.
+          </p>
+        </div>
+      </section>
+    )
 
   if (isSubmitted) {
     return (
@@ -157,10 +174,11 @@ export default function ContactForm() {
     >
       <motion.div variants={itemVariants} className="mb-8">
         <h2 className="text-4xl lg:text-5xl font-bold text-[#104179] dark:text-white mb-4">
-  Connect With Our Team
+          Connect With Our Team
         </h2>
         <p className="text-gray-600 dark:text-gray-400 text-lg">
-  Share your inquiry with us - whether it{"'"}s about participation, partnerships, or support, we{"'"}re here to help you take the next step.
+          Share your inquiry with us - whether it{"'"}s about participation, partnerships, or
+          support, we{"'"}re here to help you take the next step.
         </p>
       </motion.div>
 
@@ -175,25 +193,25 @@ export default function ContactForm() {
               <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
-                name="name"
-                value={formData.name}
+                name="full_name"
+                value={formData.full_name}
                 onChange={handleChange}
                 className={`w-full pl-12 pr-4 py-4 rounded-2xl border-2 transition-all duration-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400
                   ${
-                    errors.name
+                    errors.full_name
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
                       : 'border-gray-200 dark:border-gray-700 focus:border-[#85c226]'
                   } focus:outline-none`}
                 placeholder="John Doe"
               />
-              {errors.name && (
+              {errors.full_name && (
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="flex items-center gap-1 text-red-500 text-sm mt-2"
                 >
                   <AlertCircle className="w-4 h-4" />
-                  {errors.name}
+                  {errors.full_name}
                 </motion.div>
               )}
             </div>
@@ -265,7 +283,7 @@ export default function ContactForm() {
         {/* Message */}
         <motion.div variants={itemVariants}>
           <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            Project Details *
+            Message *
           </label>
           <div className="relative">
             <MessageSquare className="absolute left-4 top-6 text-gray-400 w-5 h-5" />

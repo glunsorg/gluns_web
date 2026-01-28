@@ -5,6 +5,9 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
+import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
+import nodemailer from 'nodemailer'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/media/Media'
@@ -99,7 +102,38 @@ export default buildConfig({
     },
   }),
   sharp,
+  email: nodemailerAdapter({
+    defaultFromAddress: `${process.env.SMTP_USER}`,
+    defaultFromName: 'Global Leaders UN Symposium',
+    transport: await nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT),
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    }),
+  }),
   plugins: [
-    // storage-adapter-placeholder
+    formBuilderPlugin({
+      fields: {
+        text: true,
+        textarea: true,
+        email: true,
+        number: true,
+        payment: false,
+      },
+      defaultToEmail: 'info.gluns@gmail.com',
+      formOverrides: {
+        admin: {
+          group: 'Forms',
+        },
+      },
+      formSubmissionOverrides: {
+        admin: {
+          group: 'Forms',
+        },
+      },
+    }),
   ],
 })

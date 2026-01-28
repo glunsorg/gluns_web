@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { FacultyAdvisor, Delegation } from '@/app/types/types'
+import { FacultyAdvisor } from '@/app/types/types'
 import { apiFetch } from '@/app/utils/apiFetch'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useFacultyAdvisors(user: any | null, delegation: any | null) {
   const [facultyAdvisors, setFacultyAdvisors] = useState<FacultyAdvisor[]>([])
   const [fetching, setFetching] = useState(true)

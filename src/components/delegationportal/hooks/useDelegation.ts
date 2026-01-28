@@ -32,6 +32,7 @@ export function useDelegation(user: any, setUser: any) {
     }
 
     fetchDelegation()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   const saveDelegation = async () => {

@@ -1,6 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function CommitteeMembers({ members }: { members: any[] }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">

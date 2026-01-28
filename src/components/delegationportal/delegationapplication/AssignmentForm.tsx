@@ -49,6 +49,7 @@ export default function AssignmentFormModal({ assignment, onClose, onSaved }: Pr
 
       const updated = await patchRes.json()
       onSaved(updated.assignment)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(err)
       alert(err.message || 'Failed to upload position paper')
