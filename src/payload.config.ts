@@ -19,6 +19,7 @@ import { Delegations } from './collections/delegation/Delegations'
 import { Delegates } from './collections/delegation/Delegates'
 
 import Blog from './collections/Blog'
+import { Events } from './collections/administration/Events'
 
 // assignments
 import { PositionPapers } from './collections/delegation/PositionPapers'
@@ -82,6 +83,7 @@ export default buildConfig({
     Delegates,
     Faculty,
     Payments,
+    Events,
     Blog,
     Committees,
     CommitteeCategories,
@@ -91,7 +93,7 @@ export default buildConfig({
     PositionPapers,
     CommitteeAssignments,
   ],
-  serverURL: process.env.NEXT_PUBLIC_PAYLOAD_URL,
+  serverURL: process.env.NEXT_PUBLIC_BASE_URL,
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

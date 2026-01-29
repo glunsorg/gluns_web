@@ -76,6 +76,7 @@ export interface Config {
     delegates: Delegate;
     'faculty-advisors': FacultyAdvisor;
     payments: Payment;
+    event: Event;
     blog: Blog;
     committees: Committee;
     'committee-categories': CommitteeCategory;
@@ -102,6 +103,7 @@ export interface Config {
     delegates: DelegatesSelect<false> | DelegatesSelect<true>;
     'faculty-advisors': FacultyAdvisorsSelect<false> | FacultyAdvisorsSelect<true>;
     payments: PaymentsSelect<false> | PaymentsSelect<true>;
+    event: EventSelect<false> | EventSelect<true>;
     blog: BlogSelect<false> | BlogSelect<true>;
     committees: CommitteesSelect<false> | CommitteesSelect<true>;
     'committee-categories': CommitteeCategoriesSelect<false> | CommitteeCategoriesSelect<true>;
@@ -330,6 +332,40 @@ export interface Payment {
   amount: number;
   status?: ('pending' | 'paid' | 'failed') | null;
   reference?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Add Event
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event".
+ */
+export interface Event {
+  id: number;
+  title: string;
+  slug: string;
+  subtitle?: string | null;
+  banner?: (number | null) | Media;
+  description: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  location: string;
+  date: string;
+  cost?: number | null;
+  currency?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -734,6 +770,10 @@ export interface PayloadLockedDocument {
         value: number | Payment;
       } | null)
     | ({
+        relationTo: 'event';
+        value: number | Event;
+      } | null)
+    | ({
         relationTo: 'blog';
         value: number | Blog;
       } | null)
@@ -967,6 +1007,23 @@ export interface PaymentsSelect<T extends boolean = true> {
   amount?: T;
   status?: T;
   reference?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event_select".
+ */
+export interface EventSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  subtitle?: T;
+  banner?: T;
+  description?: T;
+  location?: T;
+  date?: T;
+  cost?: T;
+  currency?: T;
   updatedAt?: T;
   createdAt?: T;
 }
