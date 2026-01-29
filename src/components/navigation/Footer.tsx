@@ -85,7 +85,7 @@ export default function Footer() {
               </h3>
               <ul className="space-y-3">
                 {[
-                  { name: 'Register', href: '/registration' },
+                  { name: 'Register', href: '/authentication' },
                   { name: 'Guidelines', href: '/guidelines' },
                   { name: 'FAQs', href: '/faqs' },
                   { name: 'Sponsorship', href: '/sponsors' },
@@ -122,7 +122,7 @@ export default function Footer() {
                   className="w-11 h-11 2xl:w-16 2xl:h-16 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 
     hover:bg-[#104179] hover:text-white hover:scale-110 transition-all duration-300 shadow-sm"
                 >
-                  <FaFacebookF size={18} className='w-6 h-6 2xl:w-9 2xl:h-9'/>
+                  <FaFacebookF size={18} className="w-6 h-6 2xl:w-9 2xl:h-9" />
                 </Link>
 
                 {/* Instagram */}
@@ -132,7 +132,7 @@ export default function Footer() {
                   className="w-11 h-11 2xl:w-16 2xl:h-16 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 
     hover:bg-[#104179] hover:text-white hover:scale-110 transition-all duration-300 shadow-sm"
                 >
-                  <FaInstagram size={18} className='w-6 h-6 2xl:w-9 2xl:h-9'/>
+                  <FaInstagram size={18} className="w-6 h-6 2xl:w-9 2xl:h-9" />
                 </Link>
 
                 {/* X (Twitter) */}
@@ -142,7 +142,7 @@ export default function Footer() {
                   className="w-11 h-11 2xl:w-16 2xl:h-16 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 
     hover:bg-[#104179] hover:text-white hover:scale-110 transition-all duration-300 shadow-sm"
                 >
-                  <FaXTwitter size={18} className='w-6 h-6 2xl:w-9 2xl:h-9'/>
+                  <FaXTwitter size={18} className="w-6 h-6 2xl:w-9 2xl:h-9" />
                 </Link>
 
                 {/* LinkedIn */}
@@ -152,7 +152,7 @@ export default function Footer() {
                   className="w-11 h-11 2xl:w-16 2xl:h-16 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 
     hover:bg-[#104179] hover:text-white hover:scale-110 transition-all duration-300 shadow-sm"
                 >
-                  <FaLinkedinIn size={18} className='w-6 h-6 2xl:w-9 2xl:h-9'/>
+                  <FaLinkedinIn size={18} className="w-6 h-6 2xl:w-9 2xl:h-9" />
                 </Link>
               </div>
             </div>
@@ -161,28 +161,10 @@ export default function Footer() {
 
         {/* Bottom Section */}
         <div className="border-t border-gray-200 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex flex-col md:flex-row justify-center items-center">
             <p className="text-gray-500 text-sm 2xl:text-2xl">
               © {new Date().getFullYear()} GLUNS. All Rights Reserved.
             </p>
-
-            <div className="flex gap-6 text-sm">
-              <Link
-                href="/privacy"
-                className="text-gray-500 hover:text-[#104179] 2xl:text-2xl transition-colors"
-              >
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="text-gray-500 hover:text-[#104179] 2xl:text-2xl transition-colors">
-                Terms of Service
-              </Link>
-              <Link
-                href="/cookies"
-                className="text-gray-500 hover:text-[#104179] 2xl:text-2xl transition-colors"
-              >
-                Cookies
-              </Link>
-            </div>
           </div>
         </div>
       </div>
