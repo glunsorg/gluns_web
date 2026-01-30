@@ -46,6 +46,17 @@ export default function CountryAssignmentsForm({ delegationId }: Props) {
     setEditingAssignment(null)
   }
 
+  useEffect(() => {
+    if (editingAssignment) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [editingAssignment])
+
   if (loading) return <Loading />
 
   return (

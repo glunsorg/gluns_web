@@ -112,7 +112,7 @@ export default function AssignmentFormModal({ assignment, onClose, onSaved }: Pr
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden border-2 border-[#104179]/20 animate-in fade-in zoom-in duration-300">
+      <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border-2 border-[#104179]/20 animate-in fade-in zoom-in duration-300">
         {/* Header */}
         <div className="bg-[#104179] px-6 py-5 border-b-4 border-[#85c226] flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -136,25 +136,7 @@ export default function AssignmentFormModal({ assignment, onClose, onSaved }: Pr
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
-          {/* Delegate Info */}
-          <div className="bg-[#104179]/5 border-2 border-[#104179]/20 rounded-xl p-4">
-            <div className="flex items-center gap-3 mb-2">
-              <FileText className="w-5 h-5 text-[#85c226]" />
-              <h4 className="font-bold text-[#104179]">Delegate Information</h4>
-            </div>
-            <p className="text-sm text-[#104179]/70">
-              <span className="font-semibold">Primary Delegate:</span> {primaryDelegate.firstName}{' '}
-              {primaryDelegate.lastName}
-            </p>
-            {assignment.delegates[1] && (
-              <p className="text-sm text-[#104179]/70">
-                <span className="font-semibold">Secondary Delegate:</span>{' '}
-                {assignment.delegates[1].firstName} {assignment.delegates[1].lastName}
-              </p>
-            )}
-          </div>
-
+        <div className="p-6 space-y-6 overflow-y-auto flex-1">
           {/* Error Alert */}
           {error && (
             <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">

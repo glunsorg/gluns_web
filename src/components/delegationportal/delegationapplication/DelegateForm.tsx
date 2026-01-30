@@ -112,7 +112,7 @@ export default function DelegateForm({ open, delegate, onClose, onSaved }: Props
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="sm:max-w-2xl p-0 gap-0 rounded-2xl border-2 border-[#104179]/20 overflow-hidden">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] p-0 gap-0 rounded-2xl border-2 border-[#104179]/20 overflow-hidden">
         <form onSubmit={handleSave}>
           {/* Header */}
           <div className="bg-[#104179] px-6 py-5 border-b-4 border-[#85c226]">
@@ -140,7 +140,7 @@ export default function DelegateForm({ open, delegate, onClose, onSaved }: Props
           </div>
 
           {/* Content */}
-          <div className="p-6 space-y-6">
+          <div className="p-6 space-y-6 overflow-y-auto flex-1">
             {/* Error Alert */}
             {error && (
               <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
