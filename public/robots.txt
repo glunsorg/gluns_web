@@ -1,0 +1,30 @@
+# =========================================
+# Robots.txt for GLUNS (Global Leaders United Nations Symposium)
+# =========================================
+
+# All user agents
+User-agent: *
+# Public pages allowed
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /events
+Allow: /committees
+Allow: /blog
+Allow: /faqs
+Allow: /sponsors
+Allow: /authentication
+Allow: /the-secretariat
+
+# Sensitive pages disallowed
+Disallow: /admin/
+Disallow: /api/
+Disallow: /__next/
+Disallow: /payments/
+Disallow: /delegation-applications/
+Disallow: /delegation-portal
+Disallow: /position-papers/
+
+# Sitemap location
+Sitemap: https://www.gluns.org/sitemap.xml
+Host: https://www.gluns.org

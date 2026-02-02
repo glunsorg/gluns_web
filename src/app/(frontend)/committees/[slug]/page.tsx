@@ -21,6 +21,102 @@ import { fetchCommittee } from '@/data/committeeFetch'
 import { fetchCommitteeTeam } from '@/data/committeeFetch'
 import CommitteeMembers from '@/components/committeepage/CommitteeMembers'
 
+import type { Metadata } from 'next'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+
+  const payloadConfig = await config
+  const payload = await getPayload({ config: payloadConfig })
+
+  const { docs } = await payload.find({
+    collection: 'committees',
+    where: {
+      slug: { equals: slug },
+    },
+    depth: 2,
+  })
+
+  const committee = docs[0]
+
+  if (!committee) {
+    return {
+      title: 'Committee Not Found | GLUNS',
+      description:
+        'This GLUNS committee could not be found. Explore our Model United Nations committees and leadership simulations in Kenya, Africa, and internationally.',
+    }
+  }
+
+  const title = `${committee.title} | GLUNS Committee`
+  const description =
+    committee.description ||
+    `Discover the ${committee.title} committee at GLUNS, a Model United Nations simulation empowering students in Kenya, Africa, and around the world.`
+
+  const imageUrl =
+    typeof committee?.committee_photo === 'object' && committee.committee_photo?.url
+      ? committee.committee_photo.url
+      : '/seo/committee.jpg'
+
+  const url = `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/committee/${slug}`
+
+  return {
+    title,
+    description,
+    metadataBase: new URL(`${process.env.NEXT_PUBLIC_PAYLOAD_URL}`),
+
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: 'GLUNS',
+      images: [
+        {
+          url: imageUrl,
+          secureUrl: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: committee.title,
+        },
+      ],
+      type: 'article',
+      locale: 'en_KE',
+    },
+
+    alternates: {
+      canonical: url,
+    },
+
+    keywords: [
+      // Brand
+      'GLUNS',
+      'Global Leaders United Nations Symposium',
+
+      // Committee / Core
+      'Model United Nations committee',
+      'MUN committee',
+      'Student diplomacy committee',
+      'High school MUN committee',
+
+      // Geography
+      'Model United Nations Kenya',
+      'MUN Kenya',
+      'Model United Nations Africa',
+      'MUN Africa',
+      'International Model United Nations',
+
+      // Leadership / Education
+      'Youth leadership programs',
+      'Student leadership simulation',
+      'Diplomacy education',
+      'Global affairs education',
+    ],
+  }
+}
+
 export default async function CommitteePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const payloadConfig = await config

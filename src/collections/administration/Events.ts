@@ -8,6 +8,12 @@ export const Events: CollectionConfig = {
     description: 'Add Event',
     group: 'Administration',
   },
+  access: {
+    read: () => true,
+    create: ({ req }) => req.user?.roles === 'admin',
+    update: ({ req }) => req.user?.roles === 'admin',
+    delete: ({ req }) => req.user?.roles === 'admin',
+  },
   fields: [
     {
       name: 'title',

@@ -17,8 +17,104 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import Link from 'next/link'
+import type { Metadata } from 'next'
 
 import { fetchEvents } from '@/data/eventFetch'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+
+  const payloadConfig = await config
+  const payload = await getPayload({ config: payloadConfig })
+
+  const { docs } = await payload.find({
+    collection: 'event',
+    where: {
+      slug: { equals: slug },
+    },
+    depth: 2,
+  })
+
+  const event = docs[0]
+
+  if (!event) {
+    return {
+      title: 'Event Not Found | GLUNS',
+      description:
+        'This GLUNS event could not be found. Explore our upcoming Model United Nations conferences and global youth leadership events.',
+    }
+  }
+
+  const title = `${event.title} | GLUNS Model United Nations`
+  const description =
+    event.subtitle ||
+    `Join ${event.title}, a GLUNS Model United Nations event bringing together students for diplomacy, debate, and leadership in Kenya, Africa, and internationally.`
+
+  const imageUrl =
+    typeof event?.banner === 'object' && event.banner?.url ? event.banner.url : '/seo/events.jpg'
+
+  const url = `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/events/${slug}`
+
+  return {
+    title,
+    description,
+    metadataBase: new URL(`${process.env.NEXT_PUBLIC_PAYLOAD_URL}`),
+
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: 'GLUNS',
+      images: [
+        {
+          url: imageUrl,
+          secureUrl: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: event.title,
+        },
+      ],
+      type: 'article',
+      locale: 'en_KE',
+    },
+
+    alternates: {
+      canonical: url,
+    },
+
+    keywords: [
+      // Brand
+      'GLUNS',
+      'Global Leaders United Nations Symposium',
+
+      // Core
+      'Model United Nations',
+      'Model UN',
+      'MUN',
+
+      // Event-specific
+      'Model United Nations conference',
+      'MUN conference',
+      'Student diplomacy conference',
+
+      // Geography
+      'Model United Nations Kenya',
+      'MUN Kenya',
+      'Model United Nations Africa',
+      'MUN Africa',
+      'International Model United Nations',
+
+      // Audience
+      'High school MUN',
+      'Youth leadership conference',
+      'Global youth diplomacy',
+    ],
+  }
+}
 
 export default async function CommitteePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params

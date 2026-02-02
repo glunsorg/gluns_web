@@ -18,6 +18,100 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 
+import type { Metadata } from 'next'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+
+  const payloadConfig = await config
+  const payload = await getPayload({ config: payloadConfig })
+
+  const { docs } = await payload.find({
+    collection: 'blog',
+    where: {
+      slug: { equals: slug },
+    },
+    depth: 2,
+  })
+
+  const post = docs[0]
+
+  if (!post) {
+    return {
+      title: 'Publication Not Found | GLUNS',
+      description:
+        'This GLUNS publication could not be found. Explore our Model United Nations articles, insights, and global diplomacy resources.',
+    }
+  }
+
+  const title = `${post.title} | GLUNS Publications`
+  const description =
+    post.snippet ||
+    'Read insights from GLUNS on Model United Nations, diplomacy, youth leadership, and global affairs across Kenya, Africa, and internationally.'
+
+  const imageUrl =
+    typeof post?.coverImage === 'object' && post.coverImage?.url
+      ? post.coverImage.url
+      : '/light.png'
+  const url = `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/blog/${slug}`
+
+  return {
+    title,
+    description,
+    metadataBase: new URL(`${process.env.NEXT_PUBLIC_PAYLOAD_URL}`),
+
+    openGraph: {
+      title: `${title} | GLUNS`,
+      description: description,
+      url: url,
+      siteName: 'GLUNS',
+      images: [
+        {
+          url: imageUrl,
+          secureUrl: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      type: 'article',
+      locale: 'en_US',
+    },
+
+    alternates: {
+      canonical: url,
+    },
+
+    keywords: [
+      // Brand
+      'GLUNS',
+      'Global Leaders United Nations Symposium',
+
+      // Core Topic
+      'Model United Nations',
+      'Model UN',
+      'MUN',
+
+      // Geography
+      'Model United Nations Kenya',
+      'MUN Kenya',
+      'Model United Nations Africa',
+      'MUN Africa',
+      'International Model United Nations',
+
+      // Content
+      'Youth diplomacy',
+      'Global affairs',
+      'International relations',
+      'Student leadership',
+    ],
+  }
+}
+
 export default async function PublicationPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const payloadConfig = await config
