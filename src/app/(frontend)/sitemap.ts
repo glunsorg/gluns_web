@@ -15,11 +15,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (!committeesRes.ok) throw new Error(`Failed to fetch committees: ${committeesRes.statusText}`)
   if (!blogsRes.ok) throw new Error(`Failed to fetch blogs: ${blogsRes.statusText}`)
 
-  const committees: { slug: string }[] = await committeesRes.json()
-  const blogs: { slug: string }[] = await blogsRes.json()
+  const committeesData = await committeesRes.json()
+  const committees: { slug: string }[] = committeesData.docs ?? []
+
+  const blogsData = await blogsRes.json()
+  const blogs: { slug: string }[] = blogsData.docs ?? []
 
   const committeeEntries: MetadataRoute.Sitemap = committees.map((c) => ({
-    url: `${siteUrl}/committee/${c.slug}`,
+    url: `${siteUrl}/committees/${c.slug}`,
     lastModified: new Date().toISOString(),
     changeFrequency: 'monthly',
     priority: 0.7,
