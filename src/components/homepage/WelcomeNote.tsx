@@ -25,7 +25,7 @@ export default function WelcomeNote() {
             <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               A Word from the{' '}
               <span className="text-white relative inline-block">
-                Secretary General
+                Administration
                 <div className="absolute -bottom-2 left-0 right-0 h-1 bg-white opacity-20 rounded-full"></div>
               </span>
             </h2>
@@ -52,7 +52,7 @@ export default function WelcomeNote() {
                       <Image
                         width={600}
                         height={750}
-                        src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&h=750&fit=crop"
+                        src="/images/anisa.JPG"
                         alt="Secretary General"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />
@@ -60,14 +60,16 @@ export default function WelcomeNote() {
 
                       {/* Badge overlay */}
                       <div className="absolute top-4 right-4 bg-[#104179]/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
-                        <p className="text-white font-bold text-sm">GLUNS 2025</p>
+                        <p className="text-white font-bold text-sm">GLUNS 2026</p>
                       </div>
                     </div>
 
                     {/* Info Card */}
                     <div className="p-6 bg-white">
-                      <h3 className="text-2xl font-bold text-[#104179] mb-2">James Mitchell</h3>
-                      <p className="text-[#104179] font-semibold mb-1">Secretary General</p>
+                      <h3 className="text-2xl font-bold text-[#104179] mb-2">Anisa Ali</h3>
+                      <p className="text-[#104179] font-semibold mb-1">
+                        Director of Administration
+                      </p>
                       <p className="text-gray-500 text-sm mb-4">
                         Global Leaders United Nations Symposium
                       </p>
@@ -118,16 +120,16 @@ export default function WelcomeNote() {
                       className="text-3xl md:text-4xl font-bold text-[#104179] italic"
                       style={{ fontFamily: 'Georgia, serif' }}
                     >
-                      Dr. James Mitchell
+                      Anisa Ali
                     </div>
-                    <p className="text-sm text-gray-600 font-medium">Secretary General</p>
+                    <p className="text-sm text-gray-600 font-medium">Director of Adminstration</p>
                     <p className="text-xs text-gray-500">Global Leaders United Nations Symposium</p>
                   </div>
 
                   <div className="flex items-center gap-3">
                     <div className="text-right mr-4">
                       <p className="text-xs text-gray-500 uppercase tracking-wide">Dated</p>
-                      <p className="text-sm font-semibold text-gray-700">December 2025</p>
+                      <p className="text-sm font-semibold text-gray-700">December 2026</p>
                     </div>
                     <div className="w-20 h-20 border-2 border-[#104179] rounded-lg flex items-center justify-center">
                       <div className="text-center">
