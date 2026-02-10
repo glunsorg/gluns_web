@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import React from 'react'
 import SecHero from '@/components/secretariatpage/SecHero'
 import SecListServer from '@/components/secretariatpage/SecList.server'

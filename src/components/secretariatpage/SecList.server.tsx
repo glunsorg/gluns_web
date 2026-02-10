@@ -1,4 +1,6 @@
 // app/components/secretariat/SecList.server.tsx
+export const dynamic = 'force-dynamic'
+
 import SecList from './SecList'
 import { fetchSecretariat } from '@/data/secretariatFetch'
 

@@ -1,4 +1,6 @@
 'use client'
+export const dynamic = 'force-dynamic'
+
 import React, { useState } from 'react'
 import { Mail, ArrowUpRight, X } from 'lucide-react'
 import Image from 'next/image'
