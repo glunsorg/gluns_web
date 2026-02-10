@@ -9,6 +9,7 @@ export async function fetchSecretariat() {
     collection: 'secretariat',
     depth: 2,
     pagination: false,
+    sort: 'createdAt',
   })
 
   const secretariat = result.docs.map((doc) => {

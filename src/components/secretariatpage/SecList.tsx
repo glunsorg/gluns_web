@@ -38,7 +38,7 @@ export default function SecList({ secretariat }: { secretariat: SecretariatMembe
               onClick={() => setSelectedMember(sec)}
               className={`relative cursor-pointer group ${
                 index === 0 ? 'md:col-span-2 md:row-span-2' : ''
-              } ${index === 3 ? 'lg:col-span-2' : ''}`}
+              } }`}
             >
               <div className="relative h-full min-h-[400px] overflow-hidden">
                 {/* Image Container */}
