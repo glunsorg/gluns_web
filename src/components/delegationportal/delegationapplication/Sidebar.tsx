@@ -1,14 +1,16 @@
 import {
   Globe,
   FileText,
-  UserPlus,
-  Briefcase,
+  Users,
   X,
   AlertCircle,
   SettingsIcon,
   CheckCircle2,
+  LayoutDashboard,
+  Home,
+  UserCircle,
 } from 'lucide-react'
-import Image from 'next/image'
+import Link from 'next/link'
 
 type SidebarProps = {
   status: string
@@ -17,6 +19,7 @@ type SidebarProps = {
   activeSection: string
   onSectionChange: (section: string) => void
   isDelegateAccount?: boolean
+  userName?: string
 }
 
 export function Sidebar({
@@ -26,25 +29,18 @@ export function Sidebar({
   activeSection,
   onSectionChange,
   isDelegateAccount,
+  userName,
 }: SidebarProps) {
-  const menuItems = isDelegateAccount
-    ? [
-        { id: 'application', label: 'Application', icon: FileText },
-        {
-          id: 'delegates',
-          label: 'Registration & Payment',
-          icon: UserPlus,
-          requiresApproval: true,
-        },
-        { id: 'account', label: 'Account Settings', icon: SettingsIcon },
-      ]
-    : [
-        { id: 'application', label: 'Application', icon: FileText },
-        { id: 'delegates', label: 'Add Delegates', icon: UserPlus, requiresApproval: true },
-        { id: 'advisors', label: 'Faculty Advisors', icon: Briefcase, requiresApproval: true },
-        { id: 'assignments', label: 'Country Assignments', icon: Globe, requiresApproval: true },
-        { id: 'account', label: 'Account Settings', icon: SettingsIcon },
-      ]
+  const portalLabel = isDelegateAccount ? 'Individual delegate' : 'Institution account'
+
+  const menuItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'register', label: 'Register', icon: FileText },
+    { id: 'delegations', label: 'Delegations', icon: Users },
+    { id: 'assignments', label: 'Assignments', icon: Globe, requiresApproval: true },
+    { id: 'profile', label: 'Profile', icon: UserCircle },
+    { id: 'account', label: 'Account Settings', icon: SettingsIcon },
+  ]
 
   const isApproved = status === 'approved'
 
@@ -52,49 +48,47 @@ export function Sidebar({
     <>
       {/* Sidebar */}
       <div
-        className={`fixed lg:sticky top-0 left-0 h-screen bg-white border-r border-gray-200 transition-transform duration-300 z-30 ${
+        className={`fixed lg:sticky top-0 left-0 h-screen bg-[#07131f] lg:py-8 border-r border-white/10 transition-transform duration-300 z-30 ${
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         } w-72 flex flex-col`}
       >
-        {/* Sidebar Header */}
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex justify-between items-center mb-6">
-            <div className="flex md:hidden items-center gap-3">
-              <Image
-                src="/logos/bluelogo.png"
-                alt="GLUNS Logo"
-                width={120}
-                height={40}
-                className="h-10 w-auto"
-              />
+        <div className="flex items-center justify-between px-6 pb-5 pt-6 border-b border-white/10">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="h-11 w-11 rounded-2xl bg-[#104179] border border-[#85c226]/30 flex items-center justify-center">
+              <span className="text-white font-black">G</span>
             </div>
-            <button
-              onClick={onClose}
-              aria-label="Close navigation menu"
-              title="Close navigation menu"
-              className="lg:hidden w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center transition-colors text-gray-600"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            <div className="min-w-0">
+              <p className="text-xs uppercase tracking-[0.3em] text-white/45">Portal</p>
+              <h4 className="truncate text-sm font-semibold text-white">{userName}</h4>
+              <p className="text-xs text-white/45">{portalLabel}</p>
+            </div>
           </div>
-
-          {/* Status Badge */}
-          {isApproved ? (
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700">
-              <div className="w-2 h-2 bg-[#85c226] rounded-full"></div>
-              Approved
-            </div>
-          ) : (
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-lg text-sm font-medium text-amber-700">
-              <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
-              Pending Review
-            </div>
-          )}
+          <button
+            onClick={onClose}
+            aria-label="Close navigation menu"
+            title="Close navigation menu"
+            className="lg:hidden w-9 h-9 rounded-xl border border-white/10 hover:bg-white/5 flex items-center justify-center transition-colors text-white/70"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
-        {/* Navigation Items */}
-        <nav className="flex-1 overflow-y-auto p-4">
-          <div className="space-y-6 md:space-y-1">
+        <div className="px-6 pt-5 pb-3">
+          <Link
+            href="/"
+            className="flex items-center justify-between rounded-2xl border border-[#85c226]/20 bg-[#104179]/20 px-4 py-3 text-sm font-semibold text-white transition hover:border-[#85c226]/40 hover:bg-[#104179]/30"
+            onClick={onClose}
+          >
+            <span className="flex items-center gap-3">
+              <Home className="h-4 w-4 text-[#85c226]" />
+              Go Home
+            </span>
+            <span className="text-[11px] uppercase tracking-[0.35em] text-white/45">Main site</span>
+          </Link>
+        </div>
+
+        <nav className="flex-1 overflow-y-auto px-4 pb-4 pt-2">
+          <div className="space-y-2">
             {menuItems.map((item) => {
               const Icon = item.icon
               const isDisabled = item.requiresApproval && !isApproved
@@ -110,58 +104,79 @@ export function Sidebar({
                     }
                   }}
                   disabled={isDisabled}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                  className={`group w-full rounded-2xl px-4 py-3 transition-all duration-200 ${
                     isActive
-                      ? 'bg-[#104179] text-white'
+                      ? 'bg-white text-[#0d0d0d] shadow-[0_12px_30px_rgba(0,0,0,0.24)]'
                       : isDisabled
-                        ? 'text-gray-400 cursor-not-allowed'
-                        : 'text-gray-700 hover:bg-gray-50'
+                        ? 'cursor-not-allowed text-white/30'
+                        : 'text-white/75 hover:bg-white/5 hover:text-white'
                   }`}
                 >
-                  <Icon className="w-5 h-5" />
-                  <div className="flex-1 text-left">
-                    <span className="text-sm font-medium block">{item.label}</span>
-                    {isDisabled && <span className="text-xs text-gray-400">Requires approval</span>}
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-colors ${
+                        isActive
+                          ? 'border-[#85c226]/30 bg-[#104179] text-white'
+                          : 'border-white/10 bg-white/5 text-[#85c226] group-hover:border-white/20'
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <span className="block text-sm font-semibold">{item.label}</span>
+                      {isDisabled ? (
+                        <span className="text-xs text-white/35">Requires approval</span>
+                      ) : (
+                        <span className="text-xs text-white/35">
+                          {item.id === 'register' && 'Pick an event'}
+                          {item.id === 'delegations' && 'Add students and pay'}
+                          {item.id === 'assignments' && 'Countries and committees'}
+                          {item.id === 'profile' && 'View your account details'}
+                          {item.id === 'dashboard' && 'Overview and shortcuts'}
+                          {item.id === 'account' && 'Password and security'}
+                        </span>
+                      )}
+                    </div>
+                    {isActive && <div className="h-2.5 w-2.5 rounded-full bg-[#85c226]" />}
                   </div>
-                  {isActive && <div className="w-1.5 h-1.5 bg-[#85c226] rounded-full"></div>}
                 </button>
               )
             })}
           </div>
         </nav>
 
-        {/* Status Notice */}
-        {!isApproved ? (
-          <div className="p-4 m-4 bg-amber-50 border border-amber-200 rounded-lg">
-            <div className="flex gap-3">
-              <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-semibold text-amber-900 mb-1">
-                  Application Under Review
-                </p>
-                <p className="text-xs text-amber-700 leading-relaxed">
-                  Additional features will unlock once approved.
-                </p>
+        <div className="px-4 pb-4">
+          {!isApproved ? (
+            <div className="rounded-2xl border border-[#85c226]/20 bg-[#104179]/30 p-4">
+              <div className="flex gap-3">
+                <AlertCircle className="w-5 h-5 text-[#85c226] shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-white mb-1">Application under review</p>
+                  <p className="text-xs text-white/65 leading-relaxed">
+                    Registration, delegates, and assignments unlock after approval.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        ) : (
-          <div className="p-4 m-4 bg-gray-50 border border-gray-200 rounded-lg">
-            <div className="flex gap-3">
-              <CheckCircle2 className="w-5 h-5 text-[#85c226] shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-semibold text-gray-900 mb-1">All Set!</p>
-                <p className="text-xs text-gray-600 leading-relaxed">
-                  All features are now available.
-                </p>
+          ) : (
+            <div className="rounded-2xl border border-[#85c226]/20 bg-[#0f1f12] p-4">
+              <div className="flex gap-3">
+                <CheckCircle2 className="w-5 h-5 text-[#85c226] shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-white mb-1">Portal ready</p>
+                  <p className="text-xs text-white/65 leading-relaxed">
+                    You can manage your delegation, payment, and assignments now.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
-        {/* Footer */}
-        <div className="p-4 border-t border-gray-200">
-          <p className="text-xs text-gray-500 text-center">© {new Date().getFullYear()} GLUNS</p>
+        <div className="px-6 pb-6 pt-2">
+          <p className="text-[11px] uppercase tracking-[0.35em] text-white/35">
+            {new Date().getFullYear()} GLUNS
+          </p>
         </div>
       </div>
     </>

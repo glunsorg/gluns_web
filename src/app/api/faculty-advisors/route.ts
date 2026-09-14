@@ -18,13 +18,24 @@ export async function GET(req: Request) {
   }
 
   try {
+    const url = new URL(req.url)
+    const delegationId = url.searchParams.get('delegationId')
+
+    const where: Record<string, any> = {
+      teacher: {
+        equals: user.id,
+      },
+    }
+
+    if (delegationId) {
+      where.delegation = {
+        equals: Number(delegationId),
+      }
+    }
+
     const result = await payload.find({
       collection: 'faculty-advisors',
-      where: {
-        teacher: {
-          equals: user.id,
-        },
-      },
+      where,
       sort: 'createdAt',
     })
 
@@ -39,7 +50,7 @@ export async function GET(req: Request) {
 }
 
 /**
- * POST: Create a faculty advisor (up to delegation limit)
+ * POST: Create a faculty advisor for the selected delegation application
  */
 export async function POST(req: Request) {
   const payload = await getPayload({ config })
@@ -62,12 +73,18 @@ export async function POST(req: Request) {
   try {
     const body = await req.json()
 
-    /**
-     * 1. Fetch approved delegation
-     */
+    const delegationId = Number(body.delegationId)
+
+    if (!delegationId || Number.isNaN(delegationId)) {
+      return NextResponse.json({ message: 'Delegation ID is required' }, { status: 400 })
+    }
+
     const delegation = await payload.find({
       collection: 'delegation-applications',
       where: {
+        id: {
+          equals: delegationId,
+        },
         user: {
           equals: user.id,
         },
@@ -85,32 +102,6 @@ export async function POST(req: Request) {
       )
     }
 
-    const maxAdvisors = delegation.docs[0].numberOfFacultyAdvisors
-
-    /**
-     * 2. Count existing advisors
-     */
-    const existingAdvisors = await payload.find({
-      collection: 'faculty-advisors',
-      where: {
-        teacher: {
-          equals: user.id,
-        },
-      },
-    })
-
-    if (existingAdvisors.totalDocs >= maxAdvisors) {
-      return NextResponse.json(
-        {
-          message: `You can only add ${maxAdvisors} faculty advisor(s).`,
-        },
-        { status: 400 },
-      )
-    }
-
-    /**
-     * 3. Create advisor
-     */
     const facultyAdvisor = await payload.create({
       collection: 'faculty-advisors',
       data: {
@@ -119,6 +110,7 @@ export async function POST(req: Request) {
         email: body.email,
         phoneNumber: body.phoneNumber,
         teacher: user.id,
+        delegation: delegationId,
       },
     })
 

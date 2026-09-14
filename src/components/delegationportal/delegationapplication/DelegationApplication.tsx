@@ -1,38 +1,40 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  Users,
-  Globe,
-  FileText,
-  UserPlus,
-  Briefcase,
-  Pencil,
-  Trash2,
-  Mail,
-  Phone,
-  GraduationCap,
+  ArrowRight,
+  CalendarDays,
+  CheckCircle2,
+  CreditCard,
+  Sparkles,
+  UserCircle,
 } from 'lucide-react'
 import { Sidebar } from './Sidebar'
 import DelegateForm from './DelegateForm'
-import FacultyForm from './FacultyForm'
 import DelegationHeader from './DelegationHeader'
 import DelegationSteps from './components/DelegationSteps'
 import DelegationFormStep from './components/DelegationFormStep'
 import CountryAssignmentsForm from './CountryAssignmentsForm'
-import { Delegate, FacultyAdvisor, Delegation } from '@/app/types/types'
+import { Delegate, Delegation } from '@/app/types/types'
 import PaymentForm from '../payment/PaymentForm'
 import { Button } from '@/components/ui/button'
 import Loading from '@/app/(frontend)/loading'
-
-// hooks
 import { useAuthGate } from '../hooks/useAuthGate'
-import { useFacultyAdvisors } from '../hooks/useFacultyAdvisors'
 import { apiFetch } from '@/app/utils/apiFetch'
 import { usePaymentAndDelegate } from '../hooks/usePaymentAndDelegate'
 import { AccountSettings } from './AccountSettings'
+
+type EventOption = {
+  id: number | string
+  title: string
+  subtitle?: string
+  location?: string
+  date?: string
+  cost?: number | string | null
+  currency?: string
+}
 
 const EMPTY_DELEGATION: Delegation = {
   delegationName: '',
@@ -56,38 +58,32 @@ export default function DelegationPortal() {
   const router = useRouter()
 
   const [fetching, setFetching] = useState(true)
+  const [eventsLoading, setEventsLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
   const [currentStep, setCurrentStep] = useState(0)
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState('application')
-
-  const [editingAdvisor, setEditingAdvisor] = useState<FacultyAdvisor | null>(null)
-  const [showFacultyForm, setShowFacultyForm] = useState(false)
+  const [activeSection, setActiveSection] = useState('dashboard')
+  const [selectedEventId, setSelectedEventId] = useState('')
+  const [events, setEvents] = useState<EventOption[]>([])
 
   const [delegation, setDelegation] = useState<Delegation | null>(null)
-
   const [formData, setFormData] = useState<Delegation>(EMPTY_DELEGATION)
-  const maxAdvisors = formData.numberOfFacultyAdvisors
-
   const [editingDelegate, setEditingDelegate] = useState<Delegate | null>(null)
   const [showDelegateForm, setShowDelegateForm] = useState(false)
 
-  // check payment status
-
-  // hooks
   const { user, checkingAuth, logout: authLogout } = useAuthGate()
   const isDelegateAccount = !!user?.roles?.includes('delegate')
 
   const steps = [
-    { title: 'Basic Info', icon: Users },
-    { title: 'Experience', icon: FileText },
-    { title: 'Preferences', icon: Globe },
+    { title: 'Event', icon: CalendarDays },
+    { title: 'Profile', icon: UserCircle },
+    { title: 'Preferences', icon: Sparkles },
   ]
 
   useEffect(() => {
     if (!checkingAuth && !user) {
-      router.replace('/authentication')
+      router.replace('/registration')
     }
   }, [checkingAuth, user, router])
 
@@ -97,7 +93,6 @@ export default function DelegationPortal() {
     const fetchDelegation = async () => {
       try {
         const res = await apiFetch('/api/delegation')
-
         const data = await res.json()
 
         if (data.delegation) {
@@ -117,36 +112,76 @@ export default function DelegationPortal() {
     fetchDelegation()
   }, [user])
 
-  // --------------------------
-  // FETCH FACULTY ADVISORS
-  // --------------------------
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch('/api/events', { cache: 'no-store' })
+        if (!res.ok) throw new Error('Failed to fetch events')
+
+        const data = await res.json()
+        const eventOptions = (data.events || []).map((event: any) => ({
+          id: event.id,
+          title: event.title,
+          subtitle: event.subtitle,
+          location: event.location,
+          date: event.date,
+          cost: event.cost,
+          currency: event.currency,
+        }))
+
+        setEvents(eventOptions)
+
+        if (!selectedEventId && eventOptions.length > 0) {
+          setSelectedEventId(String(eventOptions[0].id))
+        }
+      } catch (error) {
+        console.error('Failed to fetch events', error)
+      } finally {
+        setEventsLoading(false)
+      }
+    }
+
+    fetchEvents()
+  }, [selectedEventId])
 
   const {
-    facultyAdvisors,
-    setFacultyAdvisors,
-    fetching: fetchingAdvisors,
-  } = useFacultyAdvisors(user, delegation)
+    paymentStatus,
+    delegates,
+    setDelegates,
+    setPaymentStatus,
+    fetching: fetchingDelegates,
+  } = usePaymentAndDelegate(user, delegation)
 
-  const advisorCount = facultyAdvisors.length
-  const canAddAdvisor = advisorCount < maxAdvisors
-  const loading = fetching || fetchingAdvisors
-
-  // --------------------------
-  // FETCH PAYMENT & DELEGATES
-  // --------------------------
-
-  const { paymentStatus, delegates, setDelegates, setPaymentStatus } = usePaymentAndDelegate(
-    user,
-    delegation,
+  const selectedEvent = useMemo(
+    () => events.find((event) => String(event.id) === String(selectedEventId)),
+    [events, selectedEventId],
   )
-  // --------------------------
-  // HANDLERS
-  // --------------------------
+
+  const loading = fetching || fetchingDelegates || eventsLoading
+
+  useEffect(() => {
+    if (activeSection !== 'register') {
+      setCurrentStep(0)
+    }
+  }, [activeSection])
+
+  const refreshPaidData = async (delegationId: string | number) => {
+    const paymentRes = await apiFetch(`/api/payments?delegationId=${delegationId}`)
+    const paymentData = await paymentRes.json()
+    setPaymentStatus(paymentData.paymentStatus)
+
+    if (paymentData.paymentStatus === 'paid') {
+      const delegatesRes = await apiFetch(`/api/teacher/delegates?delegationId=${delegationId}`)
+      const delegatesData = await delegatesRes.json()
+      setDelegates(delegatesData.delegates || [])
+    }
+  }
+
   const handleLogout = async () => {
     setLoggingOut(true)
     try {
       await authLogout()
-      router.replace('/authentication')
+      router.replace('/registration')
     } finally {
       setLoggingOut(false)
     }
@@ -190,28 +225,10 @@ export default function DelegationPortal() {
       setDelegation(data)
       setFormData(data)
       alert('Delegation saved successfully')
-    } catch (err: any) {
-      alert(err.message)
+    } catch (error: any) {
+      alert(error.message)
     } finally {
       setSaving(false)
-    }
-  }
-
-  const handleDelete = async (advisorId: string) => {
-    try {
-      await apiFetch(`/api/faculty-advisors/${advisorId}`, { method: 'DELETE' })
-      setFacultyAdvisors((prev) => prev.filter((a) => a.id?.toString() !== advisorId))
-    } catch (err) {
-      console.error('Failed to delete faculty advisor', err)
-    }
-  }
-
-  const handleDeleteDelegate = async (delegateId: string) => {
-    try {
-      await apiFetch(`/api/teacher/delegates/${delegateId}`, { method: 'DELETE' })
-      setDelegates((prev) => prev.filter((d) => d.id?.toString() !== delegateId))
-    } catch (err) {
-      console.error('Failed to delete delegate', err)
     }
   }
 
@@ -231,478 +248,413 @@ export default function DelegationPortal() {
     return null
   }
 
-  // --------------------------
-  // LOADING GATE
-  // --------------------------
   if (fetching) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="flex min-h-screen items-center justify-center bg-[#0d0d0d] p-4 text-white">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#104179] mb-4"></div>
-          <p className="text-gray-600 text-lg">Loading your delegation...</p>
+          <div className="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-[#85c226]" />
+          <p className="text-lg text-white/75">Loading your delegation...</p>
         </div>
       </div>
     )
   }
 
+  const dashboardCards = [
+    {
+      title: 'Selected event',
+      value: selectedEvent?.title || 'Choose an event',
+      helper: selectedEvent?.location || 'Portal registration starts here',
+    },
+    {
+      title: 'Delegates',
+      value: String(delegates.length || formData.numberOfDelegates || 0),
+      helper: paymentStatus === 'paid' ? 'Slots unlocked' : 'Complete payment to add delegates',
+    },
+    {
+      title: 'Payment',
+      value: paymentStatus === 'paid' ? 'Paid' : 'Pending',
+      helper:
+        paymentStatus === 'paid'
+          ? 'Ready for delegation work'
+          : 'Pay once registration is complete',
+    },
+  ]
+
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex">
-      {/* Sidebar */}
-      <Sidebar
-        status={formData.status}
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        activeSection={activeSection}
-        onSectionChange={setActiveSection}
-        isDelegateAccount={isDelegateAccount}
-      />
+    <div className="min-h-screen bg-[#0d0d0d] text-white">
+      <div className="flex min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(16,65,121,0.45),transparent_38%),radial-gradient(circle_at_top_right,rgba(133,194,38,0.18),transparent_28%),linear-gradient(180deg,#0d0d0d_0%,#07131f_100%)]">
+        <Sidebar
+          status={formData.status}
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          activeSection={activeSection}
+          onSectionChange={setActiveSection}
+          isDelegateAccount={isDelegateAccount}
+          userName={user?.fullName || user?.email || 'User'}
+        />
 
-      {/* Main Content */}
-      <div className="flex-1 py-6 px-4 sm:px-6 lg:px-8 overflow-x-hidden">
-        <div className="max-w-5xl 2xl:max-w-full mx-auto">
-          {/* Header */}
-          <DelegationHeader
-            activeSection={activeSection}
-            formData={formData}
-            loggingOut={loggingOut}
-            onLogout={handleLogout}
-            onOpenSidebar={() => setSidebarOpen(true)}
-            isDelegateAccount={isDelegateAccount}
-          />
-          {/* Application Section */}
-          {activeSection === 'application' && (
-            <>
-              {/* Progress Steps */}
-              <DelegationSteps steps={steps} currentStep={currentStep} />
-              {/* Form Content */}
-              <DelegationFormStep
-                currentStep={currentStep}
-                formData={formData}
-                handleChange={handleChange}
-                handleSave={handleSave}
-                saving={saving}
-                stepsLength={steps.length}
-                nextStep={nextStep}
-                prevStep={prevStep}
-                isDelegateAccount={isDelegateAccount}
-              />
+        <div className="flex-1 overflow-x-hidden px-4 py-4 sm:px-6 lg:px-8 lg:py-6">
+          <div className="mx-auto max-w-7xl">
+            <DelegationHeader
+              activeSection={activeSection}
+              formData={formData}
+              loggingOut={loggingOut}
+              onLogout={handleLogout}
+              onOpenSidebar={() => setSidebarOpen(true)}
+              isDelegateAccount={isDelegateAccount}
+            />
 
-              {/* Help Text */}
-              <div className="mt-6 bg-blue-50 rounded-xl p-4 border border-blue-100">
-                <p className="text-sm text-blue-900">
-                  <span className="font-semibold">Need help?</span>{' '}
-                  {isDelegateAccount
-                    ? 'Complete your delegate registration details below. Once approved, you will move to payment and receipt issuance inside the portal.'
-                    : 'All fields marked with '}
-                  {!isDelegateAccount && <span className="text-red-500">*</span>}
-                  {!isDelegateAccount &&
-                    ' are required. You can save your progress at any time and return later to complete your application.'}
-                </p>
-              </div>
-            </>
-          )}
+            {activeSection === 'dashboard' && (
+              <div className="space-y-6">
+                <div className="grid gap-4 md:grid-cols-3">
+                  {dashboardCards.map((card) => (
+                    <div
+                      key={card.title}
+                      className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_12px_40px_rgba(0,0,0,0.18)] backdrop-blur"
+                    >
+                      <p className="text-xs uppercase tracking-[0.35em] text-white/45">
+                        {card.title}
+                      </p>
+                      <p className="mt-3 text-2xl font-black text-white">{card.value}</p>
+                      <p className="mt-2 text-sm leading-relaxed text-white/65">{card.helper}</p>
+                    </div>
+                  ))}
+                </div>
 
-          {/* Delegates Section */}
-          {activeSection === 'delegates' && (
-            <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
-              <div className="text-center py-12">
-                <UserPlus className="w-16 h-16 text-[#85c226]/70 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-[#104179] mb-2">Add Delegates</h3>
-                <p className="text-gray-600 mb-6">
-                  Register your delegation members here once your application is approved and
-                  payment is complete.
-                </p>
-
-                {!delegation?.id ? (
-                  <p className="text-gray-600">
-                    Please complete your delegation application first.
-                  </p>
-                ) : paymentStatus !== 'paid' ? (
-                  <PaymentForm
-                    numberOfDelegates={formData.numberOfDelegates}
-                    teacherId={user.id}
-                    delegationId={delegation.id}
-                    onPaymentSuccess={async () => {
-                      const res = await apiFetch(`/api/payments?delegationId=${delegation.id}`)
-                      const data = await res.json()
-                      setPaymentStatus(data.paymentStatus)
-                    }}
-                  />
-                ) : (
-                  <>
-                    {/* Add Delegate Button */}
-                    {!showDelegateForm && delegates.length < formData.numberOfDelegates && (
-                      <Button
-                        onClick={() => {
-                          setEditingDelegate({} as Delegate)
-                          setShowDelegateForm(true)
-                        }}
-                        className="mb-4 cursor-pointer bg-[#104179] hover:bg-[#0a2c52] text-white font-bold px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg"
-                      >
-                        Add Delegate
-                      </Button>
-                    )}
-
-                    {/* Delegate Form */}
-                    {showDelegateForm && (
-                      <DelegateForm
-                        open={showDelegateForm}
-                        delegate={editingDelegate}
-                        onClose={() => {
-                          setEditingDelegate(null)
-                          setShowDelegateForm(false)
-                        }}
-                        onSaved={(updatedDelegate) => {
-                          setDelegates((prev) => {
-                            const exists = prev.find((d) => d.id === updatedDelegate.id)
-                            if (exists) {
-                              return prev.map((d) =>
-                                d.id === updatedDelegate.id ? updatedDelegate : d,
-                              )
-                            }
-                            return [...prev, updatedDelegate]
-                          })
-                          setEditingDelegate(null)
-                          setShowDelegateForm(false)
-                        }}
-                      />
-                    )}
-
-                    {/* Registered Delegates List */}
-                    <div className="mt-8">
-                      <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-[#104179] rounded-lg flex items-center justify-center">
-                            <Users className="w-5 h-5 text-white" />
-                          </div>
-                          <h3 className="text-2xl font-bold text-[#104179]">
-                            Registered Delegates
-                          </h3>
-                        </div>
-                        <div className="h-1 flex-1 bg-[#85c226] ml-6 max-w-[200px]"></div>
+                <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+                  <div className="rounded-3xl border border-white/10 bg-[#07131f]/90 p-6 shadow-[0_18px_50px_rgba(0,0,0,0.22)] backdrop-blur">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.35em] text-white/40">
+                          Overview
+                        </p>
+                        <h2 className="mt-2 text-3xl font-black">
+                          Welcome to the delegation portal
+                        </h2>
+                        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/70">
+                          Use the sidebar to move from event registration to delegation management,
+                          country assignments, profile details, and account settings.
+                        </p>
                       </div>
+                      <div className="rounded-2xl border border-[#85c226]/20 bg-[#85c226]/10 px-4 py-3 text-sm font-semibold text-[#85c226]">
+                        {isDelegateAccount ? 'Individual delegate' : 'Institution delegation'}
+                      </div>
+                    </div>
+
+                    <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                      <button
+                        type="button"
+                        onClick={() => setActiveSection('register')}
+                        className="group rounded-2xl border border-white/10 bg-white/5 p-5 text-left transition hover:border-[#85c226]/40 hover:bg-white/10"
+                      >
+                        <div className="flex items-center justify-between gap-4">
+                          <div>
+                            <p className="text-lg font-bold text-white">Start registration</p>
+                            <p className="mt-1 text-sm text-white/65">
+                              Choose a specific event and save your details.
+                            </p>
+                          </div>
+                          <ArrowRight className="h-5 w-5 text-[#85c226] transition group-hover:translate-x-1" />
+                        </div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setActiveSection('delegations')}
+                        className="group rounded-2xl border border-white/10 bg-white/5 p-5 text-left transition hover:border-[#85c226]/40 hover:bg-white/10"
+                      >
+                        <div className="flex items-center justify-between gap-4">
+                          <div>
+                            <p className="text-lg font-bold text-white">Manage delegates</p>
+                            <p className="mt-1 text-sm text-white/65">
+                              Add members, then complete payment and assignments.
+                            </p>
+                          </div>
+                          <ArrowRight className="h-5 w-5 text-[#85c226] transition group-hover:translate-x-1" />
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="rounded-3xl border border-[#104179]/15 bg-white p-6 text-[#104179] shadow-[0_16px_48px_rgba(7,19,31,0.18)]">
+                    <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#104179]/50">
+                      Next steps
+                    </p>
+                    <div className="mt-4 space-y-4 text-sm">
+                      <div className="rounded-2xl bg-[#104179]/5 p-4">
+                        <p className="font-semibold">1. Choose an event</p>
+                        <p className="mt-1 text-[#104179]/70">
+                          Pick the conference before saving registration details.
+                        </p>
+                      </div>
+                      <div className="rounded-2xl bg-[#104179]/5 p-4">
+                        <p className="font-semibold">2. Add delegates and pay</p>
+                        <p className="mt-1 text-[#104179]/70">
+                          Payment unlocks the delegate list for institutional registrations.
+                        </p>
+                      </div>
+                      <div className="rounded-2xl bg-[#104179]/5 p-4">
+                        <p className="font-semibold">3. Build assignments</p>
+                        <p className="mt-1 text-[#104179]/70">
+                          GA country selection is self-service; ICJ and ILC stay
+                          secretariat-managed.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeSection === 'register' && (
+              <div className="space-y-6">
+                <DelegationSteps steps={steps} currentStep={currentStep} />
+                <DelegationFormStep
+                  currentStep={currentStep}
+                  formData={formData}
+                  handleChange={handleChange}
+                  handleSave={handleSave}
+                  saving={saving}
+                  stepsLength={steps.length}
+                  nextStep={nextStep}
+                  prevStep={prevStep}
+                  isDelegateAccount={isDelegateAccount}
+                  events={events}
+                  selectedEventId={selectedEventId}
+                  onEventChange={setSelectedEventId}
+                />
+                <div className="rounded-3xl border border-white/10 bg-white/5 p-4 text-sm text-white/70 backdrop-blur">
+                  <span className="font-semibold text-white">Need help?</span>{' '}
+                  {isDelegateAccount
+                    ? 'This path is optimized for a single delegate. Save your progress, then continue to delegations once your account is ready.'
+                    : 'Institutional registrations can return later to add multiple delegates, assign committees, and handle payment.'}
+                </div>
+              </div>
+            )}
+
+            {activeSection === 'delegations' && (
+              <div className="space-y-6">
+                <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+                  <div className="rounded-3xl border border-white/10 bg-white/95 p-6 text-[#104179] shadow-[0_18px_40px_rgba(0,0,0,0.18)]">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#104179] text-white">
+                        <CreditCard className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold">Delegation payment</h3>
+                        <p className="text-sm text-[#104179]/70">
+                          Payment is completed once your delegation setup is ready.
+                        </p>
+                      </div>
+                    </div>
+
+                    {!delegation?.id ? (
+                      <div className="mt-5 rounded-2xl border border-[#104179]/15 bg-[#104179]/5 p-4 text-sm text-[#104179]/75">
+                        Complete the registration tab first to create your delegation record.
+                      </div>
+                    ) : paymentStatus !== 'paid' ? (
+                      <div className="mt-5">
+                        <PaymentForm
+                          numberOfDelegates={formData.numberOfDelegates}
+                          teacherId={user.id}
+                          delegationId={delegation.id}
+                          onPaymentSuccess={async () => {
+                            await refreshPaidData(delegation.id!)
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="mt-5 rounded-2xl border border-[#85c226]/25 bg-[#85c226]/10 p-4 text-sm text-[#104179]">
+                        Payment complete. You can now manage delegates below.
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="rounded-3xl border border-[#104179]/15 bg-[#104179]/5 p-6 text-[#104179]">
+                    <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#104179]/50">
+                      Portal notes
+                    </p>
+                    <ul className="mt-4 space-y-3 text-sm text-[#104179]/75">
+                      <li className="flex gap-3">
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 text-[#85c226]" />
+                        Individual delegates keep the same payment and profile flow.
+                      </li>
+                      <li className="flex gap-3">
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 text-[#85c226]" />
+                        Institutions can add more delegates after payment is confirmed.
+                      </li>
+                      <li className="flex gap-3">
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 text-[#85c226]" />
+                        The country assignment tab remains linked to this delegation record.
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                {delegation?.id && paymentStatus === 'paid' && (
+                  <div className="rounded-3xl border border-white/10 bg-[#07131f]/90 p-6 shadow-[0_18px_50px_rgba(0,0,0,0.22)] backdrop-blur">
+                    <div className="flex items-center justify-between gap-4">
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.35em] text-white/40">
+                          Delegates
+                        </p>
+                        <h3 className="mt-2 text-2xl font-bold text-white">Registered delegates</h3>
+                        <p className="mt-2 text-sm text-white/65">
+                          Add and edit delegate profiles after payment is complete.
+                        </p>
+                      </div>
+                      {!showDelegateForm && delegates.length < formData.numberOfDelegates && (
+                        <Button
+                          onClick={() => {
+                            setEditingDelegate({} as Delegate)
+                            setShowDelegateForm(true)
+                          }}
+                          className="rounded-2xl bg-[#85c226] px-5 py-3 font-semibold text-white transition hover:bg-[#104179]"
+                        >
+                          Add delegate
+                        </Button>
+                      )}
+                    </div>
+
+                    <div className="mt-6">
+                      {showDelegateForm && (
+                        <DelegateForm
+                          open={showDelegateForm}
+                          delegate={editingDelegate}
+                          onClose={() => {
+                            setEditingDelegate(null)
+                            setShowDelegateForm(false)
+                          }}
+                          onSaved={(updatedDelegate) => {
+                            setDelegates((prev) => {
+                              const exists = prev.find((d) => d.id === updatedDelegate.id)
+                              if (exists) {
+                                return prev.map((d) =>
+                                  d.id === updatedDelegate.id ? updatedDelegate : d,
+                                )
+                              }
+                              return [...prev, updatedDelegate]
+                            })
+                            setEditingDelegate(null)
+                            setShowDelegateForm(false)
+                          }}
+                        />
+                      )}
 
                       {delegates.length > 0 ? (
-                        <div className="bg-white border-2 border-[#104179]/20 rounded-2xl overflow-hidden">
-                          {/* Desktop Table */}
-                          <div className="hidden lg:block overflow-x-auto">
-                            <table className="min-w-full">
-                              <thead className="bg-[#104179]">
-                                <tr>
-                                  <th className="px-6 py-4 text-left text-sm font-bold text-white border-r border-white/20">
-                                    #
-                                  </th>
-                                  <th className="px-6 py-4 text-left text-sm font-bold text-white border-r border-white/20">
-                                    Name
-                                  </th>
-                                  <th className="px-6 py-4 text-left text-sm font-bold text-white border-r border-white/20">
-                                    Email
-                                  </th>
-                                  <th className="px-6 py-4 text-left text-sm font-bold text-white border-r border-white/20">
-                                    Phone
-                                  </th>
-                                  <th className="px-6 py-4 text-left text-sm font-bold text-white border-r border-white/20">
-                                    Grade
-                                  </th>
-                                  <th className="px-6 py-4 text-left text-sm font-bold text-white">
-                                    Actions
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody className="divide-y divide-[#104179]/10">
-                                {delegates.map((delegate, index) => (
-                                  <tr
-                                    key={delegate.id}
-                                    className="hover:bg-[#104179]/5 transition-colors"
-                                  >
-                                    <td className="px-6 py-4 border-r border-[#104179]/10">
-                                      <div className="w-8 h-8 bg-[#104179] rounded-lg flex items-center justify-center">
-                                        <span className="text-white font-bold text-sm">
-                                          {index + 1}
-                                        </span>
-                                      </div>
-                                    </td>
-                                    <td className="px-6 py-4 border-r border-[#104179]/10">
-                                      <div className="flex items-center gap-2">
-                                        <p className="font-bold text-[#104179]">
-                                          {delegate.firstName} {delegate.lastName}
-                                        </p>
-                                        <div className="w-2 h-2 bg-[#85c226] rounded-full"></div>
-                                      </div>
-                                    </td>
-                                    <td className="px-6 py-4 border-r border-[#104179]/10">
-                                      <div className="flex items-center gap-2 text-[#104179]/70">
-                                        <Mail className="w-4 h-4 text-[#85c226] shrink-0" />
-                                        <p className="text-sm">{delegate.email}</p>
-                                      </div>
-                                    </td>
-                                    <td className="px-6 py-4 border-r border-[#104179]/10">
-                                      {delegate.phoneNumber ? (
-                                        <div className="flex items-center gap-2 text-[#104179]/70">
-                                          <Phone className="w-4 h-4 text-[#85c226] shrink-0" />
-                                          <p className="text-sm">{delegate.phoneNumber}</p>
-                                        </div>
-                                      ) : (
-                                        <span className="text-[#104179]/40 text-sm">—</span>
-                                      )}
-                                    </td>
-                                    <td className="px-6 py-4 border-r border-[#104179]/10">
-                                      {delegate.gradeLevel ? (
-                                        <div className="flex items-center gap-2 text-[#104179]/70">
-                                          <GraduationCap className="w-4 h-4 text-[#85c226] shrink-0" />
-                                          <p className="text-sm">{delegate.gradeLevel}</p>
-                                        </div>
-                                      ) : (
-                                        <span className="text-[#104179]/40 text-sm">—</span>
-                                      )}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                      <div className="flex gap-2">
-                                        <Button
-                                          variant="outline"
-                                          size="sm"
-                                          onClick={() => {
-                                            setEditingDelegate(delegate)
-                                            setShowDelegateForm(true)
-                                          }}
-                                          className="border-2 border-[#104179]/20 cursor-pointer text-[#104179] hover:bg-[#104179] hover:text-white hover:border-[#104179] rounded-lg px-3 py-1.5 font-semibold transition-all duration-300"
-                                        >
-                                          <Pencil className="w-4 h-4" />
-                                        </Button>
-                                        <Button
-                                          variant="destructive"
-                                          size="sm"
-                                          onClick={() =>
-                                            handleDeleteDelegate(delegate.id!.toString())
-                                          }
-                                          className="bg-red-500 hover:bg-red-600 cursor-pointer text-white rounded-lg px-3 py-1.5 font-semibold transition-all duration-300"
-                                        >
-                                          <Trash2 className="w-4 h-4" />
-                                        </Button>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-
-                          {/* Mobile/Tablet Cards */}
-                          <div className="lg:hidden divide-y divide-[#104179]/10">
-                            {delegates.map((delegate, index) => (
-                              <div
-                                key={delegate.id}
-                                className="p-4 hover:bg-[#104179]/5 transition-colors"
-                              >
-                                <div className="flex items-start gap-3">
-                                  {/* Number Badge */}
-                                  <div className="w-10 h-10 bg-[#104179] rounded-lg flex items-center justify-center shrink-0">
-                                    <span className="text-white font-bold">{index + 1}</span>
-                                  </div>
-
-                                  {/* Content */}
-                                  <div className="flex-1 min-w-0">
-                                    {/* Name */}
-                                    <div className="flex items-center gap-2 mb-2">
-                                      <h4 className="font-bold text-[#104179]">
-                                        {delegate.firstName} {delegate.lastName}
-                                      </h4>
-                                      <div className="w-2 h-2 bg-[#85c226] rounded-full"></div>
-                                    </div>
-
-                                    {/* Info Grid */}
-                                    <div className="grid grid-cols-1 gap-1.5 text-sm mb-3">
-                                      <div className="flex items-center gap-2 text-[#104179]/70">
-                                        <Mail className="w-3.5 h-3.5 text-[#85c226] shrink-0" />
-                                        <p className="truncate">{delegate.email}</p>
-                                      </div>
-                                      {delegate.phoneNumber && (
-                                        <div className="flex items-center gap-2 text-[#104179]/70">
-                                          <Phone className="w-3.5 h-3.5 text-[#85c226] shrink-0" />
-                                          <p>{delegate.phoneNumber}</p>
-                                        </div>
-                                      )}
-                                      {delegate.gradeLevel && (
-                                        <div className="flex items-center gap-2 text-[#104179]/70">
-                                          <GraduationCap className="w-3.5 h-3.5 text-[#85c226] shrink-0" />
-                                          <p>{delegate.gradeLevel}</p>
-                                        </div>
-                                      )}
-                                    </div>
-
-                                    {/* Actions */}
-                                    <div className="flex gap-2">
-                                      <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => {
-                                          setEditingDelegate(delegate)
-                                          setShowDelegateForm(true)
-                                        }}
-                                        className="flex items-center cursor-pointer gap-1.5 border-2 border-[#104179]/20 text-[#104179] hover:bg-[#104179] hover:text-white rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-300"
-                                      >
-                                        <Pencil className="w-3.5 h-3.5" />
-                                        Edit
-                                      </Button>
-                                      <Button
-                                        variant="destructive"
-                                        size="sm"
-                                        onClick={() =>
-                                          handleDeleteDelegate(delegate.id!.toString())
-                                        }
-                                        className="flex items-center gap-1.5 cursor-pointer bg-red-500 hover:bg-red-600 text-white rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-300"
-                                      >
-                                        <Trash2 className="w-3.5 h-3.5" />
-                                        Delete
-                                      </Button>
-                                    </div>
-                                  </div>
+                        <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                          {delegates.map((delegate, index) => (
+                            <div
+                              key={delegate.id}
+                              className="rounded-3xl border border-white/10 bg-white/5 p-5 text-white shadow-[0_12px_36px_rgba(0,0,0,0.18)]"
+                            >
+                              <div className="flex items-center justify-between gap-3">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#104179] font-bold text-white">
+                                  {index + 1}
                                 </div>
+                                <div className="h-2.5 w-2.5 rounded-full bg-[#85c226]" />
                               </div>
-                            ))}
-                          </div>
+                              <p className="mt-4 text-lg font-bold">
+                                {delegate.firstName} {delegate.lastName}
+                              </p>
+                              <p className="mt-1 text-sm text-white/65">{delegate.email}</p>
+                              <div className="mt-4 flex gap-2">
+                                <Button
+                                  variant="outline"
+                                  onClick={() => {
+                                    setEditingDelegate(delegate)
+                                    setShowDelegateForm(true)
+                                  }}
+                                  className="rounded-2xl border-white/20 bg-white/5 text-white hover:bg-white/10"
+                                >
+                                  Edit
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       ) : (
-                        <div className="bg-white border-2 border-[#104179]/20 rounded-2xl p-12 text-center">
-                          <div className="flex flex-col items-center gap-4">
-                            <div className="w-20 h-20 bg-[#104179]/10 rounded-full flex items-center justify-center">
-                              <Users className="w-10 h-10 text-[#104179]/50" />
-                            </div>
-                            <div>
-                              <h4 className="text-xl font-bold text-[#104179] mb-2">
-                                No Delegates Yet
-                              </h4>
-                              <p className="text-[#104179]/70 text-base">
-                                Get started by adding your first delegate to the delegation.
-                              </p>
-                            </div>
-                            <Button
-                              onClick={() => setShowDelegateForm(true)}
-                              className="mt-4 bg-[#85c226] hover:bg-[#104179] text-white font-bold px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg"
-                            >
-                              <UserPlus className="w-5 h-5 mr-2" />
-                              Add First Delegate
-                            </Button>
-                          </div>
+                        <div className="mt-6 rounded-3xl border border-dashed border-white/20 bg-white/5 p-8 text-center text-white/70">
+                          No delegates have been added yet.
                         </div>
                       )}
                     </div>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Advisors Section */}
-          {activeSection === 'advisors' && (
-            <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
-              <div className="text-center py-12">
-                <Briefcase className="w-16 h-16 text-[#85c226]/70 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Faculty Advisors</h3>
-                {/* list of faculty advisors  */}
-                {facultyAdvisors.length > 0 ? (
-                  <div className="mb-6">
-                    <p className="text-gray-600 mb-4">
-                      You have added the following faculty advisors:
-                    </p>
-                    <ul className="divide-y">
-                      {facultyAdvisors.map((advisor) => (
-                        <li
-                          key={advisor.id}
-                          className="flex items-center justify-between px-4 py-3 text-sm"
-                        >
-                          {/* Left side: info in one line */}
-                          <div className="flex items-center gap-6 min-w-0">
-                            <span className="font-medium text-lg text-gray-900 whitespace-nowrap">
-                              {advisor.firstName} {advisor.lastName}
-                            </span>
-
-                            <span className="text-gray-600 text-lg truncate max-w-[220px]">
-                              {advisor.email}
-                            </span>
-
-                            <span className="text-gray-600 text-lg whitespace-nowrap">
-                              {advisor.phoneNumber}
-                            </span>
-                          </div>
-
-                          {/* Right side: actions */}
-                          <div className="flex gap-2 shrink-0">
-                            <button
-                              onClick={() => {
-                                setEditingAdvisor(advisor)
-                                setShowFacultyForm(true)
-                              }}
-                              className="p-2 text-[#104179] hover:bg-blue-50 rounded"
-                              aria-label="Edit advisor"
-                            >
-                              <Pencil className="w-4 h-4" />
-                            </button>
-
-                            <button
-                              onClick={() => handleDelete(advisor.id!.toString())}
-                              className="p-2 text-red-600 hover:bg-red-50 rounded"
-                              aria-label="Delete advisor"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
                   </div>
-                ) : (
-                  <p className="text-gray-600 mb-6">You have not added any faculty advisors yet.</p>
-                )}
-                {showFacultyForm && (
-                  <FacultyForm
-                    advisor={editingAdvisor}
-                    onClose={() => {
-                      setEditingAdvisor(null)
-                      setShowFacultyForm(false)
-                    }}
-                    open={showFacultyForm}
-                    onSaved={(updatedAdvisor) => {
-                      setFacultyAdvisors((prev) => {
-                        const exists = prev.find((a) => a.id === updatedAdvisor.id)
-
-                        if (exists) {
-                          // EDIT
-                          return prev.map((a) => (a.id === updatedAdvisor.id ? updatedAdvisor : a))
-                        }
-
-                        // CREATE
-                        return [...prev, updatedAdvisor]
-                      })
-
-                      setEditingAdvisor(null)
-                      setShowFacultyForm(false)
-                    }}
-                  />
-                )}
-
-                {!showFacultyForm && canAddAdvisor && (
-                  <button
-                    onClick={() => {
-                      setEditingAdvisor(null)
-                      setShowFacultyForm(true)
-                    }}
-                    className="mb-4 cursor-pointer bg-[#104179] hover:bg-[#0a2c52] text-white font-bold px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg"
-                  >
-                    Add Faculty Advisor
-                  </button>
                 )}
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Assignments Section */}
-          {activeSection === 'assignments' && (
-            <CountryAssignmentsForm delegationId={Number(delegation?.id)} />
-          )}
+            {activeSection === 'assignments' && delegation?.id && (
+              <CountryAssignmentsForm
+                delegationId={Number(delegation.id)}
+                delegates={delegates as any}
+                paymentStatus={paymentStatus}
+              />
+            )}
 
-          {/* account settings */}
-          {activeSection === 'account' && <AccountSettings />}
+            {activeSection === 'profile' && (
+              <div className="grid gap-6 xl:grid-cols-[1fr_0.95fr]">
+                <div className="rounded-3xl border border-white/10 bg-[#07131f]/90 p-6 text-white shadow-[0_18px_50px_rgba(0,0,0,0.22)] backdrop-blur">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#104179] text-[#85c226]">
+                      <UserCircle className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.35em] text-white/40">Profile</p>
+                      <h3 className="mt-1 text-3xl font-black">Your portal profile</h3>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                      <p className="text-xs uppercase tracking-[0.3em] text-white/40">Account</p>
+                      <p className="mt-2 text-sm font-semibold text-white">{user.email}</p>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                      <p className="text-xs uppercase tracking-[0.3em] text-white/40">Type</p>
+                      <p className="mt-2 text-sm font-semibold text-white">
+                        {isDelegateAccount ? 'Individual delegate' : 'Institution account'}
+                      </p>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                      <p className="text-xs uppercase tracking-[0.3em] text-white/40">Status</p>
+                      <p className="mt-2 text-sm font-semibold text-white capitalize">
+                        {formData.status}
+                      </p>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                      <p className="text-xs uppercase tracking-[0.3em] text-white/40">Event</p>
+                      <p className="mt-2 text-sm font-semibold text-white">
+                        {selectedEvent?.title || 'No event selected yet'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-3xl border border-[#104179]/15 bg-white p-6 text-[#104179] shadow-[0_18px_50px_rgba(7,19,31,0.18)]">
+                  <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#104179]/50">
+                    Registration summary
+                  </p>
+                  <div className="mt-4 space-y-4 text-sm text-[#104179]/75">
+                    <div className="rounded-2xl bg-[#104179]/5 p-4">
+                      <p className="font-semibold">Delegation / school</p>
+                      <p className="mt-1">{formData.delegationName || 'Not saved yet'}</p>
+                    </div>
+                    <div className="rounded-2xl bg-[#104179]/5 p-4">
+                      <p className="font-semibold">Country of origin</p>
+                      <p className="mt-1">{formData.countryOfOrigin || 'Not saved yet'}</p>
+                    </div>
+                    <div className="rounded-2xl bg-[#104179]/5 p-4">
+                      <p className="font-semibold">Delegates requested</p>
+                      <p className="mt-1">{formData.numberOfDelegates}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeSection === 'account' && <AccountSettings />}
+          </div>
         </div>
       </div>
     </div>

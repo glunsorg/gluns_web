@@ -29,5 +29,12 @@ export const Countries: CollectionConfig = {
         description: 'ISO 3166-1 alpha-2 country code (e.g., US, GB, FR)',
       },
     },
+    {
+      name: 'active',
+      type: 'checkbox',
+      required: true,
+      defaultValue: true,
+      admin: { description: 'Indicates whether the country is active or not' },
+    },
   ],
 }

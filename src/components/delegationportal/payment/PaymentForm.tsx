@@ -75,11 +75,17 @@ export default function PaymentForm({
 
   return (
     <div className="p-4 bg-white rounded-lg shadow-md space-y-3">
-      <p>
-        Paid slots: <strong>{totalPaidSlots}</strong> / {numberOfDelegates}
-      </p>
+      {numberOfDelegates <= 0 ? (
+        <p className="text-[#104179] font-medium">
+          Add delegates first, then return here to pay for the selected event.
+        </p>
+      ) : (
+        <p>
+          Paid slots: <strong>{totalPaidSlots}</strong> / {numberOfDelegates}
+        </p>
+      )}
 
-      {remainingSlots === 0 && (
+      {numberOfDelegates > 0 && remainingSlots === 0 && (
         <p className="text-green-600 font-medium">All delegate slots have been paid for.</p>
       )}
 
@@ -87,10 +93,14 @@ export default function PaymentForm({
 
       <button
         onClick={handlePayment}
-        disabled={loading || remainingSlots === 0}
+        disabled={loading || remainingSlots === 0 || numberOfDelegates <= 0}
         className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
       >
-        {loading ? 'Processing...' : `Pay for ${remainingSlots} remaining slot(s)`}
+        {loading
+          ? 'Processing...'
+          : numberOfDelegates <= 0
+            ? 'Add delegates first'
+            : `Pay for ${remainingSlots} remaining slot(s)`}
       </button>
     </div>
   )

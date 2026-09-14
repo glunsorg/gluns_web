@@ -1,17 +1,21 @@
 'use client'
 
 import React from 'react'
+import { useActionState } from 'react'
+import { signIn } from '@/app/actions/auth'
 
 type SignInFormProps = {
   onSwitchToSignUp: () => void
 }
 
 function Field({
+  name,
   label,
   type,
   placeholder,
   autoComplete,
 }: {
+  name: string
   label: string
   type: string
   placeholder: string
@@ -21,6 +25,7 @@ function Field({
     <div className="space-y-2">
       <label className="block text-sm font-semibold text-[#104179]">{label}</label>
       <input
+        name={name}
         type={type}
         placeholder={placeholder}
         autoComplete={autoComplete}
@@ -31,6 +36,7 @@ function Field({
 }
 
 export default function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
+  const [state, action] = useActionState(signIn, undefined)
   return (
     <section id="signin" className="relative overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
@@ -91,20 +97,48 @@ export default function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
             </button>
           </div>
 
-          <form className="space-y-5">
+          <form className="space-y-5" action={action}>
             <Field
+              name="email"
               label="Email address"
               type="email"
               placeholder="you@example.com"
               autoComplete="email"
             />
+            {state?.errors?.email && (
+              <div>
+                <p>Email must:</p>
+                <ul>
+                  {state.errors.email.map((error) => (
+                    <li key={error}>- {error}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             <Field
+              name="password"
               label="Password"
               type="password"
               placeholder="Enter your password"
               autoComplete="current-password"
             />
+            {state?.errors?.password && (
+              <div>
+                <p>Password must:</p>
+                <ul>
+                  {state.errors.password.map((error) => (
+                    <li key={error}>- {error}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {state?.message && (
+              <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                {state.message}
+              </p>
+            )}
 
             <div className="flex items-center justify-between gap-4 text-sm">
               <a href="#" className="font-semibold text-[#104179] transition hover:text-[#85c226]">
@@ -113,7 +147,7 @@ export default function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
             </div>
 
             <button
-              type="button"
+              type="submit"
               className="inline-flex w-full items-center justify-center rounded-2xl bg-[#104179] px-5 py-3.5 text-base font-semibold text-white shadow-lg shadow-[#104179]/20 transition duration-300 hover:-translate-y-0.5 hover:bg-[#0a2f58]"
             >
               Sign in

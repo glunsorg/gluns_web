@@ -43,6 +43,12 @@ export const DelegationApplications: CollectionConfig = {
       required: true,
     },
     {
+      name: 'event',
+      type: 'relationship',
+      relationTo: 'event',
+      required: true,
+    },
+    {
       name: 'delegationName',
       type: 'text',
       required: true,
@@ -55,13 +61,15 @@ export const DelegationApplications: CollectionConfig = {
     {
       name: 'numberOfDelegates',
       type: 'number',
-      required: true,
-      min: 1,
+      required: false,
+      defaultValue: 0,
+      min: 0,
     },
     {
       name: 'numberOfFacultyAdvisors',
       type: 'number',
-      required: true,
+      required: false,
+      defaultValue: 0,
       min: 0,
     },
     {

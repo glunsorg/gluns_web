@@ -13,7 +13,7 @@ Allow: /organs
 Allow: /blog
 Allow: /faqs
 Allow: /sponsors
-Allow: /authentication
+Allow: /registration
 Allow: /the-secretariat
 
 # Sensitive pages disallowed

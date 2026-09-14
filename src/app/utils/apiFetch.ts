@@ -14,7 +14,7 @@ export async function apiFetch(input: RequestInfo, init?: RequestInit) {
 
     // Redirect to signup/login page
     if (typeof window !== 'undefined') {
-      window.location.href = '/authentication'
+      window.location.href = '/registration'
     }
 
     throw new Error('Unauthorized')

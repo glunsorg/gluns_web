@@ -29,30 +29,25 @@ export const Users: CollectionConfig = {
       type: 'select',
       hasMany: true,
       required: true,
-      saveToJWT: true,
+      defaultValue: ['delegate'],
       options: [
-        { label: 'Admin', value: 'admin' },
-        { label: 'Secretariat', value: 'secretariat' },
-        { label: 'Editor', value: 'editor' },
-        { label: 'Teacher', value: 'teacher' },
-        { label: 'Delegate', value: 'delegate' },
+        {
+          label: 'Teacher',
+          value: 'teacher',
+        },
+        {
+          label: 'Delegate',
+          value: 'delegate',
+        },
+        {
+          label: 'Secretariat',
+          value: 'secretariat',
+        },
+        {
+          label: 'Admin',
+          value: 'admin',
+        },
       ],
-      defaultValue: ['teacher'],
-    },
-    {
-      name: 'fullName',
-      type: 'text',
-      required: false,
-    },
-    {
-      name: 'delegationName',
-      type: 'text',
-      required: false,
-      saveToJWT: true,
-      admin: {
-        condition: (data, { user }) =>
-          !!user && Array.isArray(user.roles) && user.roles.includes('teacher'),
-      },
     },
   ],
 }

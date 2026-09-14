@@ -1,17 +1,21 @@
 'use client'
 
 import React from 'react'
+import { useActionState } from 'react'
+import { signUp } from '@/app/actions/auth'
 
 type SignUpFormProps = {
   onSwitchToSignIn: () => void
 }
 
 function Field({
+  name,
   label,
   type,
   placeholder,
   autoComplete,
 }: {
+  name: string
   label: string
   type: string
   placeholder: string
@@ -21,6 +25,7 @@ function Field({
     <div className="space-y-2">
       <label className="block text-sm font-semibold text-[#104179]">{label}</label>
       <input
+        name={name}
         type={type}
         placeholder={placeholder}
         autoComplete={autoComplete}
@@ -30,7 +35,34 @@ function Field({
   )
 }
 
+function RoleOption({
+  value,
+  title,
+  description,
+}: {
+  value: 'delegate' | 'teacher'
+  title: string
+  description: string
+}) {
+  return (
+    <label className="flex cursor-pointer items-start gap-3 border border-[#104179]/15 bg-white px-4 py-3.5 transition hover:border-[#85c226] hover:bg-[#85c226]/5 has-checked:border-[#85c226] has-checked:bg-[#85c226]/10">
+      <input
+        type="radio"
+        name="roles"
+        value={value}
+        className="mt-1 h-4 w-4 border-[#104179]/30 text-[#85c226] focus:ring-[#85c226]"
+        defaultChecked={value === 'delegate'}
+      />
+      <span className="space-y-1">
+        <span className="block text-sm font-semibold text-[#104179]">{title}</span>
+        <span className="block text-sm leading-6 text-[#104179]/70">{description}</span>
+      </span>
+    </label>
+  )
+}
+
 export default function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
+  const [state, action, pending] = useActionState(signUp, undefined)
   return (
     <section id="signup" className="relative isolate overflow-hidden  px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
@@ -63,42 +95,102 @@ export default function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
             <div className="bg-white px-4 py-3 text-center shadow-sm">Sign up</div>
           </div>
 
-          <form className="space-y-5">
+          <form className="space-y-5" action={action}>
+            <fieldset className="space-y-3">
+              <div className="space-y-1">
+                <label className="block text-sm font-semibold text-[#104179]">
+                  Select your role
+                </label>
+                <p className="text-sm leading-6 text-[#104179]/70">
+                  Choose the option that best matches how you will use the portal. Teachers manage
+                  delegation accounts for schools, while participants create individual delegate
+                  profiles.
+                </p>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <RoleOption
+                  value="delegate"
+                  title="Delegate"
+                  description="For individual delegates registering for conferences and events."
+                />
+                <RoleOption
+                  value="teacher"
+                  title="Teacher"
+                  description="For school staff managing a delegation or institution account."
+                />
+              </div>
+
+              {state?.errors?.roles && (
+                <p className="text-sm text-red-600">{state.errors.roles.join(', ')}</p>
+              )}
+            </fieldset>
+
             <div className="grid gap-5 sm:grid-cols-2">
-              <Field label="Full name" type="text" placeholder="Jane Doe" autoComplete="name" />
               <Field
+                name="name"
+                label="Full name"
+                type="text"
+                placeholder="Jane Doe"
+                autoComplete="name"
+              />
+              {state?.errors?.name && (
+                <p className="text-sm text-red-600">{state.errors.name.join(', ')}</p>
+              )}
+
+              <Field
+                name="email"
                 label="Email address"
                 type="email"
                 placeholder="you@example.com"
                 autoComplete="email"
               />
+              {state?.errors?.email && (
+                <p className="text-sm text-red-600">{state.errors.email.join(', ')}</p>
+              )}
             </div>
-
-            <Field
-              label="Organization / School"
-              type="text"
-              placeholder="GLUNS Academy"
-              autoComplete="organization"
-            />
 
             <div className="grid gap-5 sm:grid-cols-2">
               <Field
+                name="password"
                 label="Password"
                 type="password"
                 placeholder="Create a password"
                 autoComplete="new-password"
               />
+              {state?.errors?.password && (
+                <div>
+                  <p>Password must:</p>
+                  <ul>
+                    {state.errors.password.map((error) => (
+                      <li key={error}>- {error}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               <Field
+                name="confirmPassword"
                 label="Confirm password"
                 type="password"
                 placeholder="Repeat your password"
                 autoComplete="new-password"
               />
+              {state?.errors?.confirmPassword && (
+                <div>
+                  <p>Confirm Password must:</p>
+                  <ul>
+                    {state.errors.confirmPassword.map((error) => (
+                      <li key={error}>- {error}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
             <button
-              type="button"
-              className="inline-flex w-full items-center justify-center bg-[#85c226] px-5 py-3.5 text-base font-semibold text-[#104179] shadow-lg shadow-[#85c226]/20 transition duration-300 hover:-translate-y-0.5 hover:bg-[#74ac1f]"
+              disabled={pending}
+              type="submit"
+              className="inline-flex w-full cursor-pointer items-center justify-center bg-[#85c226] px-5 py-3.5 text-base font-semibold text-[#104179] shadow-lg shadow-[#85c226]/20 transition duration-300 hover:-translate-y-0.5 hover:bg-[#74ac1f]"
             >
               Create account
             </button>

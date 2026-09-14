@@ -5,6 +5,7 @@ import './styles.css'
 import Navbar from '@/components/navigation/Navbar'
 import Footer from '@/components/navigation/Footer'
 import { Barlow_Condensed } from 'next/font/google'
+import SiteChrome from '@/components/navigation/SiteChrome'
 
 const barlow = Barlow_Condensed({
   subsets: ['latin'],
@@ -76,11 +77,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={`${barlow.className} font-sans bg-white text-black`}>
-        <main>
-          <Navbar />
-          {children}
-          <Footer />
-        </main>
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   )

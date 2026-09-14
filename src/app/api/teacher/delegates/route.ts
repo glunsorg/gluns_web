@@ -58,10 +58,17 @@ export async function POST(req: Request) {
   }
 
   try {
+    const delegationId = Number(body.delegationId)
+
+    if (!delegationId || Number.isNaN(delegationId)) {
+      return NextResponse.json({ message: 'Delegation ID is required' }, { status: 400 })
+    }
+
     // 3️⃣ Fetch approved delegation
     const delegationResult = await payload.find({
       collection: 'delegation-applications',
       where: {
+        id: { equals: delegationId },
         user: { equals: user.id },
         status: { equals: 'approved' },
       },
@@ -77,48 +84,12 @@ export async function POST(req: Request) {
 
     const delegation = delegationResult.docs[0]
     const teacherId = Number(user.id)
-    const delegationId = Number(delegation.id)
 
     if (isNaN(teacherId) || isNaN(delegationId)) {
       return NextResponse.json({ message: 'Invalid teacher or delegation ID' }, { status: 400 })
     }
 
-    // 4️⃣ Count existing delegates for this teacher + delegation
-    const existingDelegates = await payload.find({
-      collection: 'delegates',
-      where: {
-        teacher: { equals: teacherId },
-        delegation: { equals: delegationId },
-      },
-      limit: 0,
-    })
-
-    // 5️⃣ Fetch total paid slots
-    const payments = await payload.find({
-      collection: 'payments',
-      where: {
-        teacher: { equals: teacherId },
-        delegation: { equals: delegationId },
-        status: { equals: 'paid' },
-      },
-      limit: 0,
-    })
-
-    const totalPaidSlots = payments.docs.reduce(
-      (acc, p) => acc + (p.delegateSlotsPurchased || 0),
-      0,
-    )
-
-    if (existingDelegates.totalDocs >= totalPaidSlots) {
-      return NextResponse.json(
-        {
-          message: `You can only add ${totalPaidSlots} delegate(s). Please purchase more slots.`,
-        },
-        { status: 400 },
-      )
-    }
-
-    // 6️⃣ Create new delegate
+    // 4️⃣ Create new delegate
     const newDelegate = await payload.create({
       collection: 'delegates',
       data: {

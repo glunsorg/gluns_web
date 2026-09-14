@@ -53,7 +53,7 @@ export default function CTA() {
               {/* Action Buttons */}
               <div className="space-y-3">
                 <Link
-                  href="/authentication"
+                  href="/registration"
                   className="block w-full px-6 py-4 bg-[#85c226] text-[#104179] font-bold text-center 2xl:text-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
                 >
                   Register Now →

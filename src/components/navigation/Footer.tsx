@@ -67,7 +67,7 @@ export default function Footer() {
               </h3>
               <ul className="space-y-3">
                 {[
-                  { name: 'Register', href: '/authentication' },
+                  { name: 'Register', href: '/registration' },
                   { name: 'Sponsorship', href: '/sponsors' },
                   { name: 'FAQs', href: '/faqs' },
                 ].map((link) => (

@@ -168,9 +168,7 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
-  roles: ('admin' | 'secretariat' | 'editor' | 'teacher' | 'delegate')[];
-  fullName?: string | null;
-  delegationName?: string | null;
+  roles: ('teacher' | 'delegate' | 'secretariat' | 'admin')[];
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -298,10 +296,11 @@ export interface Document {
 export interface DelegationApplication {
   id: number;
   user: number | User;
+  event: number | Event;
   delegationName: string;
   countryOfOrigin: string;
-  numberOfDelegates: number;
-  numberOfFacultyAdvisors: number;
+  numberOfDelegates?: number | null;
+  numberOfFacultyAdvisors?: number | null;
   previousExperience: string;
   hmunExperience: string;
   preferredRegions?: string | null;
@@ -309,6 +308,40 @@ export interface DelegationApplication {
   crisisCommitteeRequests?: string | null;
   committeeInterests: 'advanced' | 'press' | 'novice' | 'spanish';
   status?: ('pending' | 'approved' | 'rejected') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Add Event
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event".
+ */
+export interface Event {
+  id: number;
+  title: string;
+  slug: string;
+  subtitle?: string | null;
+  banner?: (number | null) | Media;
+  description: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  location: string;
+  date: string;
+  cost?: number | null;
+  currency?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -361,6 +394,7 @@ export interface Delegate {
 export interface FacultyAdvisor {
   id: number;
   teacher?: (number | null) | User;
+  delegation?: (number | null) | DelegationApplication;
   firstName: string;
   lastName: string;
   email: string;
@@ -380,40 +414,6 @@ export interface Payment {
   amount: number;
   status?: ('pending' | 'paid' | 'failed') | null;
   reference?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Add Event
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "event".
- */
-export interface Event {
-  id: number;
-  title: string;
-  slug: string;
-  subtitle?: string | null;
-  banner?: (number | null) | Media;
-  description: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  location: string;
-  date: string;
-  cost?: number | null;
-  currency?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -593,6 +593,10 @@ export interface Country {
    * ISO 3166-1 alpha-2 country code (e.g., US, GB, FR)
    */
   code: string;
+  /**
+   * Indicates whether the country is active or not
+   */
+  active: boolean;
   updatedAt: string;
   createdAt: string;
 }
@@ -989,8 +993,6 @@ export interface PayloadMigration {
  */
 export interface UsersSelect<T extends boolean = true> {
   roles?: T;
-  fullName?: T;
-  delegationName?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -1093,6 +1095,7 @@ export interface PortraitsSelect<T extends boolean = true> {
  */
 export interface DelegationApplicationsSelect<T extends boolean = true> {
   user?: T;
+  event?: T;
   delegationName?: T;
   countryOfOrigin?: T;
   numberOfDelegates?: T;
@@ -1141,6 +1144,7 @@ export interface DelegatesSelect<T extends boolean = true> {
  */
 export interface FacultyAdvisorsSelect<T extends boolean = true> {
   teacher?: T;
+  delegation?: T;
   firstName?: T;
   lastName?: T;
   email?: T;
@@ -1310,6 +1314,7 @@ export interface SecretariatSelect<T extends boolean = true> {
 export interface CountriesSelect<T extends boolean = true> {
   name?: T;
   code?: T;
+  active?: T;
   updatedAt?: T;
   createdAt?: T;
 }

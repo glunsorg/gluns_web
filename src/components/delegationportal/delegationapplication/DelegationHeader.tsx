@@ -1,6 +1,6 @@
 import React from 'react'
 import { Delegation } from '@/app/types/types'
-import { LogOut, CheckCircle, Clock, Menu } from 'lucide-react'
+import { LogOut, CheckCircle, Clock, Menu, ArrowRight } from 'lucide-react'
 
 export default function DelegationHeader({
   activeSection,
@@ -17,56 +17,74 @@ export default function DelegationHeader({
   onOpenSidebar: () => void
   isDelegateAccount?: boolean
 }) {
+  const titleMap: Record<string, string> = {
+    dashboard: 'Portal Dashboard',
+    register: 'Register for an Event',
+    delegations: 'Delegation Management',
+    assignments: 'Country Assignments',
+    profile: 'Profile',
+    account: 'Account Settings',
+  }
+
+  const descriptionMap: Record<string, string> = {
+    dashboard: 'Track progress, event choice, and next actions at a glance',
+    register: 'Choose your event and complete the registration form',
+    delegations: 'Add delegates, manage payment, and prepare the team',
+    assignments: 'Assign organs, committees, and countries for your delegates',
+    profile: 'Review your account and registration details',
+    account: 'Manage password and account security',
+  }
+
   return (
-    <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="flex items-center gap-4">
+    <div className="mb-6 rounded-3xl border border-white/10 bg-[#07131f]/80 p-6 text-white shadow-[0_18px_60px_rgba(0,0,0,0.28)] backdrop-blur">
+      <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
+        <div className="flex items-start gap-4">
           <button
             onClick={onOpenSidebar}
             aria-label="Open navigation menu"
             title="Open navigation menu"
-            className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="lg:hidden rounded-2xl border border-white/10 bg-white/5 p-2 transition-colors hover:bg-white/10"
           >
-            <Menu className="w-6 h-6 text-gray-700" />
+            <Menu className="w-6 h-6 text-white" />
           </button>
-          <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
-              {activeSection === 'application' &&
-                (isDelegateAccount ? 'Delegate Portal' : 'Delegation Portal')}
-              {activeSection === 'delegates' && 'Add Delegates'}
-              {activeSection === 'advisors' && 'Faculty Advisors'}
-              {activeSection === 'assignments' && 'Country Assignments'}
-              {activeSection === 'account' && 'Account Settings'}
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center rounded-full border border-[#85c226]/20 bg-[#85c226]/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-[#85c226]">
+                Delegation portal
+              </span>
+              <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-white/70">
+                {isDelegateAccount ? 'Individual' : 'Institution'}
+              </span>
+            </div>
+            <h1 className="text-3xl font-black tracking-tight sm:text-4xl">
+              {titleMap[activeSection] || 'Portal Dashboard'}
             </h1>
-            <p className="text-gray-600">
-              {activeSection === 'application' &&
-                (isDelegateAccount
-                  ? 'Complete your individual delegate registration'
-                  : 'Complete your delegation application')}
-              {activeSection === 'delegates' && 'Register your delegation members'}
-              {activeSection === 'advisors' && 'Add faculty advisor information'}
-              {activeSection === 'assignments' && 'View your country assignments'}
-              {activeSection === 'account' && 'Manage your account settings'}
+            <p className="max-w-2xl text-sm leading-relaxed text-white/70 sm:text-base">
+              {descriptionMap[activeSection] || 'Manage your event registration from one place.'}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2">
             {formData.status === 'pending' ? (
-              <Clock className="w-4 h-4 text-yellow-600" />
+              <Clock className="w-4 h-4 text-[#85c226]" />
             ) : (
-              <CheckCircle className="w-4 h-4 text-green-600" />
+              <CheckCircle className="w-4 h-4 text-[#85c226]" />
             )}
-            <span className="text-sm font-medium capitalize">{formData.status}</span>
+            <span className="text-sm font-semibold capitalize text-white">{formData.status}</span>
           </div>
           <button
             onClick={onLogout}
             disabled={loggingOut}
-            className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/10 disabled:opacity-50"
           >
             <LogOut className="w-4 h-4" />
             <span className="hidden sm:inline">{loggingOut ? 'Logging out...' : 'Logout'}</span>
           </button>
+          <div className="hidden xl:flex items-center gap-2 rounded-2xl border border-[#85c226]/20 bg-[#85c226]/10 px-4 py-2 text-sm font-semibold text-[#85c226]">
+            <ArrowRight className="h-4 w-4" />
+            Keep moving through the portal
+          </div>
         </div>
       </div>
     </div>

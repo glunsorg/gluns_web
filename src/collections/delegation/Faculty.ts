@@ -15,14 +15,26 @@ export const Faculty: CollectionConfig = {
   access: {
     read: ({ req }: AccessArgs) => {
       if (!req.user) return false
-      return !!(req.user && 'roles' in req.user && (req.user.roles.includes('admin') || req.user.roles.includes('teacher')))
+      return !!(
+        req.user &&
+        'roles' in req.user &&
+        (req.user.roles.includes('admin') || req.user.roles.includes('teacher'))
+      )
     },
     create: ({ req }: AccessArgs) => {
-      return !!(req.user && 'roles' in req.user && (req.user.roles.includes('admin') || req.user.roles.includes('teacher')))
+      return !!(
+        req.user &&
+        'roles' in req.user &&
+        (req.user.roles.includes('admin') || req.user.roles.includes('teacher'))
+      )
     },
     update: ({ req, data }: AccessArgs) => {
       if (!req.user) return false
-      return !!(req.user && 'roles' in req.user && (req.user.roles.includes('admin') || req.user.id === data?.teacher))
+      return !!(
+        req.user &&
+        'roles' in req.user &&
+        (req.user.roles.includes('admin') || req.user.id === data?.teacher)
+      )
     },
     delete: ({ req }: AccessArgs) => {
       if (!req.user) return false
@@ -35,6 +47,15 @@ export const Faculty: CollectionConfig = {
       name: 'teacher',
       type: 'relationship',
       relationTo: 'users',
+      required: true,
+      admin: {
+        condition: () => false,
+      },
+    },
+    {
+      name: 'delegation',
+      type: 'relationship',
+      relationTo: 'delegation-applications',
       required: true,
       admin: {
         condition: () => false,
