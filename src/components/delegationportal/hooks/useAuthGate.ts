@@ -10,7 +10,7 @@ export function useAuthGate() {
 
     const hydrate = async () => {
       try {
-        const res = await fetch('/api/me', { cache: 'no-store' })
+        const res = await fetch('/api/users/me', { cache: 'no-store' })
 
         if (!res.ok) {
           if (mounted) setUser(null)

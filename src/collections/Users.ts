@@ -49,5 +49,11 @@ export const Users: CollectionConfig = {
         },
       ],
     },
+    {
+      name: 'fullName',
+      type: 'text',
+      required: true,
+      defaultValue: 'Unknown',
+    },
   ],
 }

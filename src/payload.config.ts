@@ -109,8 +109,8 @@ export default buildConfig({
     CommitteeAssignments,
   ],
   // serverURL: process.env.PAYLOAD_URL,
-  serverURL: 'http://localhost:3000',
-  cors: [process.env.NEXT_PUBLIC_CORS_ORIGIN || '', 'http://localhost:3000'],
+  serverURL: 'http://localhost:3001',
+  cors: [process.env.NEXT_PUBLIC_CORS_ORIGIN || '', 'http://localhost:3001'],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

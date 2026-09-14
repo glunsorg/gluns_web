@@ -156,7 +156,7 @@ export default function DelegationFormStep({
                 placeholder={
                   isDelegateAccount ? 'Enter your full name' : 'Enter your delegation name'
                 }
-                className="w-full rounded-2xl border border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
+                className="w-full rounded-2xl border text-black border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
               />
             </div>
 
@@ -173,7 +173,7 @@ export default function DelegationFormStep({
                 placeholder={
                   isDelegateAccount ? 'Enter your country of residence' : 'Enter your country'
                 }
-                className="w-full rounded-2xl border border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
+                className="w-full rounded-2xl border text-black border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
               />
             </div>
 
@@ -191,7 +191,7 @@ export default function DelegationFormStep({
                     placeholder="Enter the number of delegates"
                     onChange={handleChange}
                     min={1}
-                    className="w-full rounded-2xl border border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
+                    className="w-full rounded-2xl border text-black border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
                   />
                 </div>
 
@@ -207,7 +207,7 @@ export default function DelegationFormStep({
                     value={formData.numberOfFacultyAdvisors}
                     onChange={handleChange}
                     min={0}
-                    className="w-full rounded-2xl border border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
+                    className="w-full rounded-2xl border text-black border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
                   />
                 </div>
               </>
@@ -255,7 +255,7 @@ export default function DelegationFormStep({
               onChange={handleChange}
               rows={5}
               placeholder="Tell us about your experience..."
-              className="w-full resize-none rounded-2xl border border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
+              className="w-full resize-none rounded-2xl border text-black border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
             />
           </div>
 
@@ -274,7 +274,7 @@ export default function DelegationFormStep({
               value={formData.hmunExperience}
               onChange={handleChange}
               placeholder="e.g., First time, 2 years, etc."
-              className="w-full rounded-2xl border border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
+              className="w-full rounded-2xl border text-black border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
             />
           </div>
         </div>
@@ -303,7 +303,7 @@ export default function DelegationFormStep({
               onChange={handleChange}
               maxLength={255}
               placeholder="e.g., Latin America, Southeast Asia, etc."
-              className="w-full rounded-2xl border border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
+              className="w-full rounded-2xl border text-black border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
             />
           </div>
 
@@ -322,7 +322,7 @@ export default function DelegationFormStep({
               value={formData.prefersDoubleDelegations}
               onChange={handleChange}
               title="Select whether your delegation prefers double delegations"
-              className="w-full rounded-2xl border border-[#104179]/15 bg-white px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
+              className="w-full rounded-2xl border text-black border-[#104179]/15 bg-white px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
             >
               <option value="yes" disabled={isDelegateAccount}>
                 Yes, we prefer double delegations
@@ -347,7 +347,7 @@ export default function DelegationFormStep({
               maxLength={255}
               rows={3}
               placeholder="Specify your crisis committee preferences..."
-              className="w-full resize-none rounded-2xl border border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
+              className="w-full resize-none rounded-2xl border text-black border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
             />
           </div>
 
@@ -366,7 +366,7 @@ export default function DelegationFormStep({
               value={formData.committeeInterests}
               onChange={handleChange}
               title="Select your committee interest"
-              className="w-full rounded-2xl border border-[#104179]/15 bg-white px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
+              className="w-full rounded-2xl border text-black border-[#104179]/15 bg-white px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
             >
               <option value="advanced">Advanced Committees (AHCSG, AHCDG, UNSC)</option>
               <option value="press">Press Corps Committee</option>

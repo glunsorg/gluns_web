@@ -54,12 +54,13 @@ export function Sidebar({
       >
         <div className="flex items-center justify-between px-6 pb-5 pt-6 border-b border-white/10">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="h-11 w-11 rounded-2xl bg-[#104179] border border-[#85c226]/30 flex items-center justify-center">
-              <span className="text-white font-black">G</span>
+            <div className="h-11 w-11 bg-[#85c226] border border-[#85c226]/30 flex items-center justify-center">
+              <span className="text-[#104179] font-semibold text-lg">
+                {userName?.charAt(0) || 'U'}
+              </span>
             </div>
             <div className="min-w-0">
-              <p className="text-xs uppercase tracking-[0.3em] text-white/45">Portal</p>
-              <h4 className="truncate text-sm font-semibold text-white">{userName}</h4>
+              <h4 className="truncate text-sm font-semibold text-white uppercase">{userName}</h4>
               <p className="text-xs text-white/45">{portalLabel}</p>
             </div>
           </div>

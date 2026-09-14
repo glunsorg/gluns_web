@@ -73,6 +73,7 @@ export default function DelegationPortal() {
   const [showDelegateForm, setShowDelegateForm] = useState(false)
 
   const { user, checkingAuth, logout: authLogout } = useAuthGate()
+  console.log('user details:', user)
   const isDelegateAccount = !!user?.roles?.includes('delegate')
 
   const steps = [
