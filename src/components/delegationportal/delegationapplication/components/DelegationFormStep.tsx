@@ -48,7 +48,7 @@ export default function DelegationFormStep({
           <div className="flex flex-col gap-4 rounded-3xl bg-[#0d0d0d] p-5 text-white sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.35em] text-white/45">Registration</p>
-              <h2 className="mt-2 text-2xl font-black sm:text-3xl">
+              <h2 className="mt-2 text-2xl font-semibold sm:text-3xl">
                 {isDelegateAccount ? 'Individual delegate registration' : 'Delegation registration'}
               </h2>
               <p className="mt-2 max-w-2xl text-sm text-white/70">

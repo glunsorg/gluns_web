@@ -20,6 +20,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: nu
   )
 
   const data = await res.json()
+  console.log('Delegation update response:', data)
 
   if (!res.ok) {
     return NextResponse.json(

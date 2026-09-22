@@ -56,7 +56,7 @@ export default function DelegationHeader({
                 {isDelegateAccount ? 'Individual' : 'Institution'}
               </span>
             </div>
-            <h1 className="text-3xl font-black tracking-tight sm:text-4xl">
+            <h1 className="text-3xl font-semibold uppercase tracking-tight sm:text-4xl">
               {titleMap[activeSection] || 'Portal Dashboard'}
             </h1>
             <p className="max-w-2xl text-sm leading-relaxed text-white/70 sm:text-base">

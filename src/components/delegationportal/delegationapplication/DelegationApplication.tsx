@@ -52,6 +52,7 @@ const EMPTY_DELEGATION: Delegation = {
   school: '',
   delegates: [],
   facultyAdvisors: [],
+  event: '',
 }
 
 export default function DelegationPortal() {
@@ -73,7 +74,6 @@ export default function DelegationPortal() {
   const [showDelegateForm, setShowDelegateForm] = useState(false)
 
   const { user, checkingAuth, logout: authLogout } = useAuthGate()
-  console.log('user details:', user)
   const isDelegateAccount = !!user?.roles?.includes('delegate')
 
   const steps = [
@@ -283,7 +283,7 @@ export default function DelegationPortal() {
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white">
-      <div className="flex min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(16,65,121,0.45),transparent_38%),radial-gradient(circle_at_top_right,rgba(133,194,38,0.18),transparent_28%),linear-gradient(180deg,#0d0d0d_0%,#07131f_100%)]">
+      <div className="flex min-h-screen bg-[#07131f]">
         <Sidebar
           status={formData.status}
           isOpen={sidebarOpen}
@@ -316,7 +316,7 @@ export default function DelegationPortal() {
                       <p className="text-xs uppercase tracking-[0.35em] text-white/45">
                         {card.title}
                       </p>
-                      <p className="mt-3 text-2xl font-black text-white">{card.value}</p>
+                      <p className="mt-3 text-2xl font-semibold text-white">{card.value}</p>
                       <p className="mt-2 text-sm leading-relaxed text-white/65">{card.helper}</p>
                     </div>
                   ))}
@@ -329,7 +329,7 @@ export default function DelegationPortal() {
                         <p className="text-xs uppercase tracking-[0.35em] text-white/40">
                           Overview
                         </p>
-                        <h2 className="mt-2 text-3xl font-black">
+                        <h2 className="mt-2 text-3xl font-semibold">
                           Welcome to the delegation portal
                         </h2>
                         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/70">
@@ -602,7 +602,7 @@ export default function DelegationPortal() {
                     </div>
                     <div>
                       <p className="text-xs uppercase tracking-[0.35em] text-white/40">Profile</p>
-                      <h3 className="mt-1 text-3xl font-black">Your portal profile</h3>
+                      <h3 className="mt-1 text-3xl font-semibold">Your portal profile</h3>
                     </div>
                   </div>
 

@@ -201,7 +201,7 @@ export default function CountryAssignmentsForm({ delegationId, delegates, paymen
         <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-3xl">
             <p className="text-xs uppercase tracking-[0.35em] text-white/45">Assignments</p>
-            <h2 className="mt-2 text-3xl font-black sm:text-4xl">Build committee assignments</h2>
+            <h2 className="mt-2 text-3xl font-semibold sm:text-4xl">Build committee assignments</h2>
             <p className="mt-3 text-sm leading-relaxed text-white/70 sm:text-base">
               Choose an organ, select a committee, and assign delegates. General Assembly is the
               only path where countries are selected directly in the portal.

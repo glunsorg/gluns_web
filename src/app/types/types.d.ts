@@ -1,6 +1,7 @@
 export interface Delegation {
   id?: string
   delegationName: string
+  event: string
   countryOfOrigin: string
   numberOfDelegates: number
   numberOfFacultyAdvisors: number
