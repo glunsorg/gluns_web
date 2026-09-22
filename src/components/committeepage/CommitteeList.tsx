@@ -83,7 +83,7 @@ export default async function CommitteeList() {
             conference and choose your organ.
           </p>
           <Link
-            href="/authentication"
+            href="/registration"
             className="inline-flex items-center gap-3 bg-white text-[#104179] text-lg lg:text-xl px-8 py-4 font-semibold hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-xl"
           >
             Register Now

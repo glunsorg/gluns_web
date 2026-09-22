@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import React from 'react'
 import RegisterHero from '@/components/registrationPage/RegisterHero'
 import RegistrationForms from '@/components/registrationPage/RegistrationForms'
+import BlankPage from '@/components/errorpages/BlankPage'
 
 // meta data
 export const metadata = {
@@ -70,7 +71,8 @@ export default function page() {
   return (
     <>
       <RegisterHero />
-      <RegistrationForms />
+      {/* <RegistrationForms /> */}
+      <BlankPage />
     </>
   )
 }

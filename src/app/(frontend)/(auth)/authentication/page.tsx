@@ -1,5 +1,5 @@
 import React from 'react'
-import AuthSection from '@/components/authentication/AuthSection'
+import AuthSection from '@/components/registration/AuthSection'
 
 export const metadata = {
   title: 'GLUNS Login & Sign Up | Model United Nations Kenya, Africa & Worldwide',
@@ -13,7 +13,7 @@ export const metadata = {
     title: 'GLUNS Authentication – Sign Up or Log In to Model United Nations Portal',
     description:
       'Sign up or log in to the GLUNS portal to register your school or student delegation for Model United Nations conferences and youth leadership programs across Kenya, Africa, and globally.',
-    url: `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/authentication`,
+    url: `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/registration`,
     siteName: 'GLUNS',
     images: [
       {
@@ -28,7 +28,7 @@ export const metadata = {
   },
 
   alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/authentication`,
+    canonical: `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/registration`,
   },
 
   keywords: [
