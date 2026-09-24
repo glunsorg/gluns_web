@@ -1,12 +1,11 @@
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { IoLocationSharp } from 'react-icons/io5'
 import { fetchEvents } from '@/data/eventFetch'
-import { HiArrowRight } from 'react-icons/hi2'
+import type { Event } from '@/types/event'
 
 export default async function EventsList() {
-  const { events } = await fetchEvents()
+  const { events }: { events: Event[] } = await fetchEvents()
   const dateOptions: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'long',
@@ -15,39 +14,25 @@ export default async function EventsList() {
 
   if (events.length === 0) {
     return (
-      <section className="relative bg-[#0d0d0d] min-h-screen md:min-h-[60vh] lg:min-h-screen rounded-t-3xl -mt-7 z-30 px-6 md:px-12 2xl:px-18 py-12 overflow-hidden">
+      <section className="relative bg-[#0d0d0d] min-h-auto z-30 px-6 md:px-12 2xl:px-18 py-12 overflow-hidden">
         {/* Empty State */}
-        <div className="flex flex-col items-center justify-center max-w-2xl mx-auto py-8">
-          {/* Icon/Illustration */}
-          <div className="relative mb-8">
-            <div className="w-32 h-32 md:w-40 md:h-40 bg-linear-to-br from-[#104179]/10 to-[#85c226]/10 rounded-full flex items-center justify-center">
-              <div className="w-24 h-24 md:w-32 md:h-32 bg-white rounded-full flex items-center justify-center shadow-lg">
-                <svg
-                  className="w-12 h-12 md:w-16 md:h-16 text-[#85c226]"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-              </div>
-            </div>
-            {/* Decorative dots */}
-            <div className="absolute -top-2 -right-2 w-4 h-4 bg-[#85c226] rounded-full animate-pulse"></div>
-            <div className="absolute -bottom-2 -left-2 w-3 h-3 bg-[#104179] rounded-full animate-pulse delay-300"></div>
+        <div className="flex flex-col items-center justify-center max-w-full mx-auto">
+          {/* icon */}
+          <div className="w-80 h-80 mb-6">
+            <Image
+              src="/icons/nolist.png"
+              alt="No Events"
+              width={800}
+              height={800}
+              className="object-contain"
+            />
           </div>
 
           {/* Text Content */}
-          <h3 className="text-2xl md:text-3xl font-bold text-[#104179] mb-3">
+          <h3 className="text-4xl md:text-6xl font-bold text-white mb-3 uppercase">
             No Events Scheduled Yet
           </h3>
-          <p className="text-[#104179]/70 text-center text-base md:text-lg mb-8 px-4">
+          <p className="text-white/70 text-center text-base md:text-xl mb-8 px-4">
             We{"'"}re currently planning exciting new Model UN events. Check back soon for updates
             on upcoming conferences and workshops!
           </p>
@@ -56,7 +41,7 @@ export default async function EventsList() {
           <div className="flex flex-col sm:flex-row gap-4 items-center">
             <Link
               href="/contact"
-              className="border-2 border-[#104179] text-[#104179] px-6 py-3 rounded-xl font-semibold hover:bg-[#104179] hover:text-white transition-all duration-300 hover:scale-105"
+              className="border-2 border-[#104179] text-white px-6 py-3 font-semibold hover:bg-[#104179] hover:text-white transition-all duration-300 hover:scale-105"
             >
               Contact Us
             </Link>
@@ -81,15 +66,24 @@ export default async function EventsList() {
                 </Link>
                 <span>
                   <span className="text-white/65 text-lg md:text-xl 2xl:text-3xl ml-1">
-                    {event.location}
+                    {event.venue}
                   </span>
                 </span>
               </div>
 
               <div className="flex flex-col md:flex-row justify-center items-center gap-4">
-                <span className="text-white/65 text-lg md:text-3xl">
-                  {new Date(event.date).toLocaleDateString(undefined, dateOptions)}
-                </span>
+                {/* start date and date */}
+                <div className="flex flex-col md:flex-row justify-center items-center gap-4">
+                  <div className="flex flex-col md:flex-row justify-center items-center gap-2">
+                    <span className="text-white/65 text-lg md:text-xl 2xl:text-3xl ml-1">
+                      {new Date(event.startDate).toLocaleDateString('en-US', dateOptions)}
+                    </span>
+                    <span className="text-white/65 text-lg md:text-xl 2xl:text-3xl ml-1">-</span>
+                    <span className="text-white/65 text-lg md:text-xl 2xl:text-3xl ml-1">
+                      {new Date(event.endDate).toLocaleDateString('en-US', dateOptions)}
+                    </span>
+                  </div>
+                </div>
 
                 {/* vertical divider */}
                 <div className="hidden md:block w-1 h-8 bg-[#85c226]"></div>

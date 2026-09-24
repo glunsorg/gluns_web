@@ -2,7 +2,7 @@ import { AccessArgs, CollectionConfig } from 'payload'
 import slugify from 'slugify'
 
 export const Events: CollectionConfig = {
-  slug: 'event',
+  slug: 'events',
   admin: {
     useAsTitle: 'title',
     description: 'Add Event',
@@ -49,13 +49,7 @@ export const Events: CollectionConfig = {
       type: 'textarea',
       required: false,
     },
-    {
-      name: 'banner',
-      label: 'Event Image',
-      type: 'upload',
-      relationTo: 'media',
-      required: false,
-    },
+
     {
       name: 'description',
       label: 'Event Information',
@@ -63,17 +57,12 @@ export const Events: CollectionConfig = {
       required: true,
     },
     {
-      name: 'location',
-      label: 'Location',
+      name: 'venue',
+      label: 'Venue',
       type: 'text',
       required: true,
     },
-    {
-      name: 'date',
-      label: 'Event Date',
-      type: 'date',
-      required: true,
-    },
+
     {
       name: 'cost',
       label: 'Event Cost',
@@ -86,6 +75,68 @@ export const Events: CollectionConfig = {
       type: 'text',
       required: false,
       defaultValue: 'KES',
+    },
+    {
+      name: 'eventType',
+      label: 'Event Type',
+      type: 'select',
+      required: true,
+      options: [
+        {
+          label: 'Local',
+          value: 'local',
+        },
+        {
+          label: 'International',
+          value: 'international',
+        },
+      ],
+    },
+
+    {
+      name: 'registrationState',
+      type: 'select',
+      required: true,
+      defaultValue: 'draft',
+      options: [
+        { label: 'Draft', value: 'draft' },
+        { label: 'Open', value: 'open' },
+        { label: 'Closed', value: 'closed' },
+      ],
+    },
+    {
+      name: 'startDate',
+      type: 'date',
+      required: true,
+    },
+
+    {
+      name: 'endDate',
+      type: 'date',
+      required: true,
+    },
+
+    {
+      name: 'registrationOpen',
+      type: 'date',
+      required: true,
+    },
+
+    {
+      name: 'registrationClose',
+      type: 'date',
+      required: true,
+    },
+    {
+      name: 'allowIndividualRegistration',
+      type: 'checkbox',
+      defaultValue: true,
+    },
+
+    {
+      name: 'allowInstitutionRegistration',
+      type: 'checkbox',
+      defaultValue: true,
     },
   ],
 }

@@ -15,32 +15,32 @@ import { Media } from './collections/media/Media'
 import { Pages } from './collections/Pages'
 import { Documents } from './collections/media/Documents'
 import { Portraits } from './collections/media/Portraits'
-import { DelegationApplications } from './collections/delegation/DelegationApplication'
-import { Delegations } from './collections/delegation/Delegations'
-import { Delegates } from './collections/delegation/Delegates'
 
-import Blog from './collections/Blog'
 import { Events } from './collections/administration/Events'
-import { Registrations } from './collections/administration/Registrations'
 
-// assignments
-import { PositionPapers } from './collections/delegation/PositionPapers'
+// registration
+import { Registrations } from './collections/delegation/Registrations'
+import { RegistrationBatches } from './collections/delegation/RegistrationBatches'
+import { Institutions } from './collections/delegation/Institutions'
+import { InstitutionMemberships } from './collections/delegation/InstitutionMembership'
+import { Delegates } from './collections/delegation/Delegates'
+import { DelegateAssignments } from './collections/delegation/DelegateAssignments'
 import { Countries } from './collections/delegation/Countries'
-import { CommitteeAssignments } from './collections/delegation/CommitteeAssignments'
-// committees
-import { Committees } from './collections/committee/Committees'
-import { CommitteeCategories } from './collections/committee/CommitteeCategories'
-import { CommitteeTeam } from './collections/committee/CommitteeTeam'
+import { Organs } from './collections/delegation/Organs'
+import { Committees } from './collections/delegation/Committees'
+import { EventCommittees } from './collections/delegation/EventCommittees'
 
 // secretariat
 import { Secretariat } from './collections/administration/Secretariat'
 
-import { Faculty } from './collections/delegation/Faculty'
+// payments
+import { Payments } from './collections/payment/Payments'
+import { Invoices } from './collections/payment/Invoices'
+import { InvoiceItems } from './collections/payment/InvoiceItems'
+import { Receipts } from './collections/payment/Receipts'
 
-import { Payments } from './collections/administration/Payments'
 import { Sponsors } from './collections/administration/Sponsors'
 import { Trainers } from './collections/administration/Trainers'
-import { BackgroundGuides } from './collections/background-guides/BackgroundGuides'
 
 // endpoints
 
@@ -89,24 +89,24 @@ export default buildConfig({
     Pages,
     Documents,
     Portraits,
-    DelegationApplications,
-    Delegations,
     Delegates,
-    Faculty,
+    Invoices,
+    InvoiceItems,
+    Receipts,
     Payments,
     Events,
     Registrations,
-    Blog,
+    DelegateAssignments,
     Sponsors,
     Trainers,
-    BackgroundGuides,
+    RegistrationBatches,
     Committees,
-    CommitteeCategories,
-    CommitteeTeam,
+    EventCommittees,
+    Organs,
+    Institutions,
+    InstitutionMemberships,
     Secretariat,
     Countries,
-    PositionPapers,
-    CommitteeAssignments,
   ],
   // serverURL: process.env.PAYLOAD_URL,
   serverURL: 'http://localhost:3001',

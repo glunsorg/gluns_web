@@ -6,24 +6,29 @@ export async function fetchEvents() {
   const payload = await getPayload({ config: payloadConfig })
 
   const result = await payload.find({
-    collection: 'event', // required
+    collection: 'events', // required
     depth: 2,
     pagination: false,
-    sort: 'date',
+    sort: 'startDate',
   })
 
   return {
-    events: result.docs.map((committee) => ({
-      id: committee.id,
-      title: committee.title,
-      subtitle: committee.subtitle,
-      slug: committee.slug,
-      description: committee.description,
-      banner: committee.banner,
-      location: committee.location,
-      date: committee.date,
-      cost: committee.cost,
-      currency: committee.currency,
+    events: result.docs.map((event) => ({
+      id: event.id,
+      title: event.title,
+      subtitle: event.subtitle,
+      slug: event.slug,
+      description: event.description,
+      eventType: event.eventType,
+      registrationType: event.registrationState,
+      venue: event.venue,
+      startDate: event.startDate,
+      endDate: event.endDate,
+      cost: event.cost,
+      currency: event.currency,
+      registrationOpenDate: event.registrationOpen,
+      registrationCloseDate: event.registrationClose,
+      allowInstitutionksRegistration: event.allowInstitutionRegistration,
     })),
   }
 }

@@ -9,7 +9,7 @@ export async function GET(req: Request) {
 
   try {
     const events = await payload.find({
-      collection: 'event',
+      collection: 'events',
       limit: 0,
     })
 

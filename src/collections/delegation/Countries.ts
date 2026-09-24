@@ -37,4 +37,11 @@ export const Countries: CollectionConfig = {
       admin: { description: 'Indicates whether the country is active or not' },
     },
   ],
+
+  indexes: [
+    {
+      fields: ['code'],
+      unique: true,
+    },
+  ],
 }

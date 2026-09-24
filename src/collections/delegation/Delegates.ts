@@ -1,85 +1,92 @@
-import { CollectionConfig } from 'payload'
-import { enforceDelegateOwnership } from '../hooks/DelegateOwnership'
-import { ensurePaidSlots } from '../hooks/EnsurePaidSlots'
-import { AccessArgs } from 'payload'
+import type { CollectionConfig } from 'payload'
 
 export const Delegates: CollectionConfig = {
   slug: 'delegates',
+
   admin: {
-    useAsTitle: 'email',
-    group: 'Delegation Management',
-    defaultColumns: ['firstName', 'lastName', 'email', 'delegation'],
-    enableRichTextLink: false,
+    useAsTitle: 'fullName',
+    defaultColumns: ['fullName', 'registration', 'batch', 'delegateState'],
   },
-  access: {
-    read: ({ req }: AccessArgs) => !!req.user,
-    create: ({ req }: AccessArgs) => {
-      return !!(
-        req.user &&
-        'roles' in req.user &&
-        (req.user.roles.includes('admin') || req.user.roles.includes('teacher'))
-      )
-    },
-    update: ({ req, data }: AccessArgs) => {
-      return !!(
-        req.user &&
-        'roles' in req.user &&
-        (req.user.roles.includes('admin') || req.user.id === data?.teacher)
-      )
-    },
-    delete: ({ req, data }: AccessArgs) => {
-      return !!(
-        req.user &&
-        'roles' in req.user &&
-        (req.user.roles.includes('admin') || req.user.id === data?.teacher)
-      )
-    },
-  },
-  hooks: {
-    beforeChange: [enforceDelegateOwnership, ensurePaidSlots],
-  },
+
   fields: [
     {
-      name: 'teacher',
-      type: 'relationship',
-      relationTo: 'users',
+      name: 'fullName',
+      type: 'text',
       required: true,
     },
-    {
-      name: 'delegation',
-      type: 'relationship',
-      relationTo: 'delegations',
-      required: true,
-    },
+
     {
       name: 'firstName',
       type: 'text',
       required: true,
     },
+
     {
       name: 'lastName',
       type: 'text',
       required: true,
     },
+
     {
       name: 'email',
       type: 'email',
-      required: true,
-      unique: true,
     },
+
     {
-      name: 'gradeLevel',
+      name: 'phone',
+      type: 'text',
+    },
+
+    {
+      name: 'gender',
       type: 'select',
-      options: Array.from({ length: 12 }, (_, i) => ({
-        label: `Grade ${i + 1}`,
-        value: `Grade ${i + 1}`,
-      })),
+      options: [
+        { label: 'Male', value: 'male' },
+        { label: 'Female', value: 'female' },
+        { label: 'Other', value: 'other' },
+        { label: 'Prefer not to say', value: 'prefer_not_to_say' },
+      ],
+    },
+
+    {
+      name: 'registration',
+      type: 'relationship',
+      relationTo: 'registrations',
       required: true,
     },
+
     {
-      name: 'phoneNumber',
-      type: 'number',
+      name: 'batch',
+      type: 'relationship',
+      relationTo: 'registration-batches',
       required: true,
+    },
+
+    {
+      name: 'institution',
+      type: 'relationship',
+      relationTo: 'institutions',
+    },
+
+    {
+      name: 'delegateState',
+      type: 'select',
+      required: true,
+      defaultValue: 'pending',
+      options: [
+        { label: 'Pending', value: 'pending' },
+        { label: 'Confirmed', value: 'confirmed' },
+        { label: 'Cancelled', value: 'cancelled' },
+      ],
+    },
+  ],
+
+  indexes: [
+    {
+      fields: ['registration'],
+    },
+    {
+      fields: ['batch'],
     },
   ],
 }

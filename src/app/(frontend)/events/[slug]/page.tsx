@@ -5,16 +5,8 @@ import config from '@/payload.config'
 import { getPayload } from 'payload'
 import { notFound } from 'next/navigation'
 import { RichText } from '@payloadcms/richtext-lexical/react'
-import { SlashIcon, Calendar, MapPin } from 'lucide-react'
+import { Calendar, MapPin } from 'lucide-react'
 import { FaMoneyBillTransfer } from 'react-icons/fa6'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
@@ -29,7 +21,7 @@ export async function generateMetadata({
   const payload = await getPayload({ config: payloadConfig })
 
   const { docs } = await payload.find({
-    collection: 'event',
+    collection: 'events',
     where: {
       slug: { equals: slug },
     },
@@ -51,9 +43,6 @@ export async function generateMetadata({
     event.subtitle ||
     `Join ${event.title}, a GLUNS Model United Nations event bringing together students for diplomacy, debate, and leadership in Kenya, Africa, and internationally.`
 
-  const imageUrl =
-    typeof event?.banner === 'object' && event.banner?.url ? event.banner.url : '/seo/events.jpg'
-
   const url = `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/events/${slug}`
 
   return {
@@ -68,15 +57,7 @@ export async function generateMetadata({
       description,
       url,
       siteName: 'GLUNS',
-      images: [
-        {
-          url: imageUrl,
-          secureUrl: imageUrl,
-          width: 1200,
-          height: 630,
-          alt: event.title,
-        },
-      ],
+
       type: 'article',
       locale: 'en_KE',
     },
@@ -121,7 +102,7 @@ export default async function CommitteePage({ params }: { params: Promise<{ slug
   const payload = await getPayload({ config: payloadConfig })
 
   const { docs } = await payload.find({
-    collection: 'event',
+    collection: 'events',
     where: {
       slug: {
         equals: slug,
@@ -171,29 +152,31 @@ export default async function CommitteePage({ params }: { params: Promise<{ slug
         <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 border-t-8 border-[#85c226]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Date */}
-            {events.date && (
+            {events.startDate && (
               <div className="flex items-center space-x-4 p-4 border-2 border-[#104179]/20 hover:border-[#85c226] transition-all duration-300">
-                <div className="shrink-0 w-14 h-14 bg-[#104179] rounded-lg flex items-center justify-center">
+                <div className="shrink-0 w-14 h-14 bg-[#85c226] rounded-lg flex items-center justify-center">
                   <Calendar className="w-7 h-7 text-white" />
                 </div>
                 <div>
                   <p className="text-sm text-gray-600 font-medium">Date</p>
                   <p className="text-lg font-bold text-[#104179]">
-                    {new Date(events.date).toLocaleDateString('en-US', dateOptions)}
+                    {new Date(events.startDate).toLocaleDateString('en-US', dateOptions)}
+                    {events.endDate &&
+                      ` - ${new Date(events.endDate).toLocaleDateString('en-US', dateOptions)}`}
                   </p>
                 </div>
               </div>
             )}
 
             {/* Location */}
-            {events.location && (
+            {events.venue && (
               <div className="flex items-center space-x-4 p-4 border-2 border-[#104179]/20 hover:border-[#85c226] transition-all duration-300">
                 <div className="shrink-0 w-14 h-14 bg-[#104179] rounded-lg flex items-center justify-center">
                   <MapPin className="w-7 h-7 text-white" />
                 </div>
                 <div>
                   <p className="text-sm text-gray-600 font-medium">Location</p>
-                  <p className="text-lg font-bold text-[#104179]">{events.location}</p>
+                  <p className="text-lg font-bold text-[#104179]">{events.venue}</p>
                 </div>
               </div>
             )}

@@ -28,138 +28,50 @@ export default function SecList({ block }: TeamBlockProps) {
   const [selectedMember, setSelectedMember] = useState<SecretariatMember | null>(null)
   const seclist = Array.isArray(block?.team_profiles) ? block.team_profiles : []
 
-  if (!seclist) {
-    const placeholderRoles = [
-      'Secretary-General',
-      'Deputy Secretary-General',
-      'Director of Operations',
-      'Chief of Staff',
-      'Director of Communications',
-      'Head of Delegate Affairs',
-    ]
+  console.log('SecList block:', block)
+  console.log('team_profiles:', block?.team_profiles)
+  console.log('seclist:', seclist)
 
+  if (seclist.length === 0) {
     return (
-      <section className="relative bg-white pt-2 pb-12 px-6 md:px-8 2xl:px-16 overflow-hidden">
-        {/* Background Pattern — same as populated state */}
-        <div className="absolute inset-0 opacity-5 pointer-events-none">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-[#104179] rounded-full" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#104179] rounded-full" />
-          <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-[#104179] rounded-full" />
-        </div>
-
-        <div className="mx-auto relative z-10">
-          {/* Ghost Bento Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {placeholderRoles.map((role, index) => (
-              <div
-                key={index}
-                className={`relative ${index === 0 ? 'md:col-span-2 md:row-span-2' : ''}`}
-              >
-                <div className="relative h-full min-h-[400px] overflow-hidden bg-[#104179]/5 border-2 border-dashed border-[#104179]/20">
-                  {/* Subtle gradient wash */}
-                  <div className="absolute inset-0 bg-linear-to-br from-[#104179]/5 via-transparent to-[#85c226]/5" />
-
-                  {/* Silhouette figure */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-10">
-                    <svg
-                      viewBox="0 0 100 140"
-                      className="w-32 h-44 fill-[#104179]"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <circle cx="50" cy="35" r="22" />
-                      <path d="M10 140 Q10 85 50 85 Q90 85 90 140Z" />
-                    </svg>
-                  </div>
-
-                  {/* Content overlay — mirrors real card layout */}
-                  <div className="absolute inset-0 p-8 flex flex-col justify-between">
-                    {/* Top corner accent */}
-                    <div className="flex justify-end">
-                      <div className="w-16 h-16 flex items-center justify-center transform rotate-45 bg-[#104179]/15">
-                        <ArrowUpRight className="w-6 h-6 text-[#104179]/25 transform -rotate-45" />
-                      </div>
-                    </div>
-
-                    {/* Bottom content skeleton */}
-                    <div>
-                      <div className="mb-4">
-                        <div className="w-12 h-1 bg-[#104179]/20 mb-4" />
-                        {/* Name bar placeholder */}
-                        <div className="h-7 w-40 bg-[#104179]/12 rounded mb-3" />
-                        {/* Role label */}
-                        <p className="text-[#104179]/35 font-medium uppercase tracking-widest text-xs">
-                          {role}
-                        </p>
-                      </div>
-                      <div className="h-4 w-24 bg-[#104179]/10 rounded" />
-                    </div>
-                  </div>
-
-                  {/* Number badge */}
-                  <div className="absolute top-8 left-8">
-                    <div className="w-12 h-12 flex items-center justify-center bg-[#104179]/12 text-[#104179]/25 font-black text-xl">
-                      {String(index + 1).padStart(2, '0')}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+      <section className="relative bg-[#0d0d0d] min-h-auto z-30 px-6 md:px-12 2xl:px-18 py-12 overflow-hidden">
+        {/* Empty State */}
+        <div className="flex flex-col items-center justify-center max-w-full mx-auto">
+          {/* icon */}
+          <div className="w-80 h-80 mb-6">
+            <Image
+              src="/icons/nolist.png"
+              alt="No Events"
+              width={800}
+              height={800}
+              className="object-contain"
+            />
           </div>
 
-          {/* Centred announcement card, floating above the ghost grid */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center z-20 px-6 pointer-events-none">
-            <div className="bg-white/95 backdrop-blur-sm border border-[#104179]/20 shadow-2xl px-10 py-10 max-w-lg w-full text-center pointer-events-auto">
-              {/* Icon block */}
-              <div className="w-16 h-16 mx-auto mb-6 bg-[#104179] flex items-center justify-center">
-                <svg
-                  className="w-8 h-8 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-              </div>
+          {/* Text Content */}
+          <h3 className="text-4xl md:text-6xl font-bold text-white mb-3 uppercase">
+            No Secretariat Members Found
+          </h3>
+          <p className="text-white/70 text-center text-base md:text-xl mb-8 px-4">
+            We{"'"}re currently in the process of updating our Secretariat team. Please check back
+            later for the latest information on our dedicated team members who help make GLUNS a
+            success!
+          </p>
 
-              {/* Label pill */}
-              <span className="inline-block text-[#104179] text-xs tracking-widest border border-[#104179] px-4 py-1 mb-5 uppercase">
-                Secretariat
-              </span>
-
-              <h2 className="text-[#104179] text-3xl md:text-4xl font-black mb-3 leading-tight">
-                Meet the Team — <span className="text-[#85c226]">Coming Soon</span>
-              </h2>
-
-              <p className="text-[#104179]/55 text-sm md:text-base leading-relaxed mb-8">
-                Our Secretariat is being assembled. Check back shortly to meet the team leading this
-                year&apos;s conference.
-              </p>
-
-              {/* Decorative divider */}
-              <div className="flex items-center gap-3 mb-8">
-                <div className="flex-1 h-px bg-[#104179]/15" />
-                <div className="w-2 h-2 bg-[#85c226]" />
-                <div className="flex-1 h-px bg-[#104179]/15" />
-              </div>
-
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 bg-[#104179] text-white px-7 py-3 font-semibold text-sm tracking-wide hover:bg-[#104179]/85 transition-colors duration-200"
-              >
-                <Mail className="w-4 h-4" />
-                Get in Touch
-              </Link>
-            </div>
+          {/* Call to Action */}
+          <div className="flex flex-col sm:flex-row gap-4 items-center">
+            <Link
+              href="/contact"
+              className="border-2 border-[#104179] text-white px-6 py-3 font-semibold hover:bg-[#104179] hover:text-white transition-all duration-300 hover:scale-105"
+            >
+              Contact Us
+            </Link>
           </div>
         </div>
       </section>
     )
   }
+
   return (
     <section className="relative bg-white pt-2 pb-12 px-6 md:px-8 2xl:px-16 overflow-hidden">
       {/* Background Pattern */}

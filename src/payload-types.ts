@@ -72,24 +72,24 @@ export interface Config {
     pages: Page;
     documents: Document;
     portraits: Portrait;
-    'delegation-applications': DelegationApplication;
-    delegations: Delegation;
     delegates: Delegate;
-    'faculty-advisors': FacultyAdvisor;
+    invoices: Invoice;
+    'invoice-items': InvoiceItem;
+    receipts: Receipt;
     payments: Payment;
-    event: Event;
+    events: Event;
     registrations: Registration;
-    blog: Blog;
+    'delegate-assignments': DelegateAssignment;
     sponsors: Sponsor;
     trainers: Trainer;
-    'background-guides': BackgroundGuide;
+    'registration-batches': RegistrationBatch;
     committees: Committee;
-    'committee-categories': CommitteeCategory;
-    'committee-team': CommitteeTeam;
+    'event-committees': EventCommittee;
+    organs: Organ;
+    institutions: Institution;
+    'institution-memberships': InstitutionMembership;
     secretariat: Secretariat;
     countries: Country;
-    'position-papers': PositionPaper;
-    'committee-assignments': CommitteeAssignment;
     forms: Form;
     'form-submissions': FormSubmission;
     'payload-kv': PayloadKv;
@@ -104,24 +104,24 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     documents: DocumentsSelect<false> | DocumentsSelect<true>;
     portraits: PortraitsSelect<false> | PortraitsSelect<true>;
-    'delegation-applications': DelegationApplicationsSelect<false> | DelegationApplicationsSelect<true>;
-    delegations: DelegationsSelect<false> | DelegationsSelect<true>;
     delegates: DelegatesSelect<false> | DelegatesSelect<true>;
-    'faculty-advisors': FacultyAdvisorsSelect<false> | FacultyAdvisorsSelect<true>;
+    invoices: InvoicesSelect<false> | InvoicesSelect<true>;
+    'invoice-items': InvoiceItemsSelect<false> | InvoiceItemsSelect<true>;
+    receipts: ReceiptsSelect<false> | ReceiptsSelect<true>;
     payments: PaymentsSelect<false> | PaymentsSelect<true>;
-    event: EventSelect<false> | EventSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
     registrations: RegistrationsSelect<false> | RegistrationsSelect<true>;
-    blog: BlogSelect<false> | BlogSelect<true>;
+    'delegate-assignments': DelegateAssignmentsSelect<false> | DelegateAssignmentsSelect<true>;
     sponsors: SponsorsSelect<false> | SponsorsSelect<true>;
     trainers: TrainersSelect<false> | TrainersSelect<true>;
-    'background-guides': BackgroundGuidesSelect<false> | BackgroundGuidesSelect<true>;
+    'registration-batches': RegistrationBatchesSelect<false> | RegistrationBatchesSelect<true>;
     committees: CommitteesSelect<false> | CommitteesSelect<true>;
-    'committee-categories': CommitteeCategoriesSelect<false> | CommitteeCategoriesSelect<true>;
-    'committee-team': CommitteeTeamSelect<false> | CommitteeTeamSelect<true>;
+    'event-committees': EventCommitteesSelect<false> | EventCommitteesSelect<true>;
+    organs: OrgansSelect<false> | OrgansSelect<true>;
+    institutions: InstitutionsSelect<false> | InstitutionsSelect<true>;
+    'institution-memberships': InstitutionMembershipsSelect<false> | InstitutionMembershipsSelect<true>;
     secretariat: SecretariatSelect<false> | SecretariatSelect<true>;
     countries: CountriesSelect<false> | CountriesSelect<true>;
-    'position-papers': PositionPapersSelect<false> | PositionPapersSelect<true>;
-    'committee-assignments': CommitteeAssignmentsSelect<false> | CommitteeAssignmentsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -292,23 +292,37 @@ export interface Document {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "delegation-applications".
+ * via the `definition` "delegates".
  */
-export interface DelegationApplication {
+export interface Delegate {
   id: number;
-  user: number | User;
+  fullName: string;
+  firstName: string;
+  lastName: string;
+  email?: string | null;
+  phone?: string | null;
+  gender?: ('male' | 'female' | 'other' | 'prefer_not_to_say') | null;
+  registration: number | Registration;
+  batch: number | RegistrationBatch;
+  institution?: (number | null) | Institution;
+  delegateState: 'pending' | 'confirmed' | 'cancelled';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registrations".
+ */
+export interface Registration {
+  id: number;
+  registrationNumber: string;
   event: number | Event;
-  delegationName: string;
-  countryOfOrigin: string;
-  numberOfDelegates?: number | null;
-  numberOfFacultyAdvisors?: number | null;
-  previousExperience: string;
-  hmunExperience: string;
-  preferredRegions?: string | null;
-  prefersDoubleDelegations: 'yes' | 'no';
-  crisisCommitteeRequests?: string | null;
-  committeeInterests: 'advanced' | 'press' | 'novice' | 'spanish';
-  status?: ('pending' | 'approved' | 'rejected') | null;
+  registrationType: 'individual' | 'institution';
+  registeredBy: number | User;
+  institution?: (number | null) | Institution;
+  registrationState: 'draft' | 'active' | 'completed' | 'cancelled';
+  currency: string;
+  notes?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -316,14 +330,13 @@ export interface DelegationApplication {
  * Add Event
  *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "event".
+ * via the `definition` "events".
  */
 export interface Event {
   id: number;
   title: string;
   slug: string;
   subtitle?: string | null;
-  banner?: (number | null) | Media;
   description: {
     root: {
       type: string;
@@ -339,67 +352,108 @@ export interface Event {
     };
     [k: string]: unknown;
   };
-  location: string;
-  date: string;
+  venue: string;
   cost?: number | null;
   currency?: string | null;
+  eventType: 'local' | 'international';
+  registrationState: 'draft' | 'open' | 'closed';
+  startDate: string;
+  endDate: string;
+  registrationOpen: string;
+  registrationClose: string;
+  allowIndividualRegistration?: boolean | null;
+  allowInstitutionRegistration?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "delegations".
+ * via the `definition` "institutions".
  */
-export interface Delegation {
+export interface Institution {
   id: number;
-  teacher: number | User;
-  application: number | DelegationApplication;
   name: string;
-  maxDelegates: number;
-  year: number;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "delegates".
- */
-export interface Delegate {
-  id: number;
-  teacher: number | User;
-  delegation: number | Delegation;
-  firstName: string;
-  lastName: string;
+  institutionType: 'school' | 'university' | 'organization';
+  country: string;
+  city: string;
+  address: string;
   email: string;
-  gradeLevel:
-    | 'Grade 1'
-    | 'Grade 2'
-    | 'Grade 3'
-    | 'Grade 4'
-    | 'Grade 5'
-    | 'Grade 6'
-    | 'Grade 7'
-    | 'Grade 8'
-    | 'Grade 9'
-    | 'Grade 10'
-    | 'Grade 11'
-    | 'Grade 12';
   phoneNumber: number;
+  website?: string | null;
   updatedAt: string;
   createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "faculty-advisors".
+ * via the `definition` "registration-batches".
  */
-export interface FacultyAdvisor {
+export interface RegistrationBatch {
   id: number;
-  teacher?: (number | null) | User;
-  delegation?: (number | null) | DelegationApplication;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
+  batchNumber: string;
+  registration: number | Registration;
+  batchState: 'draft' | 'pending_payment' | 'partially_paid' | 'paid' | 'cancelled';
+  sequence: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invoices".
+ */
+export interface Invoice {
+  id: number;
+  invoiceNumber: string;
+  registration: number | Registration;
+  batch?: (number | null) | RegistrationBatch;
+  invoiceState: 'draft' | 'issued' | 'partially_paid' | 'paid' | 'overdue' | 'cancelled' | 'void';
+  issueDate: string;
+  dueDate?: string | null;
+  currency: string;
+  subtotal: number;
+  discount?: number | null;
+  tax?: number | null;
+  total: number;
+  amountPaid?: number | null;
+  balanceDue: number;
+  pdf?: (number | null) | Media;
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invoice-items".
+ */
+export interface InvoiceItem {
+  id: number;
+  invoice: number | Invoice;
+  description: string;
+  quantity: number;
+  unitPrice: number;
+  amount: number;
+  delegate?: (number | null) | Delegate;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "receipts".
+ */
+export interface Receipt {
+  id: number;
+  receiptNumber: string;
+  payment: number | Payment;
+  invoice: number | Invoice;
+  registration: number | Registration;
+  amount: number;
+  currency: string;
+  paymentMethod: string;
+  transactionReference?: string | null;
+  recipientName: string;
+  recipientEmail?: string | null;
+  issuedAt: string;
+  receiptState: 'issued' | 'void';
+  pdf?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -409,64 +463,112 @@ export interface FacultyAdvisor {
  */
 export interface Payment {
   id: number;
-  teacher: number | User;
-  delegation: number | Delegation;
-  delegateSlotsPurchased: number;
+  paymentNumber: string;
+  registration: number | Registration;
+  invoice: number | Invoice;
   amount: number;
-  status?: ('pending' | 'paid' | 'failed') | null;
-  reference?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "registrations".
- */
-export interface Registration {
-  id: number;
-  registrationType: 'individual' | 'school';
-  fullName?: string | null;
-  grade?: number | null;
-  schoolName: string;
-  contactPerson?: string | null;
-  numOfStudents?: number | null;
-  email: string;
-  phoneNumber: string;
-  event: number | Event;
-  invoiceNumber?: string | null;
-  totalAmount?: number | null;
-  status?: ('pending' | 'confirmed' | 'cancelled') | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "blog".
- */
-export interface Blog {
-  id: number;
-  title: string;
-  slug: string;
-  snippet: string;
-  coverImage?: (number | null) | Media;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
+  currency: string;
+  provider: 'mpesa' | 'stripe' | 'flutterwave' | 'bank_transfer' | 'cash' | 'other';
+  transactionReference?: string | null;
+  paymentState: 'pending' | 'successful' | 'failed' | 'cancelled' | 'refunded';
+  initiatedAt?: string | null;
+  paidAt?: string | null;
+  /**
+   * Raw provider response for audit/debugging.
+   */
+  providerResponse?:
+    | {
         [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "delegate-assignments".
+ */
+export interface DelegateAssignment {
+  id: number;
+  delegate: number | Delegate;
+  country: number | Country;
+  eventCommittee: number | EventCommittee;
+  assignmentState: 'pending' | 'assigned' | 'confirmed';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "countries".
+ */
+export interface Country {
+  id: number;
+  name: string;
+  /**
+   * ISO 3166-1 alpha-2 country code (e.g., US, GB, FR)
+   */
+  code: string;
+  /**
+   * Indicates whether the country is active or not
+   */
+  active: boolean;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event-committees".
+ */
+export interface EventCommittee {
+  id: number;
+  /**
+   * Optional event-specific committee name.
+   */
+  name?: string | null;
+  event: number | Event;
+  committee: number | Committee;
+  available?: boolean | null;
+  capacity?: number | null;
+  fee?: number | null;
+  currency?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "committees".
+ */
+export interface Committee {
+  id: number;
+  name: string;
+  description: string;
+  committee_photo?: (number | null) | Media;
+  /**
+   * This field is auto-generated from the Title field. Please do not edit manually.
+   */
+  slug?: string | null;
+  committee_code: string;
+  organ: number | Organ;
+  active?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "organs".
+ */
+export interface Organ {
+  id: number;
+  name: string;
+  code: string;
+  organType: 'committee_based' | 'court' | 'commission' | 'other';
+  active?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * Add Sponsor
@@ -498,136 +600,14 @@ export interface Trainer {
   createdAt: string;
 }
 /**
- * Publish password-protected committee background guides for delegates.
- *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "background-guides".
+ * via the `definition` "institution-memberships".
  */
-export interface BackgroundGuide {
+export interface InstitutionMembership {
   id: number;
-  title: string;
-  /**
-   * Auto-generated from the title, but can be customized if needed.
-   */
-  slug: string;
-  description?: string | null;
-  organ?: string | null;
-  committee?: string | null;
-  guideFile: number | Media;
-  /**
-   * Enter a new password to replace the existing one.
-   */
-  password?: string | null;
-  passwordHash?: string | null;
-  published?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "committees".
- */
-export interface Committee {
-  id: number;
-  title: string;
-  description: string;
-  committee_photo?: (number | null) | Media;
-  /**
-   * This field is auto-generated from the Title field. Please do not edit manually.
-   */
-  slug?: string | null;
-  committee_category: number | CommitteeCategory;
-  committee_code: string;
-  summary: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "committee-categories".
- */
-export interface CommitteeCategory {
-  id: number;
-  name: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "committee-team".
- */
-export interface CommitteeTeam {
-  id: number;
-  name: string;
-  position: string;
-  /**
-   * Lower numbers appear first
-   */
-  rank: number;
-  photo?: (number | null) | Portrait;
-  committee: number | Committee;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "countries".
- */
-export interface Country {
-  id: number;
-  name: string;
-  /**
-   * ISO 3166-1 alpha-2 country code (e.g., US, GB, FR)
-   */
-  code: string;
-  /**
-   * Indicates whether the country is active or not
-   */
-  active: boolean;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "position-papers".
- */
-export interface PositionPaper {
-  id: number;
-  delegate: number | Delegate;
-  committeeAssignment: number | CommitteeAssignment;
-  file: number | Media;
-  submittedAt?: string | null;
-  status?: ('submitted' | 'reviewed') | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "committee-assignments".
- */
-export interface CommitteeAssignment {
-  id: number;
-  delegation: number | DelegationApplication;
-  delegates: (number | Delegate)[];
-  committee: number | Committee;
-  country: number | Country;
-  seatType?: ('single' | 'double') | null;
-  positionPaper?: (number | null) | Document;
-  assignedAt?: string | null;
+  user: number | User;
+  institution: number | Institution;
+  role: 'student' | 'teacher' | 'administrator';
   updatedAt: string;
   createdAt: string;
 }
@@ -867,27 +847,27 @@ export interface PayloadLockedDocument {
         value: number | Portrait;
       } | null)
     | ({
-        relationTo: 'delegation-applications';
-        value: number | DelegationApplication;
-      } | null)
-    | ({
-        relationTo: 'delegations';
-        value: number | Delegation;
-      } | null)
-    | ({
         relationTo: 'delegates';
         value: number | Delegate;
       } | null)
     | ({
-        relationTo: 'faculty-advisors';
-        value: number | FacultyAdvisor;
+        relationTo: 'invoices';
+        value: number | Invoice;
+      } | null)
+    | ({
+        relationTo: 'invoice-items';
+        value: number | InvoiceItem;
+      } | null)
+    | ({
+        relationTo: 'receipts';
+        value: number | Receipt;
       } | null)
     | ({
         relationTo: 'payments';
         value: number | Payment;
       } | null)
     | ({
-        relationTo: 'event';
+        relationTo: 'events';
         value: number | Event;
       } | null)
     | ({
@@ -895,8 +875,8 @@ export interface PayloadLockedDocument {
         value: number | Registration;
       } | null)
     | ({
-        relationTo: 'blog';
-        value: number | Blog;
+        relationTo: 'delegate-assignments';
+        value: number | DelegateAssignment;
       } | null)
     | ({
         relationTo: 'sponsors';
@@ -907,20 +887,28 @@ export interface PayloadLockedDocument {
         value: number | Trainer;
       } | null)
     | ({
-        relationTo: 'background-guides';
-        value: number | BackgroundGuide;
+        relationTo: 'registration-batches';
+        value: number | RegistrationBatch;
       } | null)
     | ({
         relationTo: 'committees';
         value: number | Committee;
       } | null)
     | ({
-        relationTo: 'committee-categories';
-        value: number | CommitteeCategory;
+        relationTo: 'event-committees';
+        value: number | EventCommittee;
       } | null)
     | ({
-        relationTo: 'committee-team';
-        value: number | CommitteeTeam;
+        relationTo: 'organs';
+        value: number | Organ;
+      } | null)
+    | ({
+        relationTo: 'institutions';
+        value: number | Institution;
+      } | null)
+    | ({
+        relationTo: 'institution-memberships';
+        value: number | InstitutionMembership;
       } | null)
     | ({
         relationTo: 'secretariat';
@@ -929,14 +917,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'countries';
         value: number | Country;
-      } | null)
-    | ({
-        relationTo: 'position-papers';
-        value: number | PositionPaper;
-      } | null)
-    | ({
-        relationTo: 'committee-assignments';
-        value: number | CommitteeAssignment;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1093,64 +1073,77 @@ export interface PortraitsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "delegation-applications_select".
- */
-export interface DelegationApplicationsSelect<T extends boolean = true> {
-  user?: T;
-  event?: T;
-  delegationName?: T;
-  countryOfOrigin?: T;
-  numberOfDelegates?: T;
-  numberOfFacultyAdvisors?: T;
-  previousExperience?: T;
-  hmunExperience?: T;
-  preferredRegions?: T;
-  prefersDoubleDelegations?: T;
-  crisisCommitteeRequests?: T;
-  committeeInterests?: T;
-  status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "delegations_select".
- */
-export interface DelegationsSelect<T extends boolean = true> {
-  teacher?: T;
-  application?: T;
-  name?: T;
-  maxDelegates?: T;
-  year?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "delegates_select".
  */
 export interface DelegatesSelect<T extends boolean = true> {
-  teacher?: T;
-  delegation?: T;
+  fullName?: T;
   firstName?: T;
   lastName?: T;
   email?: T;
-  gradeLevel?: T;
-  phoneNumber?: T;
+  phone?: T;
+  gender?: T;
+  registration?: T;
+  batch?: T;
+  institution?: T;
+  delegateState?: T;
   updatedAt?: T;
   createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "faculty-advisors_select".
+ * via the `definition` "invoices_select".
  */
-export interface FacultyAdvisorsSelect<T extends boolean = true> {
-  teacher?: T;
-  delegation?: T;
-  firstName?: T;
-  lastName?: T;
-  email?: T;
-  phoneNumber?: T;
+export interface InvoicesSelect<T extends boolean = true> {
+  invoiceNumber?: T;
+  registration?: T;
+  batch?: T;
+  invoiceState?: T;
+  issueDate?: T;
+  dueDate?: T;
+  currency?: T;
+  subtotal?: T;
+  discount?: T;
+  tax?: T;
+  total?: T;
+  amountPaid?: T;
+  balanceDue?: T;
+  pdf?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invoice-items_select".
+ */
+export interface InvoiceItemsSelect<T extends boolean = true> {
+  invoice?: T;
+  description?: T;
+  quantity?: T;
+  unitPrice?: T;
+  amount?: T;
+  delegate?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "receipts_select".
+ */
+export interface ReceiptsSelect<T extends boolean = true> {
+  receiptNumber?: T;
+  payment?: T;
+  invoice?: T;
+  registration?: T;
+  amount?: T;
+  currency?: T;
+  paymentMethod?: T;
+  transactionReference?: T;
+  recipientName?: T;
+  recipientEmail?: T;
+  issuedAt?: T;
+  receiptState?: T;
+  pdf?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1159,29 +1152,40 @@ export interface FacultyAdvisorsSelect<T extends boolean = true> {
  * via the `definition` "payments_select".
  */
 export interface PaymentsSelect<T extends boolean = true> {
-  teacher?: T;
-  delegation?: T;
-  delegateSlotsPurchased?: T;
+  paymentNumber?: T;
+  registration?: T;
+  invoice?: T;
   amount?: T;
-  status?: T;
-  reference?: T;
+  currency?: T;
+  provider?: T;
+  transactionReference?: T;
+  paymentState?: T;
+  initiatedAt?: T;
+  paidAt?: T;
+  providerResponse?: T;
   updatedAt?: T;
   createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "event_select".
+ * via the `definition` "events_select".
  */
-export interface EventSelect<T extends boolean = true> {
+export interface EventsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   subtitle?: T;
-  banner?: T;
   description?: T;
-  location?: T;
-  date?: T;
+  venue?: T;
   cost?: T;
   currency?: T;
+  eventType?: T;
+  registrationState?: T;
+  startDate?: T;
+  endDate?: T;
+  registrationOpen?: T;
+  registrationClose?: T;
+  allowIndividualRegistration?: T;
+  allowInstitutionRegistration?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1190,34 +1194,28 @@ export interface EventSelect<T extends boolean = true> {
  * via the `definition` "registrations_select".
  */
 export interface RegistrationsSelect<T extends boolean = true> {
-  registrationType?: T;
-  fullName?: T;
-  grade?: T;
-  schoolName?: T;
-  contactPerson?: T;
-  numOfStudents?: T;
-  email?: T;
-  phoneNumber?: T;
+  registrationNumber?: T;
   event?: T;
-  invoiceNumber?: T;
-  totalAmount?: T;
-  status?: T;
+  registrationType?: T;
+  registeredBy?: T;
+  institution?: T;
+  registrationState?: T;
+  currency?: T;
+  notes?: T;
   updatedAt?: T;
   createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "blog_select".
+ * via the `definition` "delegate-assignments_select".
  */
-export interface BlogSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  snippet?: T;
-  coverImage?: T;
-  content?: T;
+export interface DelegateAssignmentsSelect<T extends boolean = true> {
+  delegate?: T;
+  country?: T;
+  eventCommittee?: T;
+  assignmentState?: T;
   updatedAt?: T;
   createdAt?: T;
-  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1244,18 +1242,13 @@ export interface TrainersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "background-guides_select".
+ * via the `definition` "registration-batches_select".
  */
-export interface BackgroundGuidesSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  description?: T;
-  organ?: T;
-  committee?: T;
-  guideFile?: T;
-  password?: T;
-  passwordHash?: T;
-  published?: T;
+export interface RegistrationBatchesSelect<T extends boolean = true> {
+  batchNumber?: T;
+  registration?: T;
+  batchState?: T;
+  sequence?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1264,35 +1257,67 @@ export interface BackgroundGuidesSelect<T extends boolean = true> {
  * via the `definition` "committees_select".
  */
 export interface CommitteesSelect<T extends boolean = true> {
-  title?: T;
+  name?: T;
   description?: T;
   committee_photo?: T;
   slug?: T;
-  committee_category?: T;
   committee_code?: T;
-  summary?: T;
+  organ?: T;
+  active?: T;
   updatedAt?: T;
   createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "committee-categories_select".
+ * via the `definition` "event-committees_select".
  */
-export interface CommitteeCategoriesSelect<T extends boolean = true> {
+export interface EventCommitteesSelect<T extends boolean = true> {
   name?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "committee-team_select".
- */
-export interface CommitteeTeamSelect<T extends boolean = true> {
-  name?: T;
-  position?: T;
-  rank?: T;
-  photo?: T;
+  event?: T;
   committee?: T;
+  available?: T;
+  capacity?: T;
+  fee?: T;
+  currency?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "organs_select".
+ */
+export interface OrgansSelect<T extends boolean = true> {
+  name?: T;
+  code?: T;
+  organType?: T;
+  active?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "institutions_select".
+ */
+export interface InstitutionsSelect<T extends boolean = true> {
+  name?: T;
+  institutionType?: T;
+  country?: T;
+  city?: T;
+  address?: T;
+  email?: T;
+  phoneNumber?: T;
+  website?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "institution-memberships_select".
+ */
+export interface InstitutionMembershipsSelect<T extends boolean = true> {
+  user?: T;
+  institution?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1317,34 +1342,6 @@ export interface CountriesSelect<T extends boolean = true> {
   name?: T;
   code?: T;
   active?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "position-papers_select".
- */
-export interface PositionPapersSelect<T extends boolean = true> {
-  delegate?: T;
-  committeeAssignment?: T;
-  file?: T;
-  submittedAt?: T;
-  status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "committee-assignments_select".
- */
-export interface CommitteeAssignmentsSelect<T extends boolean = true> {
-  delegation?: T;
-  delegates?: T;
-  committee?: T;
-  country?: T;
-  seatType?: T;
-  positionPaper?: T;
-  assignedAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }
