@@ -11,3 +11,15 @@ export interface InvoiceData {
   priceKnown: boolean
   currency: string // add this
 }
+
+export interface DelegateData {
+  id: string
+  fullname: string
+  email: string
+  phone: string
+  gender: string
+  registration: string
+  batch: string
+  institution: string
+  delegateState: string
+}

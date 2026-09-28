@@ -75,13 +75,6 @@ export const Registrations: CollectionConfig = {
     },
 
     {
-      name: 'currency',
-      type: 'text',
-      required: true,
-      defaultValue: 'KES',
-    },
-
-    {
       name: 'notes',
       type: 'textarea',
     },

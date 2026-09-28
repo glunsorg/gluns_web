@@ -128,14 +128,14 @@ export default function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
 
             <div className="grid gap-5 sm:grid-cols-2">
               <Field
-                name="name"
+                name="fullName"
                 label="Full name"
                 type="text"
                 placeholder="Jane Doe"
                 autoComplete="name"
               />
-              {state?.errors?.name && (
-                <p className="text-sm text-red-600">{state.errors.name.join(', ')}</p>
+              {state?.errors?.fullName && (
+                <p className="text-sm text-red-600">{state.errors.fullName.join(', ')}</p>
               )}
 
               <Field

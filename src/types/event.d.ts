@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Media } from './payload-types' // adjust import path if you have generated types
-
 interface Event {
   id: number
   title: string

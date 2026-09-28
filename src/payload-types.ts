@@ -297,8 +297,6 @@ export interface Document {
 export interface Delegate {
   id: number;
   fullName: string;
-  firstName: string;
-  lastName: string;
   email?: string | null;
   phone?: string | null;
   gender?: ('male' | 'female' | 'other' | 'prefer_not_to_say') | null;
@@ -321,7 +319,6 @@ export interface Registration {
   registeredBy: number | User;
   institution?: (number | null) | Institution;
   registrationState: 'draft' | 'active' | 'completed' | 'cancelled';
-  currency: string;
   notes?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -1077,8 +1074,6 @@ export interface PortraitsSelect<T extends boolean = true> {
  */
 export interface DelegatesSelect<T extends boolean = true> {
   fullName?: T;
-  firstName?: T;
-  lastName?: T;
   email?: T;
   phone?: T;
   gender?: T;
@@ -1200,7 +1195,6 @@ export interface RegistrationsSelect<T extends boolean = true> {
   registeredBy?: T;
   institution?: T;
   registrationState?: T;
-  currency?: T;
   notes?: T;
   updatedAt?: T;
   createdAt?: T;

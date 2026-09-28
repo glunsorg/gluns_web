@@ -40,7 +40,7 @@ export default function SecList({ block }: TeamBlockProps) {
           {/* icon */}
           <div className="w-80 h-80 mb-6">
             <Image
-              src="/icons/nolist.png"
+              src="/icons/nogeneral.png"
               alt="No Events"
               width={800}
               height={800}

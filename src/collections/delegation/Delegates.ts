@@ -16,18 +16,6 @@ export const Delegates: CollectionConfig = {
     },
 
     {
-      name: 'firstName',
-      type: 'text',
-      required: true,
-    },
-
-    {
-      name: 'lastName',
-      type: 'text',
-      required: true,
-    },
-
-    {
       name: 'email',
       type: 'email',
     },

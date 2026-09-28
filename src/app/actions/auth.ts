@@ -3,7 +3,7 @@ import { SignUpFormSchema, SignInFormSchema, FormState } from '@/lib/definitions
 
 export async function signUp(state: FormState, formData: FormData) {
   const validatedFields = SignUpFormSchema.safeParse({
-    name: formData.get('name'),
+    fullName: formData.get('fullName'),
     email: formData.get('email'),
     password: formData.get('password'),
     confirmPassword: formData.get('confirmPassword'),
@@ -16,7 +16,7 @@ export async function signUp(state: FormState, formData: FormData) {
     }
   }
 
-  const { name, email, password, confirmPassword, roles } = validatedFields.data
+  const { fullName, email, password, confirmPassword, roles } = validatedFields.data
 
   if (password !== confirmPassword) {
     return {
@@ -30,7 +30,7 @@ export async function signUp(state: FormState, formData: FormData) {
   const response = await fetch('/api/signup', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, email, password, roles }),
+    body: JSON.stringify({ fullName, email, password, roles }),
   })
 
   if (!response.ok) {
