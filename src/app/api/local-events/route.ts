@@ -11,6 +11,13 @@ export async function GET(req: Request) {
     const events = await payload.find({
       collection: 'events',
       limit: 0,
+      where: {
+        eventType: {
+          equals: 'local',
+        },
+      },
+      sort: '-startDate',
+      depth: 0,
     })
 
     return NextResponse.json({ events: events.docs })

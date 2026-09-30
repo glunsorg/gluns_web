@@ -57,8 +57,8 @@ export default async function EventsList() {
       <div className="">
         {events.map((event, index) => (
           <div key={index} className="border-b border-[#85c226] py-6">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 py-6">
-              <div className="flex flex-col md:flex-col justify-between items-start gap-4">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div className="flex flex-col md:flex-col justify-between items-start gap-2">
                 <Link href={`/events/${event.slug}`} className="flex items-center gap-2">
                   <h3 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-semibold text-white uppercase lg:w-2xl">
                     {event.title}

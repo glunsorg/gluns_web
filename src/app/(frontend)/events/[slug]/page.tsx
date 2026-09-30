@@ -149,7 +149,7 @@ export default async function CommitteePage({ params }: { params: Promise<{ slug
 
       {/* Event Details Card */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-10 mb-12">
-        <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 border-t-8 border-[#85c226]">
+        <div className="bg-white shadow-2xl p-6 md:p-8 border-t-8 border-[#85c226]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Date */}
             {events.startDate && (
@@ -218,7 +218,7 @@ export default async function CommitteePage({ params }: { params: Promise<{ slug
       {/* Committee Content */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Summary Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 lg:p-16 mb-16 border-t-8 border-[#104179]">
+        <div className="bg-white shadow-2xl p-8 md:p-12 lg:p-16 mb-16 border-t-8 border-[#104179]">
           <div className="flex items-center justify-center mb-8 md:mb-12">
             <div className="flex items-center space-x-4">
               <div className="h-1 w-16 bg-[#85c226]"></div>

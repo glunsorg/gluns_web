@@ -23,3 +23,23 @@ export interface DelegateData {
   institution: string
   delegateState: string
 }
+
+export interface Registration {
+  id: string
+  registrationNumber: string
+  event: string
+  registrationType: 'individual' | 'institution'
+  registeredBy: string
+  institution?: string
+  registrationState: 'draft' | 'submitted' | 'approved' | 'rejected'
+}
+
+export interface EventOption {
+  id: number | string
+  title: string
+  subtitle?: string
+  location?: string
+  date?: string
+  cost?: number | string | null
+  currency?: string
+}

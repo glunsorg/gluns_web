@@ -1,17 +1,14 @@
 import React from 'react'
-import { Delegation } from '@/app/types/types'
-import { LogOut, CheckCircle, Clock, Menu, ArrowRight } from 'lucide-react'
+import { LogOut, Menu, ArrowRight } from 'lucide-react'
 
 export default function DelegationHeader({
   activeSection,
-  formData,
   loggingOut,
   onLogout,
   onOpenSidebar,
   isDelegateAccount,
 }: {
   activeSection: string
-  formData: Delegation
   loggingOut: boolean
   onLogout: () => void
   onOpenSidebar: () => void
@@ -65,14 +62,6 @@ export default function DelegationHeader({
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2">
-            {formData.status === 'pending' ? (
-              <Clock className="w-4 h-4 text-[#85c226]" />
-            ) : (
-              <CheckCircle className="w-4 h-4 text-[#85c226]" />
-            )}
-            <span className="text-sm font-semibold capitalize text-white">{formData.status}</span>
-          </div>
           <button
             onClick={onLogout}
             disabled={loggingOut}

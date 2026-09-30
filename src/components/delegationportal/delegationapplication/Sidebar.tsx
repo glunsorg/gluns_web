@@ -3,17 +3,15 @@ import {
   FileText,
   Users,
   X,
-  AlertCircle,
   SettingsIcon,
-  CheckCircle2,
   LayoutDashboard,
   Home,
   UserCircle,
 } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 type SidebarProps = {
-  status: string
   isOpen: boolean
   onClose: () => void
   activeSection: string
@@ -23,7 +21,6 @@ type SidebarProps = {
 }
 
 export function Sidebar({
-  status,
   isOpen,
   onClose,
   activeSection,
@@ -41,9 +38,6 @@ export function Sidebar({
     { id: 'profile', label: 'Profile', icon: UserCircle },
     { id: 'account', label: 'Account Settings', icon: SettingsIcon },
   ]
-
-  const isApproved = status === 'approved'
-
   return (
     <>
       {/* Sidebar */}
@@ -52,15 +46,24 @@ export function Sidebar({
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         } w-72 flex flex-col`}
       >
-        <div className="flex items-center justify-between px-6 pb-5 pt-6 border-b border-white/10">
+        <div className="flex flex-col px-6 pb-5 pt-6 border-b border-white/10">
+          <div className="flex items-center gap-4 mb-6">
+            <Image
+              src="/logos/white.png"
+              alt="GLUNS logo"
+              width={400}
+              height={400}
+              className="h-12 lg:h-24 w-auto"
+            />
+          </div>
           <div className="flex items-center gap-3 min-w-0">
             <div className="h-11 w-11 bg-[#85c226] border border-[#85c226]/30 flex items-center justify-center">
-              <span className="text-[#104179] font-semibold text-lg">
+              <span className="text-[#104179] font-semibold text-2xl">
                 {userName?.charAt(0) || 'U'}
               </span>
             </div>
             <div className="min-w-0">
-              <h4 className="truncate text-sm font-semibold text-white uppercase">{userName}</h4>
+              <h4 className="truncate text-xl font-semibold text-white uppercase">{userName}</h4>
               <p className="text-xs text-white/45">{portalLabel}</p>
             </div>
           </div>
@@ -68,12 +71,11 @@ export function Sidebar({
             onClick={onClose}
             aria-label="Close navigation menu"
             title="Close navigation menu"
-            className="lg:hidden w-9 h-9 rounded-xl border border-white/10 hover:bg-white/5 flex items-center justify-center transition-colors text-white/70"
+            className="lg:hidden w-9 h-9 rounded-xl border border-white/10 hover:bg-white/5 flex items-center justify-center transition-colors text-white/70 mt-6"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
-
         <div className="px-6 pt-5 pb-3">
           <Link
             href="/"
@@ -87,12 +89,11 @@ export function Sidebar({
             <span className="text-[11px] uppercase tracking-[0.35em] text-white/45">Main site</span>
           </Link>
         </div>
-
         <nav className="flex-1 overflow-y-auto px-4 pb-4 pt-2">
           <div className="space-y-2">
             {menuItems.map((item) => {
               const Icon = item.icon
-              const isDisabled = item.requiresApproval && !isApproved
+              const isDisabled = item.requiresApproval
               const isActive = activeSection === item.id
 
               return (
@@ -145,34 +146,6 @@ export function Sidebar({
             })}
           </div>
         </nav>
-
-        <div className="px-4 pb-4">
-          {!isApproved ? (
-            <div className="rounded-2xl border border-[#85c226]/20 bg-[#104179]/30 p-4">
-              <div className="flex gap-3">
-                <AlertCircle className="w-5 h-5 text-[#85c226] shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-semibold text-white mb-1">Application under review</p>
-                  <p className="text-xs text-white/65 leading-relaxed">
-                    Registration, delegates, and assignments unlock after approval.
-                  </p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="rounded-2xl border border-[#85c226]/20 bg-[#0f1f12] p-4">
-              <div className="flex gap-3">
-                <CheckCircle2 className="w-5 h-5 text-[#85c226] shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-semibold text-white mb-1">Portal ready</p>
-                  <p className="text-xs text-white/65 leading-relaxed">
-                    You can manage your delegation, payment, and assignments now.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
 
         <div className="px-6 pb-6 pt-2">
           <p className="text-[11px] uppercase tracking-[0.35em] text-white/35">

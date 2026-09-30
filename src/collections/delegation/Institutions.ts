@@ -45,29 +45,6 @@ export const Institutions: CollectionConfig = {
         },
       ],
     },
-    {
-      name: 'country',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'city',
-      type: 'text',
-      required: true,
-    },
-    { name: 'address', type: 'text', required: true },
-    {
-      name: 'email',
-      type: 'email',
-      required: true,
-    },
-
-    {
-      name: 'phoneNumber',
-      type: 'number',
-      required: true,
-    },
-    { name: 'website', type: 'text', required: false },
   ],
 
   indexes: [

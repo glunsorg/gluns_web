@@ -371,12 +371,6 @@ export interface Institution {
   id: number;
   name: string;
   institutionType: 'school' | 'university' | 'organization';
-  country: string;
-  city: string;
-  address: string;
-  email: string;
-  phoneNumber: number;
-  website?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1295,12 +1289,6 @@ export interface OrgansSelect<T extends boolean = true> {
 export interface InstitutionsSelect<T extends boolean = true> {
   name?: T;
   institutionType?: T;
-  country?: T;
-  city?: T;
-  address?: T;
-  email?: T;
-  phoneNumber?: T;
-  website?: T;
   updatedAt?: T;
   createdAt?: T;
 }

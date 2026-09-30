@@ -6,6 +6,7 @@ export async function createRegistrationEndpoint(req: any) {
     payload: req.payload,
     eventId: req.body.event,
     registrationType: req.body.registrationType,
+    institutionId: req.body.institution,
     userId: req.user.id,
   })
 

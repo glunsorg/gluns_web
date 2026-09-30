@@ -1,8 +1,8 @@
 import React from 'react'
-import { Delegation } from '@/app/types/types'
 import { Save, CalendarDays, Building2, Globe } from 'lucide-react'
+import { Registration } from '@/types/registrationTypes'
 
-type EventOption = {
+export type EventOption = {
   id: number | string
   title: string
   date?: string
@@ -11,27 +11,61 @@ type EventOption = {
   currency?: string
 }
 
-export default function DelegationFormStep({
-  formData,
-  handleChange,
-  handleSave,
-  saving,
-  isDelegateAccount,
-  events,
-  selectedEventId,
-  onEventChange,
-}: {
-  formData: Delegation
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  handleChange: (e: React.ChangeEvent<any>) => void
+export type InstitutionOption = {
+  id: number | string
+  name: string
+}
+
+interface DelegationFormStepProps {
+  formData: Registration
+  setFormData: React.Dispatch<React.SetStateAction<Registration>>
   handleSave: () => void
   saving: boolean
   isDelegateAccount?: boolean
   events: EventOption[]
+  institutions: InstitutionOption[]
+  selectedInstitutionId: string
   selectedEventId: string
+  registeredBy: string
   onEventChange: (eventId: string) => void
-}) {
+  onInstitutionChange: (institutionId: string) => void
+}
+
+export default function DelegationFormStep({
+  formData,
+  setFormData,
+  handleSave,
+  saving,
+  isDelegateAccount,
+  events,
+  institutions,
+  selectedEventId,
+  selectedInstitutionId,
+  registeredBy,
+  onEventChange,
+  onInstitutionChange,
+}: DelegationFormStepProps) {
   const selectedEvent = events.find((event) => String(event.id) === String(selectedEventId))
+
+  // Update formData when event changes
+  const handleEventSelect = (eventId: string) => {
+    onEventChange(eventId)
+    setFormData((prev) => ({
+      ...prev,
+      event: eventId,
+      registeredBy: registeredBy, // using registeredBy here
+    }))
+  }
+
+  // Update formData when institution changes
+  const handleInstitutionSelect = (institutionId: string) => {
+    onInstitutionChange(institutionId)
+    setFormData((prev) => ({
+      ...prev,
+      institution: institutionId,
+      registeredBy: registeredBy, // using registeredBy here
+    }))
+  }
 
   return (
     <div className="rounded-3xl border border-white/10 bg-white/95 p-6 shadow-[0_20px_50px_rgba(7,19,31,0.18)] sm:p-8">
@@ -78,8 +112,8 @@ export default function DelegationFormStep({
                 Event selection <span className="text-red-500">*</span>
               </label>
               <select
-                value={selectedEventId}
-                onChange={(e) => onEventChange(e.target.value)}
+                value={formData.event || selectedEventId} // read directly from formData
+                onChange={(e) => handleEventSelect(e.target.value)}
                 className="w-full rounded-2xl border-2 border-[#104179]/15 bg-white px-4 py-3 text-[#104179] outline-none transition focus:border-[#85c226]"
                 title="Select an event"
               >
@@ -134,43 +168,27 @@ export default function DelegationFormStep({
         )}
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {/* Delegation Name */}
-          <div className="md:col-span-2">
+          <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
-              {isDelegateAccount ? 'Delegate Full Name' : 'Delegation Name'}{' '}
-              <span className="text-red-500">*</span>
+              Institution <span className="text-red-500">*</span>
             </label>
-            <input
-              name="delegationName"
-              value={formData.delegationName}
-              onChange={handleChange}
-              placeholder={
-                isDelegateAccount ? 'Enter your full name' : 'Enter your delegation name'
-              }
+            <select
+              value={formData.institution || selectedInstitutionId} // read directly from formData
+              onChange={(e) => handleInstitutionSelect(e.target.value)}
               className="w-full rounded-2xl border text-black border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
-            />
-          </div>
-
-          {/* Country of Origin */}
-          <div className="md:col-span-2">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              {isDelegateAccount ? 'Country of Residence' : 'Country of Origin'}{' '}
-              <span className="text-red-500">*</span>
-            </label>
-            <input
-              name="countryOfOrigin"
-              value={formData.countryOfOrigin}
-              onChange={handleChange}
-              placeholder={
-                isDelegateAccount ? 'Enter your country of residence' : 'Enter your country'
-              }
-              className="w-full rounded-2xl border text-black border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
-            />
+              title="Select an institution"
+            >
+              <option value="">Select an institution</option>
+              {institutions.map((school) => (
+                <option key={school.id} value={school.id}>
+                  {school.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
 
-      {/* Navigation */}
       <div className="mt-8 flex flex-col gap-3 border-t border-[#104179]/10 pt-6 sm:flex-row">
         <div className="flex gap-3 flex-1 justify-end">
           <button
