@@ -15,7 +15,7 @@ export interface Delegation {
 }
 
 export interface Delegate {
-  id?: number
+  id?: number | string
   firstName: string
   lastName: string
   gradeLevel: string

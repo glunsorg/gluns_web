@@ -1,7 +1,8 @@
 import { useAuthStore } from '@/app/store/authStore'
 
 export async function apiFetch(input: RequestInfo, init?: RequestInit) {
-  const res = await fetch(input, init)
+  const finalInit: RequestInit = { credentials: 'include', ...(init || {}) }
+  const res = await fetch(input, finalInit)
 
   if (res.status === 401) {
     try {

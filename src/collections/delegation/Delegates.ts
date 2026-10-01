@@ -7,6 +7,12 @@ export const Delegates: CollectionConfig = {
     useAsTitle: 'fullName',
     defaultColumns: ['fullName', 'registration', 'batch', 'delegateState'],
   },
+  access: {
+    read: () => true,
+    create: () => true,
+    update: ({ req: { user } }) => !!user,
+    delete: ({ req: { user } }) => !!user,
+  },
 
   fields: [
     {

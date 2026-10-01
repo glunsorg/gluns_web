@@ -459,13 +459,12 @@ export interface Payment {
   invoice: number | Invoice;
   amount: number;
   currency: string;
-  provider: 'mpesa' | 'stripe' | 'flutterwave' | 'bank_transfer' | 'cash' | 'other';
   transactionReference?: string | null;
   paymentState: 'pending' | 'successful' | 'failed' | 'cancelled' | 'refunded';
   initiatedAt?: string | null;
   paidAt?: string | null;
   /**
-   * Raw provider response for audit/debugging.
+   * Raw Paystack response for audit/debugging.
    */
   providerResponse?:
     | {
@@ -1146,7 +1145,6 @@ export interface PaymentsSelect<T extends boolean = true> {
   invoice?: T;
   amount?: T;
   currency?: T;
-  provider?: T;
   transactionReference?: T;
   paymentState?: T;
   initiatedAt?: T;

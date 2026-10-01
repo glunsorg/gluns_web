@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Delegate } from '@/app/types/types'
 import { useAuthStore } from '@/app/store/authStore'
 import {
   User,
@@ -23,48 +22,60 @@ import {
   AlertCircle,
   CheckCircle2,
 } from 'lucide-react'
+import { DelegateData } from '@/types/registrationTypes'
 
 type Props = {
   open: boolean
-  delegate: Delegate | null
+  delegate: DelegateData | null
   onClose: () => void
-  onSaved: (delegate: Delegate) => void
+  onSaved: (delegate: DelegateData) => void
+  registrationId?: string | number | null
+  batchId?: string | number | null
 }
 
-export default function DelegateForm({ open, delegate, onClose, onSaved }: Props) {
+export default function DelegateForm({
+  open,
+  delegate,
+  onClose,
+  onSaved,
+  registrationId,
+  batchId, // 1. Fixed: destructure batchId from props
+}: Props) {
   const { setUser } = useAuthStore()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    fullName: '',
+    gender: '',
     gradeLevel: '',
     email: '',
     phoneNumber: '',
   })
+
   const gradeOptions = Array.from({ length: 12 }, (_, i) => `Grade ${i + 1}`)
 
-  // Populate form when editing
   useEffect(() => {
-    if (delegate) {
-      setFormData({
-        firstName: delegate.firstName,
-        lastName: delegate.lastName,
-        gradeLevel: delegate.gradeLevel,
-        email: delegate.email,
-        phoneNumber: delegate.phoneNumber,
-      })
-    } else {
-      setFormData({
-        firstName: '',
-        lastName: '',
-        gradeLevel: '',
-        email: '',
-        phoneNumber: '',
-      })
+    if (open) {
+      if (delegate) {
+        setFormData({
+          fullName: delegate.fullName ?? '',
+          gender: delegate.gender ?? '',
+          gradeLevel: delegate.gradeLevel ?? '',
+          email: delegate.email ?? '',
+          phoneNumber: delegate.phoneNumber ?? (delegate as any).phone ?? '',
+        })
+      } else {
+        setFormData({
+          fullName: '',
+          gender: '',
+          gradeLevel: '',
+          email: '',
+          phoneNumber: '',
+        })
+      }
+      setError(null)
     }
-    setError(null)
   }, [delegate, open])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,10 +95,20 @@ export default function DelegateForm({ open, delegate, onClose, onSaved }: Props
       const method = delegate?.id ? 'PATCH' : 'POST'
       const url = delegate?.id ? `/api/teacher/delegates/${delegate.id}` : '/api/teacher/delegates'
 
+      // batchId is now properly destructured and included
+      const bodyToSend =
+        registrationId && batchId
+          ? {
+              ...formData,
+              registration: Number(registrationId),
+              batch: Number(batchId),
+            }
+          : formData
+
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(bodyToSend),
       })
 
       if (res.status === 401) {
@@ -102,7 +123,6 @@ export default function DelegateForm({ open, delegate, onClose, onSaved }: Props
       }
 
       onSaved(data)
-      onClose()
     } catch (err: any) {
       setError(err.message || 'Failed to save delegate')
     } finally {
@@ -168,34 +188,43 @@ export default function DelegateForm({ open, delegate, onClose, onSaved }: Props
                 <Input
                   id="firstName"
                   name="firstName"
-                  value={formData.firstName}
+                  value={formData.fullName} // Using fullName for the input
                   onChange={handleChange}
-                  placeholder="Enter first name"
+                  placeholder="Enter full name"
                   required
                   disabled={saving}
                   className="border-2 border-[#104179]/20 focus:border-[#85c226] h-12 rounded-xl text-[#104179] placeholder:text-[#104179]/40"
                 />
               </div>
 
-              {/* Last Name */}
+              {/* gender */}
               <div className="space-y-2">
                 <Label
-                  htmlFor="lastName"
+                  htmlFor="gender"
                   className="flex items-center gap-2 text-sm font-bold text-[#104179]"
                 >
                   <User className="w-4 h-4 text-[#85c226]" />
-                  Last Name
+                  Gender
                 </Label>
-                <Input
-                  id="lastName"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  placeholder="Enter last name"
+                <select
+                  id="gender"
+                  name="gender"
+                  value={formData.gender}
+                  title="Select gender"
+                  onChange={(e) => {
+                    setFormData((prev) => ({ ...prev, gender: e.target.value }))
+                    setError(null)
+                  }}
                   required
                   disabled={saving}
-                  className="border-2 border-[#104179]/20 focus:border-[#85c226] h-12 rounded-xl text-[#104179] placeholder:text-[#104179]/40"
-                />
+                  className="w-full border-2 border-[#104179]/20 focus:border-[#85c226] focus:outline-none h-12 rounded-xl text-[#104179] px-4 bg-white disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <option value="" disabled>
+                    Select gender
+                  </option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
               </div>
 
               {/* Email */}

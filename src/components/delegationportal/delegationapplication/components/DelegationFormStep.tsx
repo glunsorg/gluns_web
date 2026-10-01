@@ -19,7 +19,7 @@ export type InstitutionOption = {
 interface DelegationFormStepProps {
   formData: Registration
   setFormData: React.Dispatch<React.SetStateAction<Registration>>
-  handleSave: () => void
+  handleSave: () => Promise<any> | any
   saving: boolean
   isDelegateAccount?: boolean
   events: EventOption[]
@@ -29,6 +29,7 @@ interface DelegationFormStepProps {
   registeredBy: string
   onEventChange: (eventId: string) => void
   onInstitutionChange: (institutionId: string) => void
+  onSaved?: (data: any) => void
 }
 
 export default function DelegationFormStep({
@@ -44,6 +45,7 @@ export default function DelegationFormStep({
   registeredBy,
   onEventChange,
   onInstitutionChange,
+  onSaved,
 }: DelegationFormStepProps) {
   const selectedEvent = events.find((event) => String(event.id) === String(selectedEventId))
 
@@ -193,7 +195,14 @@ export default function DelegationFormStep({
         <div className="flex gap-3 flex-1 justify-end">
           <button
             type="button"
-            onClick={handleSave}
+            onClick={async () => {
+              try {
+                const data = await handleSave()
+                if (data && typeof onSaved === 'function') onSaved(data)
+              } catch (err) {
+                // handleSave already alerts
+              }
+            }}
             disabled={saving}
             className="flex flex-1 items-center justify-center gap-2 bg-[#85c226] px-6 py-3 font-medium text-white shadow-md transition-colors hover:bg-[#104179] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none"
           >

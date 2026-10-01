@@ -3,6 +3,7 @@
 import { ArrowRight } from 'lucide-react'
 import { DelegationSection } from '@/lib/registration'
 import Image from 'next/image'
+import { RegistrationSelector } from '../components/RegistrationSelector'
 
 interface DashboardSectionProps {
   isDelegateAccount: boolean
@@ -91,6 +92,25 @@ export default function DashboardSection({
             </div>
           </div>
         </div>
+      </div>
+      <div className="rounded-3xl border border-white/10 bg-[#07131f]/90 p-6 shadow-[0_18px_50px_rgba(0,0,0,0.22)] backdrop-blur">
+        <p className="text-xs uppercase tracking-[0.35em] text-white/40">Your registrations</p>
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/70">
+          You can return later to add delegates, assign committees, and handle payment.
+        </p>
+
+        <RegistrationSelector
+          registrations={[]}
+          activeRegistrationId={null}
+          onSelectRegistration={(id) => {
+            console.log('Selected registration ID:', id)
+            // Handle registration selection logic here
+          }}
+          onStartNewRegistration={() => {
+            console.log('Starting new registration')
+            onSectionChange('register')
+          }}
+        />
       </div>
     </div>
   )

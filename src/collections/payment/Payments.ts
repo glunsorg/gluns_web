@@ -1,5 +1,3 @@
-// src/collections/Payments.ts
-
 import type { CollectionConfig } from 'payload'
 
 export const Payments: CollectionConfig = {
@@ -7,7 +5,15 @@ export const Payments: CollectionConfig = {
 
   admin: {
     useAsTitle: 'paymentNumber',
-    defaultColumns: ['paymentNumber', 'invoice', 'amount', 'paymentState', 'provider'],
+    defaultColumns: [
+      'paymentNumber',
+      'invoice',
+      'amount',
+      'currency',
+      'paymentState',
+      'transactionReference',
+      'paidAt',
+    ],
   },
 
   fields: [
@@ -49,22 +55,9 @@ export const Payments: CollectionConfig = {
     },
 
     {
-      name: 'provider',
-      type: 'select',
-      required: true,
-      options: [
-        { label: 'M-Pesa', value: 'mpesa' },
-        { label: 'Stripe', value: 'stripe' },
-        { label: 'Flutterwave', value: 'flutterwave' },
-        { label: 'Bank Transfer', value: 'bank_transfer' },
-        { label: 'Cash', value: 'cash' },
-        { label: 'Other', value: 'other' },
-      ],
-    },
-
-    {
       name: 'transactionReference',
       type: 'text',
+      unique: true,
     },
 
     {
@@ -95,7 +88,7 @@ export const Payments: CollectionConfig = {
       name: 'providerResponse',
       type: 'json',
       admin: {
-        description: 'Raw provider response for audit/debugging.',
+        description: 'Raw Paystack response for audit/debugging.',
       },
     },
   ],
@@ -107,6 +100,7 @@ export const Payments: CollectionConfig = {
     },
     {
       fields: ['transactionReference'],
+      unique: true,
     },
     {
       fields: ['invoice'],

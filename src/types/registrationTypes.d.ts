@@ -14,10 +14,11 @@ export interface InvoiceData {
 
 export interface DelegateData {
   id: string
-  fullname: string
+  fullName: string
   email: string
-  phone: string
+  phoneNumber: string
   gender: string
+  gradeLevel: string
   registration: string
   batch: string
   institution: string

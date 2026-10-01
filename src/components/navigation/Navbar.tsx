@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { HiMenuAlt2 } from 'react-icons/hi'
 import { RiCloseLargeLine } from 'react-icons/ri'
+import { useAuthStore } from '@/app/store/authStore'
 
 // Social Icons
 import { IoLogoTiktok, IoLogoInstagram, IoLogoWhatsapp } from 'react-icons/io5'
@@ -13,6 +14,7 @@ import { FaFacebookF } from 'react-icons/fa6'
 export default function Navbar() {
   const [isMenuOpen, setMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const { user, loading, checkAuth } = useAuthStore()
 
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen)
@@ -41,6 +43,10 @@ export default function Navbar() {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [])
+
+  useEffect(() => {
+    checkAuth()
+  }, [checkAuth])
 
   const menuItems = [
     { name: 'Home', link: '/' },
@@ -87,14 +93,25 @@ export default function Navbar() {
 
           {/* Right Section */}
           <div className="flex gap-2 items-center">
-            <Link
-              href="/registration"
-              className="hidden lg:flex relative overflow-hidden border border-white/65 text-white/65 p-2 text-center items-center font-semibold transition-colors duration-300 before:absolute before:inset-0 before:bg-[#104179] before:translate-y-full before:transition-transform before:duration-300 hover:before:translate-y-0 hover:text-[#fffff6]"
-            >
-              <span className="relative z-10 text-base 2xl:text-xl text-center uppercase">
-                Register Now{' '}
-              </span>
-            </Link>
+            {!loading && !user ? (
+              <Link
+                href="/registration"
+                className="hidden lg:flex relative overflow-hidden border border-white/65 text-white/65 p-2 text-center items-center font-semibold transition-colors duration-300 before:absolute before:inset-0 before:bg-[#104179] before:translate-y-full before:transition-transform before:duration-300 hover:before:translate-y-0 hover:text-[#fffff6]"
+              >
+                <span className="relative z-10 text-base 2xl:text-xl text-center uppercase">
+                  Register Now{' '}
+                </span>
+              </Link>
+            ) : (
+              <Link
+                href="/delegation-portal"
+                className="hidden lg:flex relative overflow-hidden border border-white/65 text-white/65 p-2 text-center items-center font-semibold transition-colors duration-300 before:absolute before:inset-0 before:bg-[#104179] before:translate-y-full before:transition-transform before:duration-300 hover:before:translate-y-0 hover:text-[#fffff6]"
+              >
+                <span className="relative z-10 text-base 2xl:text-xl text-center uppercase">
+                  Delegation Portal{' '}
+                </span>
+              </Link>
+            )}
             {/* Mobile Menu Button */}
             <button
               className="ml-2 lg:hidden cursor-pointer hover:scale-105 transition-transform"

@@ -9,25 +9,25 @@ export function useDelegationForm(userId?: string) {
   const [saving, setSaving] = useState(false)
 
   const handleSave = async () => {
-    if (
-      !formData.institution ||
-      !formData.registrationType ||
-      !formData.event ||
-      !formData.registeredBy
-    ) {
+    if (!formData.institution || !formData.registrationType || !formData.event) {
       alert('Please fill in all required fields')
       return
     }
 
     setSaving(true)
     try {
-      const method = userId ? 'PATCH' : 'POST'
-      const url = userId ? `/api/registrations/${userId}` : '/api/registrations'
+      // If this registration already has an id, PATCH it; otherwise POST to create
+      const isExisting = !!formData.id
+      const url = isExisting ? `/api/registrations/${formData.id}` : '/api/registrations'
+      const method = isExisting ? 'PATCH' : 'POST'
+
+      // ensure registeredBy is set to current user if provided
+      const payloadBody = { ...formData, registeredBy: formData.registeredBy || userId }
 
       const res = await apiFetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payloadBody),
       })
 
       if (!res.ok) {
@@ -38,8 +38,10 @@ export function useDelegationForm(userId?: string) {
       const data = await res.json()
       setFormData(data)
       alert('Delegation saved successfully')
+      return data
     } catch (error: any) {
       alert(error.message)
+      throw error
     } finally {
       setSaving(false)
     }
