@@ -34,12 +34,19 @@ export const Delegates: CollectionConfig = {
     {
       name: 'gender',
       type: 'select',
+      required: true,
+      defaultValue: 'male',
       options: [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
-        { label: 'Other', value: 'other' },
-        { label: 'Prefer not to say', value: 'prefer_not_to_say' },
+        { label: 'Not specified', value: 'not-specified' },
       ],
+    },
+    {
+      name: 'gradeLevel',
+      type: 'text',
+      required: true,
+      defaultValue: 'Grade 12',
     },
 
     {

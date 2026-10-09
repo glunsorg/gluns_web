@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
@@ -94,11 +95,9 @@ export async function POST(req: Request) {
     const registration =
       toRelationshipId(body?.registration) ?? body?.registrationId ?? body?.delegationId
 
-    if (!registration) {
+    if (registration == null || registration === '') {
       return NextResponse.json({ message: 'Registration is required' }, { status: 400 })
     }
-
-  
 
     const registrationId = Number(registration)
     const normalizedRegistration = Number.isNaN(registrationId) ? registration : registrationId
@@ -109,14 +108,21 @@ export async function POST(req: Request) {
       fullName: body?.fullName,
       email: body?.email,
       phone: body?.phone ?? body?.phoneNumber,
-      gender: body?.gender,
+      gender: typeof body?.gender === 'string' ? body.gender.trim().toLowerCase() : undefined,
+      gradeLevel: body?.gradeLevel,
       registration: normalizedRegistration,
       batch,
       institution: toRelationshipId(body?.institution),
       delegateState: body?.delegateState ?? 'pending',
     }
 
-    const created = await payload.create({ collection: 'delegates', depth: 0, data: delegateData })
+    const created = await payload.create({
+      collection: 'delegates',
+      depth: 0,
+      data: delegateData,
+    })
+
+    return NextResponse.json(created, { status: 201 })
     return NextResponse.json(created, { status: 201 })
   } catch (err: any) {
     console.error(err)

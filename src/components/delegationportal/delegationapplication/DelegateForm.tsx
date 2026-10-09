@@ -93,21 +93,28 @@ export default function DelegateForm({
 
     try {
       const method = delegate?.id ? 'PATCH' : 'POST'
+
       const url = delegate?.id ? `/api/teacher/delegates/${delegate.id}` : '/api/teacher/delegates'
 
-      // batchId is now properly destructured and included
-      const bodyToSend =
-        registrationId && batchId
-          ? {
-              ...formData,
-              registration: Number(registrationId),
-              batch: Number(batchId),
-            }
-          : formData
+      if (!delegate?.id && registrationId == null) {
+        throw new Error('Registration ID is missing')
+      }
+
+      const bodyToSend = {
+        ...formData,
+
+        ...(registrationId != null ? { registration: Number(registrationId) } : {}),
+
+        ...(batchId != null ? { batch: Number(batchId) } : {}),
+      }
+
+      console.log('Creating delegate with:', bodyToSend)
 
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(bodyToSend),
       })
 
@@ -132,13 +139,13 @@ export default function DelegateForm({
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] p-0 gap-0 rounded-2xl border-2 border-[#104179]/20 overflow-hidden">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] p-0 gap-0 border-2 border-[#104179]/20 overflow-hidden">
         <form onSubmit={handleSave}>
           {/* Header */}
-          <div className="bg-[#104179] px-6 py-5 border-b-4 border-[#85c226]">
+          <div className="bg-[#07131f] px-6 py-5 border-b-4 border-[#85c226]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-[#85c226] rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-[#85c226] rounded-sm flex items-center justify-center">
                   {delegate ? (
                     <User className="w-6 h-6 text-white" />
                   ) : (
@@ -146,7 +153,7 @@ export default function DelegateForm({
                   )}
                 </div>
                 <div>
-                  <DialogTitle className="text-xl font-bold text-white">
+                  <DialogTitle className="text-xl font-semibold text-white">
                     {delegate ? 'Edit Delegate' : 'Add New Delegate'}
                   </DialogTitle>
                   <DialogDescription className="text-white/70 text-sm">
@@ -183,11 +190,11 @@ export default function DelegateForm({
                   className="flex items-center gap-2 text-sm font-bold text-[#104179]"
                 >
                   <User className="w-4 h-4 text-[#85c226]" />
-                  First Name
+                  Full Name
                 </Label>
                 <Input
-                  id="firstName"
-                  name="firstName"
+                  id="fullName"
+                  name="fullName"
                   value={formData.fullName} // Using fullName for the input
                   onChange={handleChange}
                   placeholder="Enter full name"
@@ -222,8 +229,8 @@ export default function DelegateForm({
                   <option value="" disabled>
                     Select gender
                   </option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
                 </select>
               </div>
 

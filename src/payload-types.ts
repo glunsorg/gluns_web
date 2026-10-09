@@ -299,7 +299,8 @@ export interface Delegate {
   fullName: string;
   email?: string | null;
   phone?: string | null;
-  gender?: ('male' | 'female' | 'other' | 'prefer_not_to_say') | null;
+  gender: 'male' | 'female' | 'not-specified';
+  gradeLevel: string;
   registration: number | Registration;
   batch: number | RegistrationBatch;
   institution?: (number | null) | Institution;
@@ -1070,6 +1071,7 @@ export interface DelegatesSelect<T extends boolean = true> {
   email?: T;
   phone?: T;
   gender?: T;
+  gradeLevel?: T;
   registration?: T;
   batch?: T;
   institution?: T;
