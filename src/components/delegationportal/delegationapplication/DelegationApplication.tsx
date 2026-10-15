@@ -22,6 +22,7 @@ import { useDelegates } from '../hooks/useDelegates'
 import { Sidebar } from './Sidebar'
 import DashboardSection from './components/DashboardSection'
 import { useUserRegistrations } from '../hooks/useUserRegistrations'
+import PaymentHistory from './components/PaymentHistory'
 
 type UserRegistration = {
   id: string | number
@@ -100,7 +101,9 @@ export default function DelegationPortal() {
       }
 
       if (data?.authorization_url) {
-        window.open(data.authorization_url, '_blank')
+        window.location.href = data.authorization_url
+      } else {
+        throw new Error('Paystack authorization URL was not returned')
       }
     } catch (err) {
       console.error('Payment initiation error:', err)
@@ -269,7 +272,20 @@ export default function DelegationPortal() {
               </div>
             )}
 
-            {/* delegation registration */}
+            {activeSection === 'payments' && (
+              <div className="space-y-6">
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <h3 className="text-lg font-semibold text-white">Payments & Receipts</h3>
+                  <p className="mt-1 text-sm text-white/70">
+                    View your payment history and download receipts.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/70">
+                  <PaymentHistory />{' '}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

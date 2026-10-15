@@ -15,24 +15,24 @@ export async function GET(req: Request) {
   }
 
   const url = new URL(req.url)
-  const delegationId = url.searchParams.get('delegationId')
+  const registrationId = url.searchParams.get('registrationId')
 
-  if (!delegationId) {
+  if (!registrationId) {
     return NextResponse.json({ paymentStatus: 'pending' })
   }
 
   const payments = await payload.find({
     collection: 'payments',
     where: {
-      teacher: { equals: user.id },
-      delegation: { equals: delegationId },
-      status: { equals: 'paid' },
+      user: { equals: user.id },
+      delegation: { equals: registrationId },
+      status: { equals: 'successful' },
     },
     limit: 1,
   })
 
   return NextResponse.json({
-    paymentStatus: payments.docs.length > 0 ? 'paid' : 'pending',
+    paymentStatus: payments.docs.length > 0 ? 'successful' : 'pending',
   })
 }
 
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     // Fetch all payments for this user (any status)
     const payments = await payload.find({
       collection: 'payments',
-      where: { teacher: { equals: user.id } },
+      where: { user: { equals: user.id } },
       limit: 0,
     })
 

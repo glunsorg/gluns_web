@@ -2,6 +2,12 @@ import type { CollectionConfig } from 'payload'
 
 export const Registrations: CollectionConfig = {
   slug: 'registrations',
+  access: {
+    read: () => true,
+    create: () => true,
+    update: ({ req: { user } }) => !!user,
+    delete: ({ req: { user } }) => !!user,
+  },
 
   admin: {
     useAsTitle: 'registrationNumber',

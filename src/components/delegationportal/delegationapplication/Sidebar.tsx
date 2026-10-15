@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   Home,
   UserCircle,
+  ReceiptText,
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -34,8 +35,14 @@ export function Sidebar({
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'register', label: 'Register', icon: FileText },
     { id: 'delegations', label: 'Delegations', icon: Users },
+    {
+      id: 'payments',
+      label: 'Payments & Receipts',
+      icon: ReceiptText,
+    },
     { id: 'assignments', label: 'Assignments', icon: Globe, requiresApproval: true },
     { id: 'profile', label: 'Profile', icon: UserCircle },
+
     { id: 'account', label: 'Account Settings', icon: SettingsIcon },
   ]
   return (

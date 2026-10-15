@@ -2,7 +2,6 @@
 
 import { ArrowRight } from 'lucide-react'
 import { DelegationSection } from '@/lib/registration'
-import Image from 'next/image'
 import { RegistrationSelector } from '../components/RegistrationSelector'
 
 interface DashboardSectionProps {

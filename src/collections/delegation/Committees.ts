@@ -63,20 +63,11 @@ export const Committees: CollectionConfig = {
       required: true,
       unique: true,
     },
-
     {
-      name: 'organ',
-      type: 'relationship',
-      relationTo: 'organs',
-      required: true,
-      filterOptions: {
-        organType: {
-          equals: 'committee_based',
-        },
-        active: {
-          equals: true,
-        },
-      },
+      name: 'summary',
+      label: 'Summary',
+      type: 'textarea',
+      required: false,
     },
 
     {
@@ -88,7 +79,7 @@ export const Committees: CollectionConfig = {
 
   indexes: [
     {
-      fields: ['organ', 'committee_code'],
+      fields: ['committee_code'],
       unique: true,
     },
   ],

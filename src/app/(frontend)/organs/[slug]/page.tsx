@@ -47,10 +47,10 @@ export async function generateMetadata({
     }
   }
 
-  const title = `${committee.title} | GLUNS Organ`
+  const title = `${committee.name} | GLUNS Organ`
   const description =
     committee.description ||
-    `Discover the ${committee.title} organ at GLUNS, a Model United Nations simulation empowering students in Kenya, Africa, and around the world.`
+    `Discover the ${committee.name} organ at GLUNS, a Model United Nations simulation empowering students in Kenya, Africa, and around the world.`
 
   const imageUrl =
     typeof committee?.committee_photo === 'object' && committee.committee_photo?.url
@@ -77,7 +77,7 @@ export async function generateMetadata({
           secureUrl: imageUrl,
           width: 1200,
           height: 630,
-          alt: committee.title,
+          alt: committee.name,
         },
       ],
       type: 'article',
@@ -170,7 +170,7 @@ export default async function CommitteePage({ params }: { params: Promise<{ slug
               </BreadcrumbSeparator>
               <BreadcrumbItem>
                 <BreadcrumbPage className="text-[#85c226] font-semibold">
-                  {committee.title}
+                  {committee.name}
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
@@ -183,7 +183,7 @@ export default async function CommitteePage({ params }: { params: Promise<{ slug
         {typeof committee.committee_photo === 'object' && committee.committee_photo ? (
           <Image
             src={committee.committee_photo.url || ''}
-            alt={committee.title}
+            alt={committee.name}
             fill
             className="object-cover"
             priority
@@ -206,7 +206,7 @@ export default async function CommitteePage({ params }: { params: Promise<{ slug
           <div className="max-w-4xl w-full text-center space-y-6">
             <div className="inline-block">
               <h1 className="text-5xl md:text-7xl font-black text-white tracking-tight mb-4">
-                {committee.title}
+                {committee.name}
               </h1>
               <div className="h-2 bg-[#85c226] w-3/4 mx-auto"></div>
             </div>
@@ -232,24 +232,9 @@ export default async function CommitteePage({ params }: { params: Promise<{ slug
           </div>
 
           <article className="prose prose-xl max-w-none prose-headings:text-[#104179] prose-headings:font-bold prose-a:text-[#104179] prose-a:no-underline hover:prose-a:text-[#85c226] prose-a:transition-colors prose-img:rounded-xl prose-img:shadow-lg prose-p:text-gray-700 prose-p:leading-relaxed">
-            <RichText data={committee.summary} className="richtext" />
+            <p>{committee.summary}</p>
           </article>
         </div>
-
-        {/* Committee Members Section */}
-        {/* <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 lg:p-16 mb-16 border-t-8 border-[#85c226]">
-          <div className="flex items-center justify-center mb-12">
-            <div className="flex items-center space-x-4">
-              <div className="h-1 w-16 bg-[#104179]"></div>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#104179] tracking-tight">
-                Committee Dais
-              </h2>
-              <div className="h-1 w-16 bg-[#104179]"></div>
-            </div>
-          </div>
-
-          <CommitteeMembers members={members} />
-        </div> */}
       </div>
 
       {/* Bottom Spacer */}

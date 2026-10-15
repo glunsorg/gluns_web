@@ -14,43 +14,12 @@ export async function fetchCommittee() {
   return {
     committee: result.docs.map((committee) => ({
       id: committee.id,
-      name: committee.title,
+      name: committee.name,
       slug: committee.slug,
-      description: committee.description,
       photo: committee.committee_photo,
+      description: committee.description,
       code: committee.committee_code,
-      category:
-        typeof committee.committee_category === 'object' && committee.committee_category
-          ? {
-              id: committee.committee_category.id,
-              name: committee.committee_category.name,
-            }
-          : null,
+      summary: committee.summary,
     })),
   }
-}
-
-export async function fetchCommitteeTeam(committeeId: number | string) {
-  const payloadConfig = await config
-  const payload = await getPayload({ config: payloadConfig })
-
-  const result = await payload.find({
-    collection: 'committee-team',
-    depth: 1,
-    pagination: false,
-    where: {
-      committee: {
-        equals: committeeId,
-      },
-    },
-    sort: 'rank',
-  })
-
-  return result.docs.map((member) => ({
-    id: member.id,
-    name: member.name,
-    position: member.position,
-    photo: member.photo,
-    rank: member.rank,
-  }))
 }

@@ -67,14 +67,10 @@ export const Receipts: CollectionConfig = {
     },
 
     {
-      name: 'recipientName',
-      type: 'text',
+      name: 'recipient',
+      type: 'relationship',
       required: true,
-    },
-
-    {
-      name: 'recipientEmail',
-      type: 'email',
+      relationTo: 'users',
     },
 
     {

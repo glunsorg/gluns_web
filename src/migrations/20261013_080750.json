@@ -3386,11 +3386,11 @@
           "primaryKey": false,
           "notNull": true
         },
-        "organ_id": {
-          "name": "organ_id",
-          "type": "integer",
+        "summary": {
+          "name": "summary",
+          "type": "varchar",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "active": {
           "name": "active",
@@ -3445,21 +3445,6 @@
           "method": "btree",
           "with": {}
         },
-        "committees_organ_idx": {
-          "name": "committees_organ_idx",
-          "columns": [
-            {
-              "expression": "organ_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "committees_updated_at_idx": {
           "name": "committees_updated_at_idx",
           "columns": [
@@ -3490,15 +3475,9 @@
           "method": "btree",
           "with": {}
         },
-        "organ_committee_code_idx": {
-          "name": "organ_committee_code_idx",
+        "committee_code_idx": {
+          "name": "committee_code_idx",
           "columns": [
-            {
-              "expression": "organ_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
             {
               "expression": "committee_code",
               "isExpression": false,
@@ -3519,19 +3498,6 @@
           "tableTo": "media",
           "columnsFrom": [
             "committee_photo_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "committees_organ_id_organs_id_fk": {
-          "name": "committees_organ_id_organs_id_fk",
-          "tableFrom": "committees",
-          "tableTo": "organs",
-          "columnsFrom": [
-            "organ_id"
           ],
           "columnsTo": [
             "id"
@@ -7365,7 +7331,8 @@
       "schema": "public",
       "values": [
         "male",
-        "female"
+        "female",
+        "not-specified"
       ]
     },
     "public.enum_delegates_delegate_state": {
@@ -7519,6 +7486,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "5ae3fd64-b21f-435e-aa0f-9a3e969f59c1",
+  "id": "68ae9bff-057e-48f2-bbdf-3c4373e04877",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }

@@ -2,15 +2,6 @@ import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
-function toRelationshipId(value: unknown) {
-  if (value && typeof value === 'object') {
-    const maybeId = (value as { id?: unknown }).id
-    return maybeId ?? value
-  }
-
-  return value
-}
-
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   const payload = await getPayload({ config })
 
@@ -29,8 +20,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
   const data = {
     ...body,
-    event: toRelationshipId(body?.event),
-    institution: toRelationshipId(body?.institution),
+    event: body?.event.id,
+    institution: body?.institution.id,
   }
 
   try {

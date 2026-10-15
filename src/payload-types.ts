@@ -441,8 +441,7 @@ export interface Receipt {
   currency: string;
   paymentMethod: string;
   transactionReference?: string | null;
-  recipientName: string;
-  recipientEmail?: string | null;
+  recipient: number | User;
   issuedAt: string;
   receiptState: 'issued' | 'void';
   pdf?: (number | null) | Media;
@@ -543,20 +542,7 @@ export interface Committee {
    */
   slug?: string | null;
   committee_code: string;
-  organ: number | Organ;
-  active?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "organs".
- */
-export interface Organ {
-  id: number;
-  name: string;
-  code: string;
-  organType: 'committee_based' | 'court' | 'commission' | 'other';
+  summary?: string | null;
   active?: boolean | null;
   updatedAt: string;
   createdAt: string;
@@ -587,6 +573,19 @@ export interface Trainer {
   organ: string;
   photo?: (number | null) | Portrait;
   gender: 'male' | 'female';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "organs".
+ */
+export interface Organ {
+  id: number;
+  name: string;
+  code: string;
+  organType: 'committee_based' | 'court' | 'commission' | 'other';
+  active?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1129,8 +1128,7 @@ export interface ReceiptsSelect<T extends boolean = true> {
   currency?: T;
   paymentMethod?: T;
   transactionReference?: T;
-  recipientName?: T;
-  recipientEmail?: T;
+  recipient?: T;
   issuedAt?: T;
   receiptState?: T;
   pdf?: T;
@@ -1250,7 +1248,7 @@ export interface CommitteesSelect<T extends boolean = true> {
   committee_photo?: T;
   slug?: T;
   committee_code?: T;
-  organ?: T;
+  summary?: T;
   active?: T;
   updatedAt?: T;
   createdAt?: T;
