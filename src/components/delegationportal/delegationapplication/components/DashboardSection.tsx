@@ -103,7 +103,6 @@ export default function DashboardSection({
           activeRegistrationId={null}
           onSelectRegistration={(id) => {
             console.log('Selected registration ID:', id)
-            // Handle registration selection logic here
           }}
           onStartNewRegistration={() => {
             console.log('Starting new registration')

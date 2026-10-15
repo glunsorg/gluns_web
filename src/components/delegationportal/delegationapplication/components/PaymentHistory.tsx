@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Download, FileText, Users, X, CalendarDays, CreditCard, ExternalLink } from 'lucide-react'
+import { Download, FileText, Users, X, CalendarDays } from 'lucide-react'
 
 type Delegate = {
   id: string

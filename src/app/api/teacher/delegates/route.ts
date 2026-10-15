@@ -100,7 +100,64 @@ export async function POST(req: Request) {
     }
 
     const registrationId = Number(registration)
-    const normalizedRegistration = Number.isNaN(registrationId) ? registration : registrationId
+
+    if (!Number.isInteger(registrationId) || registrationId <= 0) {
+      return NextResponse.json({ message: 'Invalid registration ID' }, { status: 400 })
+    }
+
+    const normalizedRegistration = registrationId
+
+    // Load the registration from the database.
+    const registrationRecord = await payload.findByID({
+      collection: 'registrations',
+      id: registrationId,
+      depth: 0,
+    })
+
+    const registeredById = toRelationshipId(registrationRecord.registeredBy)
+
+    if (registrationRecord.registrationType === 'individual') {
+      // Confirm the individual registration belongs to the logged-in user.
+      if (String(registeredById) !== String(user.id)) {
+        return NextResponse.json(
+          { message: 'You can only register yourself under your own registration.' },
+          { status: 403 },
+        )
+      }
+
+      // Ensure the delegate's email matches the logged-in user's email.
+      const accountEmail = user.email?.trim().toLowerCase()
+      const delegateEmail = String(body?.email ?? '')
+        .trim()
+        .toLowerCase()
+
+      if (!accountEmail || delegateEmail !== accountEmail) {
+        return NextResponse.json(
+          { message: 'Please use the email address associated with your account.' },
+          { status: 403 },
+        )
+      }
+
+      // Check whether this individual registration already has a delegate.
+      const existingDelegates = await payload.find({
+        collection: 'delegates',
+        where: {
+          registration: {
+            equals: registrationId,
+          },
+        },
+        limit: 1,
+        depth: 0,
+      })
+
+      if (existingDelegates.totalDocs > 0) {
+        return NextResponse.json(
+          { message: 'Individual registration allows only one delegate.' },
+          { status: 409 },
+        )
+      }
+    }
+
     const incomingBatch = toRelationshipId(body?.batch)
     const batch = incomingBatch ?? (await resolveBatchId(payload, normalizedRegistration))
 
@@ -122,7 +179,6 @@ export async function POST(req: Request) {
       data: delegateData,
     })
 
-    return NextResponse.json(created, { status: 201 })
     return NextResponse.json(created, { status: 201 })
   } catch (err: any) {
     console.error(err)

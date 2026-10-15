@@ -27,12 +27,10 @@ import PaymentHistory from './components/PaymentHistory'
 type UserRegistration = {
   id: string | number
   registrationNumber?: string
-  batch?:
-    | string
-    | number
-    | {
-        id?: string | number
-      }
+  registrationType?: 'individual' | 'institution'
+  registrationState?: 'draft' | 'active' | 'completed' | 'cancelled'
+  paymentStatus?: string
+  batch?: string | number | { id?: string | number }
   event?: {
     title?: string
   }
@@ -50,10 +48,6 @@ export default function DelegationPortal() {
   const [activeDelegationRegistrationId, setActiveDelegationRegistrationId] = useState<
     string | number | null
   >(null)
-
-  const activeRegistration = (registrations as UserRegistration[]).find(
-    (reg) => String(reg.id) === String(activeDelegationRegistrationId),
-  )
 
   const { delegates, loadingDelegates } = useDelegates(activeDelegationRegistrationId ?? undefined)
 
@@ -136,6 +130,17 @@ export default function DelegationPortal() {
     return <Loading />
   }
 
+  const selectedRegistration = registrations.find(
+    (reg) => String(reg.id) === String(activeDelegationRegistrationId),
+  ) as UserRegistration | undefined
+
+  const isRegistrationCompleted = selectedRegistration?.registrationState === 'completed'
+
+  const isPaymentSuccessful = selectedRegistration?.paymentStatus === 'success'
+
+  const shouldShowStartPayment =
+    !!selectedRegistration && !isRegistrationCompleted && !isPaymentSuccessful
+
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white">
       <div className="flex min-h-screen bg-[#07131f]">
@@ -193,6 +198,7 @@ export default function DelegationPortal() {
                   institutions={institutions}
                   registeredBy={user?.id || ''}
                   showDelegateManagement={false}
+                  isDelegateAccount={isDelegateAccount}
                   onSaved={() => {
                     refetch()
                     setActiveSection('dashboard')
@@ -209,7 +215,6 @@ export default function DelegationPortal() {
                     Select a registration, then add delegates and continue to payment.
                   </p>
                 </div>
-
                 {regsLoading ? (
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/70">
                     Loading registrations...
@@ -244,29 +249,62 @@ export default function DelegationPortal() {
                     })}
                   </div>
                 )}
-
                 {activeDelegationRegistrationId && (
-                  <div className="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <h4 className="text-sm font-semibold text-white">Delegates</h4>
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                    {isRegistrationCompleted || isPaymentSuccessful ? (
+                      <div className="space-y-4">
+                        <div className="flex items-start gap-3">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#85c226]/15">
+                            <span className="text-xl text-[#85c226]">✓</span>
+                          </div>
 
-                        <p className="mt-1 text-sm text-white/70">
-                          {loadingDelegates
-                            ? 'Loading delegates...'
-                            : `${delegates.length} delegate${delegates.length === 1 ? '' : 's'}`}
-                        </p>
+                          <div>
+                            <h4 className="font-semibold text-white">Registration Completed</h4>
+
+                            <p className="mt-1 text-sm leading-6 text-white/70">
+                              Your registration has been completed successfully. You can access your
+                              payment details and receipts in the Payment History tab.
+                            </p>
+                          </div>
+                        </div>
+
+                        <Button
+                          onClick={() => setActiveSection('payments')}
+                          className="bg-[#85c226] text-black hover:bg-[#76ae20]"
+                        >
+                          View Payment History
+                        </Button>
                       </div>
+                    ) : (
+                      <div className="space-y-4">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                          <div>
+                            <h4 className="text-sm font-semibold text-white">Delegates</h4>
 
-                      <Button
-                        onClick={startPaymentForRegistration}
-                        disabled={loadingDelegates || delegates.length === 0}
-                      >
-                        Start payment
-                      </Button>
-                    </div>
+                            <p className="mt-1 text-sm text-white/70">
+                              {loadingDelegates
+                                ? 'Loading delegates...'
+                                : `${delegates.length} delegate${
+                                    delegates.length === 1 ? '' : 's'
+                                  }`}
+                            </p>
+                          </div>
 
-                    <DelegatesManager registrationId={activeDelegationRegistrationId} />
+                          {shouldShowStartPayment && (
+                            <Button
+                              onClick={startPaymentForRegistration}
+                              disabled={loadingDelegates || delegates.length === 0}
+                            >
+                              Start payment
+                            </Button>
+                          )}
+                        </div>
+                        <DelegatesManager
+                          registrationId={activeDelegationRegistrationId}
+                          isIndividual={selectedRegistration?.registrationType === 'individual'}
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

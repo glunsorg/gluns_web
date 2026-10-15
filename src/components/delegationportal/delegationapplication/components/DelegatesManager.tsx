@@ -6,13 +6,15 @@ import { DelegateData } from '@/types/registrationTypes'
 
 interface DelegatesManagerProps {
   registrationId?: string | number
+  isIndividual?: boolean
 }
 
-export default function DelegatesManager({ registrationId }: DelegatesManagerProps) {
+export default function DelegatesManager({ registrationId, isIndividual }: DelegatesManagerProps) {
   const { delegates = [], loadingDelegates, refetchDelegates } = useDelegates(registrationId)
 
   const [open, setOpen] = useState(false)
   const [editing, setEditing] = useState<DelegateData | null>(null)
+  const canAddDelegate = !isIndividual || delegates.length === 0
 
   function normalizeDelegate(
     delegate: Partial<DelegateData> & { id?: string | number },
@@ -73,16 +75,25 @@ export default function DelegatesManager({ registrationId }: DelegatesManagerPro
         )}
       </div>
 
-      <div className="mt-3">
-        <Button
-          onClick={() => {
-            setEditing(null)
-            setOpen(true)
-          }}
-        >
-          Add delegate
-        </Button>
-      </div>
+      {canAddDelegate && (
+        <div className="mt-3">
+          <Button
+            disabled={loadingDelegates}
+            onClick={() => {
+              setEditing(null)
+              setOpen(true)
+            }}
+          >
+            Add delegate
+          </Button>
+        </div>
+      )}
+
+      {isIndividual && delegates.length > 0 && (
+        <p className="mt-3 text-sm text-white/70">
+          Individual registration allows only one delegate. You can edit your existing details.
+        </p>
+      )}
 
       <DelegateForm
         open={open}
@@ -90,6 +101,7 @@ export default function DelegatesManager({ registrationId }: DelegatesManagerPro
         onClose={handleClose}
         onSaved={handleSaved}
         registrationId={registrationId}
+        isIndividual={isIndividual}
       />
     </div>
   )

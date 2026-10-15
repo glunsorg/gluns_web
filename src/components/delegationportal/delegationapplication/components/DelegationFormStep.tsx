@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
 import { Save, CalendarDays, Building2, Globe } from 'lucide-react'
 import { Registration } from '@/types/registrationTypes'
@@ -200,7 +201,7 @@ export default function DelegationFormStep({
                 const data = await handleSave()
                 if (data && typeof onSaved === 'function') onSaved(data)
               } catch (err) {
-                // handleSave already alerts
+                console.error('Error saving form data:', err)
               }
             }}
             disabled={saving}

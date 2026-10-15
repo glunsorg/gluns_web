@@ -31,6 +31,7 @@ type Props = {
   onSaved: (delegate: DelegateData) => void
   registrationId?: string | number | null
   batchId?: string | number | null
+  isIndividual?: boolean
 }
 
 export default function DelegateForm({
@@ -39,6 +40,7 @@ export default function DelegateForm({
   onClose,
   onSaved,
   registrationId,
+  isIndividual,
   batchId, // 1. Fixed: destructure batchId from props
 }: Props) {
   const { setUser } = useAuthStore()

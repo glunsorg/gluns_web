@@ -10,6 +10,7 @@ interface Props {
   registrationId?: string | number | null
   events: EventOption[]
   institutions: InstitutionOption[]
+  isDelegateAccount?: boolean
   registeredBy: string
   showDelegateManagement?: boolean
   onSaved: (reg: any) => void
@@ -21,6 +22,7 @@ export default function RegistrationEditor({
   institutions,
   registeredBy,
   showDelegateManagement = true,
+  isDelegateAccount,
   onSaved,
 }: Props) {
   const [registration, setRegistration] = useState<any>(EMPTY_REGISTRATION)
@@ -95,32 +97,11 @@ export default function RegistrationEditor({
         institutions={institutions}
         selectedEventId={String(registration?.event || '')}
         selectedInstitutionId={String(registration?.institution || '')}
-        isDelegateAccount={false}
+        isDelegateAccount={isDelegateAccount}
         registeredBy={registeredBy}
         onEventChange={(id) => setRegistration((r: any) => ({ ...r, event: id }))}
         onInstitutionChange={(id) => setRegistration((r: any) => ({ ...r, institution: id }))}
       />
-
-      {showDelegateManagement && (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-sm font-semibold text-white">Delegates</p>
-              <p className="text-xs text-white/70">Add delegates for this registration</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button onClick={() => setEditingDelegates((s) => !s)}>Manage delegates</Button>
-              <Button onClick={startPayment}>Start payment</Button>
-            </div>
-          </div>
-
-          {editingDelegates && (
-            <div className="mt-4">
-              <DelegatesManager registrationId={registration?.id} />
-            </div>
-          )}
-        </div>
-      )}
     </div>
   )
 }
