@@ -2,8 +2,6 @@ import { z } from 'zod'
 
 export const SchoolRegistrationSchema = z.object({
   registrationType: z.literal('school'),
-
-  schoolName: z.string().min(2, 'Name must be at least 2 characters'),
   contactPerson: z.string(),
   email: z.email(),
   phoneNumber: z.string(),
@@ -18,7 +16,6 @@ export const IndividualRegistrationSchema = z.object({
   email: z.email(),
   phoneNumber: z.string(),
   grade: z.number(),
-  schoolName: z.string(),
   eventId: z.string().min(1, 'Please select an event'),
 })
 

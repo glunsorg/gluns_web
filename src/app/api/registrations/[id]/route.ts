@@ -21,7 +21,6 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   const data = {
     ...body,
     event: body?.event.id,
-    institution: body?.institution.id,
   }
 
   try {

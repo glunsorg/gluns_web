@@ -190,6 +190,18 @@
           "notNull": true,
           "default": "'Unknown'"
         },
+        "institution_id": {
+          "name": "institution_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "institution_name": {
+          "name": "institution_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -249,6 +261,21 @@
         }
       },
       "indexes": {
+        "users_institution_idx": {
+          "name": "users_institution_idx",
+          "columns": [
+            {
+              "expression": "institution_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "users_updated_at_idx": {
           "name": "users_updated_at_idx",
           "columns": [
@@ -295,7 +322,21 @@
           "with": {}
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "users_institution_id_institutions_id_fk": {
+          "name": "users_institution_id_institutions_id_fk",
+          "tableFrom": "users",
+          "tableTo": "institutions",
+          "columnsFrom": [
+            "institution_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -1829,17 +1870,11 @@
           "primaryKey": false,
           "notNull": false
         },
-        "recipient_name": {
-          "name": "recipient_name",
-          "type": "varchar",
+        "recipient_id": {
+          "name": "recipient_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
-        },
-        "recipient_email": {
-          "name": "recipient_email",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
         },
         "issued_at": {
           "name": "issued_at",
@@ -1927,6 +1962,21 @@
           "columns": [
             {
               "expression": "registration_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "receipts_recipient_idx": {
+          "name": "receipts_recipient_idx",
+          "columns": [
+            {
+              "expression": "recipient_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2046,6 +2096,19 @@
           "tableTo": "registrations",
           "columnsFrom": [
             "registration_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "receipts_recipient_id_users_id_fk": {
+          "name": "receipts_recipient_id_users_id_fk",
+          "tableFrom": "receipts",
+          "tableTo": "users",
+          "columnsFrom": [
+            "recipient_id"
           ],
           "columnsTo": [
             "id"
@@ -2526,12 +2589,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "institution_id": {
-          "name": "institution_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
         "registration_state": {
           "name": "registration_state",
           "type": "enum_registrations_registration_state",
@@ -2597,21 +2654,6 @@
           "columns": [
             {
               "expression": "registered_by_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "registrations_institution_idx": {
-          "name": "registrations_institution_idx",
-          "columns": [
-            {
-              "expression": "institution_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2688,17 +2730,11 @@
           "method": "btree",
           "with": {}
         },
-        "event_institution_idx": {
-          "name": "event_institution_idx",
+        "event_idx": {
+          "name": "event_idx",
           "columns": [
             {
               "expression": "event_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "institution_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2730,19 +2766,6 @@
           "tableTo": "users",
           "columnsFrom": [
             "registered_by_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "registrations_institution_id_institutions_id_fk": {
-          "name": "registrations_institution_id_institutions_id_fk",
-          "tableFrom": "registrations",
-          "tableTo": "institutions",
-          "columnsFrom": [
-            "institution_id"
           ],
           "columnsTo": [
             "id"
@@ -3819,6 +3842,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "normalized_name": {
+          "name": "normalized_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
         "institution_type": {
           "name": "institution_type",
           "type": "enum_institutions_institution_type",
@@ -3842,6 +3871,21 @@
         }
       },
       "indexes": {
+        "institutions_normalized_name_idx": {
+          "name": "institutions_normalized_name_idx",
+          "columns": [
+            {
+              "expression": "normalized_name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "institutions_updated_at_idx": {
           "name": "institutions_updated_at_idx",
           "columns": [
@@ -3871,164 +3915,9 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
-        },
-        "name_idx": {
-          "name": "name_idx",
-          "columns": [
-            {
-              "expression": "name",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
         }
       },
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.institution_memberships": {
-      "name": "institution_memberships",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "institution_id": {
-          "name": "institution_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "role": {
-          "name": "role",
-          "type": "enum_institution_memberships_role",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "institution_memberships_user_idx": {
-          "name": "institution_memberships_user_idx",
-          "columns": [
-            {
-              "expression": "user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "institution_memberships_institution_idx": {
-          "name": "institution_memberships_institution_idx",
-          "columns": [
-            {
-              "expression": "institution_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "institution_memberships_updated_at_idx": {
-          "name": "institution_memberships_updated_at_idx",
-          "columns": [
-            {
-              "expression": "updated_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "institution_memberships_created_at_idx": {
-          "name": "institution_memberships_created_at_idx",
-          "columns": [
-            {
-              "expression": "created_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "institution_memberships_user_id_users_id_fk": {
-          "name": "institution_memberships_user_id_users_id_fk",
-          "tableFrom": "institution_memberships",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "institution_memberships_institution_id_institutions_id_fk": {
-          "name": "institution_memberships_institution_id_institutions_id_fk",
-          "tableFrom": "institution_memberships",
-          "tableTo": "institutions",
-          "columnsFrom": [
-            "institution_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -6217,12 +6106,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "institution_memberships_id": {
-          "name": "institution_memberships_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
         "secretariat_id": {
           "name": "secretariat_id",
           "type": "integer",
@@ -6594,21 +6477,6 @@
           "method": "btree",
           "with": {}
         },
-        "payload_locked_documents_rels_institution_memberships_id_idx": {
-          "name": "payload_locked_documents_rels_institution_memberships_id_idx",
-          "columns": [
-            {
-              "expression": "institution_memberships_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "payload_locked_documents_rels_secretariat_id_idx": {
           "name": "payload_locked_documents_rels_secretariat_id_idx",
           "columns": [
@@ -6937,19 +6805,6 @@
           "tableTo": "institutions",
           "columnsFrom": [
             "institutions_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "payload_locked_documents_rels_institution_memberships_fk": {
-          "name": "payload_locked_documents_rels_institution_memberships_fk",
-          "tableFrom": "payload_locked_documents_rels",
-          "tableTo": "institution_memberships",
-          "columnsFrom": [
-            "institution_memberships_id"
           ],
           "columnsTo": [
             "id"
@@ -7458,15 +7313,6 @@
         "organization"
       ]
     },
-    "public.enum_institution_memberships_role": {
-      "name": "enum_institution_memberships_role",
-      "schema": "public",
-      "values": [
-        "student",
-        "teacher",
-        "administrator"
-      ]
-    },
     "public.enum_forms_confirmation_type": {
       "name": "enum_forms_confirmation_type",
       "schema": "public",
@@ -7486,6 +7332,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "68ae9bff-057e-48f2-bbdf-3c4373e04877",
+  "id": "6ea64c2d-f289-47e3-bfcf-e53fd44633c3",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }

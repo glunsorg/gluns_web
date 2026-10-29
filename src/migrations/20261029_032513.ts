@@ -17,7 +17,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum_registration_batches_batch_state" AS ENUM('draft', 'pending_payment', 'partially_paid', 'paid', 'cancelled');
   CREATE TYPE "public"."enum_organs_organ_type" AS ENUM('committee_based', 'court', 'commission', 'other');
   CREATE TYPE "public"."enum_institutions_institution_type" AS ENUM('school', 'university', 'organization');
-  CREATE TYPE "public"."enum_institution_memberships_role" AS ENUM('student', 'teacher', 'administrator');
   CREATE TYPE "public"."enum_forms_confirmation_type" AS ENUM('message', 'redirect');
   CREATE TABLE "users_roles" (
   	"order" integer NOT NULL,
@@ -37,6 +36,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TABLE "users" (
   	"id" serial PRIMARY KEY NOT NULL,
   	"full_name" varchar DEFAULT 'Unknown' NOT NULL,
+  	"institution_id" integer,
+  	"institution_name" varchar,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"email" varchar NOT NULL,
@@ -182,8 +183,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"currency" varchar NOT NULL,
   	"payment_method" varchar NOT NULL,
   	"transaction_reference" varchar,
-  	"recipient_name" varchar NOT NULL,
-  	"recipient_email" varchar,
+  	"recipient_id" integer NOT NULL,
   	"issued_at" timestamp(3) with time zone NOT NULL,
   	"receipt_state" "enum_receipts_receipt_state" DEFAULT 'issued' NOT NULL,
   	"pdf_id" integer,
@@ -234,7 +234,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"event_id" integer NOT NULL,
   	"registration_type" "enum_registrations_registration_type" NOT NULL,
   	"registered_by_id" integer NOT NULL,
-  	"institution_id" integer,
   	"registration_state" "enum_registrations_registration_state" DEFAULT 'draft' NOT NULL,
   	"notes" varchar,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
@@ -319,16 +318,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TABLE "institutions" (
   	"id" serial PRIMARY KEY NOT NULL,
   	"name" varchar NOT NULL,
+  	"normalized_name" varchar NOT NULL,
   	"institution_type" "enum_institutions_institution_type" NOT NULL,
-  	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
-  	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
-  );
-  
-  CREATE TABLE "institution_memberships" (
-  	"id" serial PRIMARY KEY NOT NULL,
-  	"user_id" integer NOT NULL,
-  	"institution_id" integer NOT NULL,
-  	"role" "enum_institution_memberships_role" NOT NULL,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
@@ -549,7 +540,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"event_committees_id" integer,
   	"organs_id" integer,
   	"institutions_id" integer,
-  	"institution_memberships_id" integer,
   	"secretariat_id" integer,
   	"countries_id" integer,
   	"forms_id" integer,
@@ -582,6 +572,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   
   ALTER TABLE "users_roles" ADD CONSTRAINT "users_roles_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "users_sessions" ADD CONSTRAINT "users_sessions_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "users" ADD CONSTRAINT "users_institution_id_institutions_id_fk" FOREIGN KEY ("institution_id") REFERENCES "public"."institutions"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "pages_blocks_our_team" ADD CONSTRAINT "pages_blocks_our_team_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "pages_rels" ADD CONSTRAINT "pages_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "pages_rels" ADD CONSTRAINT "pages_rels_secretariat_fk" FOREIGN KEY ("secretariat_id") REFERENCES "public"."secretariat"("id") ON DELETE cascade ON UPDATE no action;
@@ -596,12 +587,12 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "receipts" ADD CONSTRAINT "receipts_payment_id_payments_id_fk" FOREIGN KEY ("payment_id") REFERENCES "public"."payments"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "receipts" ADD CONSTRAINT "receipts_invoice_id_invoices_id_fk" FOREIGN KEY ("invoice_id") REFERENCES "public"."invoices"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "receipts" ADD CONSTRAINT "receipts_registration_id_registrations_id_fk" FOREIGN KEY ("registration_id") REFERENCES "public"."registrations"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "receipts" ADD CONSTRAINT "receipts_recipient_id_users_id_fk" FOREIGN KEY ("recipient_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "receipts" ADD CONSTRAINT "receipts_pdf_id_media_id_fk" FOREIGN KEY ("pdf_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "payments" ADD CONSTRAINT "payments_registration_id_registrations_id_fk" FOREIGN KEY ("registration_id") REFERENCES "public"."registrations"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "payments" ADD CONSTRAINT "payments_invoice_id_invoices_id_fk" FOREIGN KEY ("invoice_id") REFERENCES "public"."invoices"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "registrations" ADD CONSTRAINT "registrations_event_id_events_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."events"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "registrations" ADD CONSTRAINT "registrations_registered_by_id_users_id_fk" FOREIGN KEY ("registered_by_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "registrations" ADD CONSTRAINT "registrations_institution_id_institutions_id_fk" FOREIGN KEY ("institution_id") REFERENCES "public"."institutions"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "delegate_assignments" ADD CONSTRAINT "delegate_assignments_delegate_id_delegates_id_fk" FOREIGN KEY ("delegate_id") REFERENCES "public"."delegates"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "delegate_assignments" ADD CONSTRAINT "delegate_assignments_country_id_countries_id_fk" FOREIGN KEY ("country_id") REFERENCES "public"."countries"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "delegate_assignments" ADD CONSTRAINT "delegate_assignments_event_committee_id_event_committees_id_fk" FOREIGN KEY ("event_committee_id") REFERENCES "public"."event_committees"("id") ON DELETE set null ON UPDATE no action;
@@ -611,8 +602,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "committees" ADD CONSTRAINT "committees_committee_photo_id_media_id_fk" FOREIGN KEY ("committee_photo_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "event_committees" ADD CONSTRAINT "event_committees_event_id_events_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."events"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "event_committees" ADD CONSTRAINT "event_committees_committee_id_committees_id_fk" FOREIGN KEY ("committee_id") REFERENCES "public"."committees"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "institution_memberships" ADD CONSTRAINT "institution_memberships_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "institution_memberships" ADD CONSTRAINT "institution_memberships_institution_id_institutions_id_fk" FOREIGN KEY ("institution_id") REFERENCES "public"."institutions"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "secretariat" ADD CONSTRAINT "secretariat_photo_id_portraits_id_fk" FOREIGN KEY ("photo_id") REFERENCES "public"."portraits"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "forms_blocks_checkbox" ADD CONSTRAINT "forms_blocks_checkbox_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."forms"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "forms_blocks_country" ADD CONSTRAINT "forms_blocks_country_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."forms"("id") ON DELETE cascade ON UPDATE no action;
@@ -648,7 +637,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_event_committees_fk" FOREIGN KEY ("event_committees_id") REFERENCES "public"."event_committees"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_organs_fk" FOREIGN KEY ("organs_id") REFERENCES "public"."organs"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_institutions_fk" FOREIGN KEY ("institutions_id") REFERENCES "public"."institutions"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_institution_memberships_fk" FOREIGN KEY ("institution_memberships_id") REFERENCES "public"."institution_memberships"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_secretariat_fk" FOREIGN KEY ("secretariat_id") REFERENCES "public"."secretariat"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_countries_fk" FOREIGN KEY ("countries_id") REFERENCES "public"."countries"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_forms_fk" FOREIGN KEY ("forms_id") REFERENCES "public"."forms"("id") ON DELETE cascade ON UPDATE no action;
@@ -659,6 +647,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "users_roles_parent_idx" ON "users_roles" USING btree ("parent_id");
   CREATE INDEX "users_sessions_order_idx" ON "users_sessions" USING btree ("_order");
   CREATE INDEX "users_sessions_parent_id_idx" ON "users_sessions" USING btree ("_parent_id");
+  CREATE INDEX "users_institution_idx" ON "users" USING btree ("institution_id");
   CREATE INDEX "users_updated_at_idx" ON "users" USING btree ("updated_at");
   CREATE INDEX "users_created_at_idx" ON "users" USING btree ("created_at");
   CREATE UNIQUE INDEX "users_email_idx" ON "users" USING btree ("email");
@@ -705,6 +694,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE UNIQUE INDEX "receipts_payment_idx" ON "receipts" USING btree ("payment_id");
   CREATE INDEX "receipts_invoice_idx" ON "receipts" USING btree ("invoice_id");
   CREATE INDEX "receipts_registration_idx" ON "receipts" USING btree ("registration_id");
+  CREATE INDEX "receipts_recipient_idx" ON "receipts" USING btree ("recipient_id");
   CREATE INDEX "receipts_pdf_idx" ON "receipts" USING btree ("pdf_id");
   CREATE INDEX "receipts_updated_at_idx" ON "receipts" USING btree ("updated_at");
   CREATE INDEX "receipts_created_at_idx" ON "receipts" USING btree ("created_at");
@@ -724,12 +714,11 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE UNIQUE INDEX "registrations_registration_number_idx" ON "registrations" USING btree ("registration_number");
   CREATE INDEX "registrations_event_idx" ON "registrations" USING btree ("event_id");
   CREATE INDEX "registrations_registered_by_idx" ON "registrations" USING btree ("registered_by_id");
-  CREATE INDEX "registrations_institution_idx" ON "registrations" USING btree ("institution_id");
   CREATE INDEX "registrations_updated_at_idx" ON "registrations" USING btree ("updated_at");
   CREATE INDEX "registrations_created_at_idx" ON "registrations" USING btree ("created_at");
   CREATE INDEX "registrationNumber_idx" ON "registrations" USING btree ("registration_number");
   CREATE UNIQUE INDEX "event_registeredBy_idx" ON "registrations" USING btree ("event_id","registered_by_id");
-  CREATE INDEX "event_institution_idx" ON "registrations" USING btree ("event_id","institution_id");
+  CREATE INDEX "event_idx" ON "registrations" USING btree ("event_id");
   CREATE UNIQUE INDEX "delegate_assignments_delegate_idx" ON "delegate_assignments" USING btree ("delegate_id");
   CREATE INDEX "delegate_assignments_country_idx" ON "delegate_assignments" USING btree ("country_id");
   CREATE INDEX "delegate_assignments_event_committee_idx" ON "delegate_assignments" USING btree ("event_committee_id");
@@ -761,13 +750,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "organs_updated_at_idx" ON "organs" USING btree ("updated_at");
   CREATE INDEX "organs_created_at_idx" ON "organs" USING btree ("created_at");
   CREATE UNIQUE INDEX "code_idx" ON "organs" USING btree ("code");
+  CREATE UNIQUE INDEX "institutions_normalized_name_idx" ON "institutions" USING btree ("normalized_name");
   CREATE INDEX "institutions_updated_at_idx" ON "institutions" USING btree ("updated_at");
   CREATE INDEX "institutions_created_at_idx" ON "institutions" USING btree ("created_at");
-  CREATE UNIQUE INDEX "name_idx" ON "institutions" USING btree ("name");
-  CREATE INDEX "institution_memberships_user_idx" ON "institution_memberships" USING btree ("user_id");
-  CREATE INDEX "institution_memberships_institution_idx" ON "institution_memberships" USING btree ("institution_id");
-  CREATE INDEX "institution_memberships_updated_at_idx" ON "institution_memberships" USING btree ("updated_at");
-  CREATE INDEX "institution_memberships_created_at_idx" ON "institution_memberships" USING btree ("created_at");
   CREATE INDEX "secretariat_photo_idx" ON "secretariat" USING btree ("photo_id");
   CREATE INDEX "secretariat_updated_at_idx" ON "secretariat" USING btree ("updated_at");
   CREATE INDEX "secretariat_created_at_idx" ON "secretariat" USING btree ("created_at");
@@ -841,7 +826,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "payload_locked_documents_rels_event_committees_id_idx" ON "payload_locked_documents_rels" USING btree ("event_committees_id");
   CREATE INDEX "payload_locked_documents_rels_organs_id_idx" ON "payload_locked_documents_rels" USING btree ("organs_id");
   CREATE INDEX "payload_locked_documents_rels_institutions_id_idx" ON "payload_locked_documents_rels" USING btree ("institutions_id");
-  CREATE INDEX "payload_locked_documents_rels_institution_memberships_id_idx" ON "payload_locked_documents_rels" USING btree ("institution_memberships_id");
   CREATE INDEX "payload_locked_documents_rels_secretariat_id_idx" ON "payload_locked_documents_rels" USING btree ("secretariat_id");
   CREATE INDEX "payload_locked_documents_rels_countries_id_idx" ON "payload_locked_documents_rels" USING btree ("countries_id");
   CREATE INDEX "payload_locked_documents_rels_forms_id_idx" ON "payload_locked_documents_rels" USING btree ("forms_id");
@@ -883,7 +867,6 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "event_committees" CASCADE;
   DROP TABLE "organs" CASCADE;
   DROP TABLE "institutions" CASCADE;
-  DROP TABLE "institution_memberships" CASCADE;
   DROP TABLE "secretariat" CASCADE;
   DROP TABLE "countries" CASCADE;
   DROP TABLE "forms_blocks_checkbox" CASCADE;
@@ -921,6 +904,5 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum_registration_batches_batch_state";
   DROP TYPE "public"."enum_organs_organ_type";
   DROP TYPE "public"."enum_institutions_institution_type";
-  DROP TYPE "public"."enum_institution_memberships_role";
   DROP TYPE "public"."enum_forms_confirmation_type";`)
 }

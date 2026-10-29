@@ -28,54 +28,48 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   const payload = await getPayload({ config })
-  const body = await req.json()
-
-  // authenticate user if possible
-  const { user } = await payload.auth({ headers: req.headers }).catch(() => ({ user: null }))
-
-  // allow creation when either an authenticated user exists, or caller provided registeredBy in body
-  if (!user && !body?.registeredBy) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
-  }
 
   try {
-    // Sanitize incoming body to avoid circular references or deep objects
-    const eventId = body?.event?.id ?? body?.event
-    const registrationType = body?.registrationType ?? 'institution'
-    const institutionId = body?.institution?.id ?? body?.institution
+    const body = await req.json()
 
-    if (!eventId) {
-      return NextResponse.json({ message: 'Event is required' }, { status: 400 })
+    // Require an authenticated user.
+    const { user } = await payload.auth({ headers: req.headers }).catch(() => ({ user: null }))
+
+    if (!user) {
+      return NextResponse.json({ message: 'Unauthorized. Please sign in.' }, { status: 401 })
     }
 
-    // Use the service helper to create a safe registration record
+    const eventId = body?.event?.id ?? body?.event
+
+    if (!eventId) {
+      return NextResponse.json({ message: 'Event is required.' }, { status: 400 })
+    }
+
+    // Determine registration type on the server.
+
     const registration = await createRegistration({
       payload,
       eventId: String(eventId),
-      registrationType,
-      institutionId: institutionId ? String(institutionId) : undefined,
-      userId: String(user?.id ?? body.registeredBy),
+      userId: String(user.id),
     })
 
-    const safeRegistration = {
-      id: registration?.id,
-      registrationNumber: registration?.registrationNumber,
-      event: registration?.event,
-      registrationType: registration?.registrationType,
-      registeredBy: registration?.registeredBy,
-      institution: registration?.institution,
-      registrationState: registration?.registrationState,
-      notes: registration?.notes,
-      createdAt: registration?.createdAt,
-      updatedAt: registration?.updatedAt,
-    }
-
-    return NextResponse.json(safeRegistration, { status: 201 })
-  } catch (err: any) {
-    console.error('Registrations POST error:', err?.stack || err)
     return NextResponse.json(
-      { message: 'Failed to create registration', error: String(err) },
-      { status: 500 },
+      {
+        id: registration.id,
+        registrationNumber: registration.registrationNumber,
+        event: registration.event,
+        registrationType: registration.registrationType,
+        registeredBy: registration.registeredBy,
+        registrationState: registration.registrationState,
+        notes: registration.notes,
+        createdAt: registration.createdAt,
+        updatedAt: registration.updatedAt,
+      },
+      { status: 201 },
     )
+  } catch (err) {
+    console.error('Registrations POST error:', err)
+
+    return NextResponse.json({ message: 'Failed to create registration.' }, { status: 500 })
   }
 }

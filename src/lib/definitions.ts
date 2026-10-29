@@ -6,6 +6,7 @@ export const SignUpFormSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters long'),
   confirmPassword: z.string().min(8, 'Confirm Password must be at least 8 characters long'),
   roles: z.array(z.enum(['teacher', 'delegate'])).nonempty('Please select at least one role'),
+  institutionName: z.string().optional(),
 })
 
 export type SignUpFormData = z.infer<typeof SignUpFormSchema>
@@ -27,5 +28,6 @@ export type FormState =
         roles?: string[]
       }
       message?: string
+      institutionName?: string[]
     }
   | undefined

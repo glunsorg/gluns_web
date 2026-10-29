@@ -87,7 +87,6 @@ export interface Config {
     'event-committees': EventCommittee;
     organs: Organ;
     institutions: Institution;
-    'institution-memberships': InstitutionMembership;
     secretariat: Secretariat;
     countries: Country;
     forms: Form;
@@ -119,7 +118,6 @@ export interface Config {
     'event-committees': EventCommitteesSelect<false> | EventCommitteesSelect<true>;
     organs: OrgansSelect<false> | OrgansSelect<true>;
     institutions: InstitutionsSelect<false> | InstitutionsSelect<true>;
-    'institution-memberships': InstitutionMembershipsSelect<false> | InstitutionMembershipsSelect<true>;
     secretariat: SecretariatSelect<false> | SecretariatSelect<true>;
     countries: CountriesSelect<false> | CountriesSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
@@ -170,6 +168,8 @@ export interface User {
   id: number;
   roles: ('teacher' | 'delegate' | 'secretariat' | 'admin')[];
   fullName: string;
+  institution?: (number | null) | Institution;
+  institutionName?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -187,6 +187,20 @@ export interface User {
       }[]
     | null;
   password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "institutions".
+ */
+export interface Institution {
+  id: number;
+  name: string;
+  /**
+   * Automatically normalized institution name.
+   */
+  normalizedName: string;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * Media
@@ -318,7 +332,6 @@ export interface Registration {
   event: number | Event;
   registrationType: 'individual' | 'institution';
   registeredBy: number | User;
-  institution?: (number | null) | Institution;
   registrationState: 'draft' | 'active' | 'completed' | 'cancelled';
   notes?: string | null;
   updatedAt: string;
@@ -361,17 +374,6 @@ export interface Event {
   registrationClose: string;
   allowIndividualRegistration?: boolean | null;
   allowInstitutionRegistration?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "institutions".
- */
-export interface Institution {
-  id: number;
-  name: string;
-  institutionType: 'school' | 'university' | 'organization';
   updatedAt: string;
   createdAt: string;
 }
@@ -586,18 +588,6 @@ export interface Organ {
   code: string;
   organType: 'committee_based' | 'court' | 'commission' | 'other';
   active?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "institution-memberships".
- */
-export interface InstitutionMembership {
-  id: number;
-  user: number | User;
-  institution: number | Institution;
-  role: 'student' | 'teacher' | 'administrator';
   updatedAt: string;
   createdAt: string;
 }
@@ -897,10 +887,6 @@ export interface PayloadLockedDocument {
         value: number | Institution;
       } | null)
     | ({
-        relationTo: 'institution-memberships';
-        value: number | InstitutionMembership;
-      } | null)
-    | ({
         relationTo: 'secretariat';
         value: number | Secretariat;
       } | null)
@@ -965,6 +951,8 @@ export interface PayloadMigration {
 export interface UsersSelect<T extends boolean = true> {
   roles?: T;
   fullName?: T;
+  institution?: T;
+  institutionName?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -1185,7 +1173,6 @@ export interface RegistrationsSelect<T extends boolean = true> {
   event?: T;
   registrationType?: T;
   registeredBy?: T;
-  institution?: T;
   registrationState?: T;
   notes?: T;
   updatedAt?: T;
@@ -1286,18 +1273,7 @@ export interface OrgansSelect<T extends boolean = true> {
  */
 export interface InstitutionsSelect<T extends boolean = true> {
   name?: T;
-  institutionType?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "institution-memberships_select".
- */
-export interface InstitutionMembershipsSelect<T extends boolean = true> {
-  user?: T;
-  institution?: T;
-  role?: T;
+  normalizedName?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -9,6 +9,7 @@ export const Users: CollectionConfig = {
   admin: {
     useAsTitle: 'email',
     group: 'Administration',
+    defaultColumns: ['email', 'fullName', 'roles', 'institutionName', 'institution'],
   },
 
   auth: true,
@@ -54,6 +55,24 @@ export const Users: CollectionConfig = {
       type: 'text',
       required: true,
       defaultValue: 'Unknown',
+    },
+
+    {
+      name: 'institution',
+      type: 'relationship',
+      relationTo: 'institutions',
+      required: false,
+      admin: {
+        condition: (data) => Array.isArray(data?.roles) && data.roles.includes('teacher'),
+      },
+    },
+    {
+      name: 'institutionName',
+      type: 'text',
+      required: false,
+      admin: {
+        condition: (data) => Array.isArray(data?.roles) && data.roles.includes('delegate'),
+      },
     },
   ],
 }

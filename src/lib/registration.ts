@@ -6,7 +6,6 @@ export const EMPTY_REGISTRATION: Registration = {
   event: '',
   registrationType: 'individual',
   registeredBy: '',
-  institution: undefined,
   registrationState: 'draft',
 }
 

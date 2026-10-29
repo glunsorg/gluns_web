@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+'use client'
 import React from 'react'
 import { Save, CalendarDays, Building2, Globe } from 'lucide-react'
 import { Registration } from '@/types/registrationTypes'
@@ -28,8 +29,8 @@ interface DelegationFormStepProps {
   selectedInstitutionId: string
   selectedEventId: string
   registeredBy: string
+  registrationType: 'individual' | 'institution'
   onEventChange: (eventId: string) => void
-  onInstitutionChange: (institutionId: string) => void
   onSaved?: (data: any) => void
 }
 
@@ -40,12 +41,10 @@ export default function DelegationFormStep({
   saving,
   isDelegateAccount,
   events,
-  institutions,
+  registrationType,
   selectedEventId,
-  selectedInstitutionId,
   registeredBy,
   onEventChange,
-  onInstitutionChange,
   onSaved,
 }: DelegationFormStepProps) {
   const selectedEvent = events.find((event) => String(event.id) === String(selectedEventId))
@@ -57,19 +56,9 @@ export default function DelegationFormStep({
       ...prev,
       event: eventId,
       registeredBy: registeredBy, // using registeredBy here
+      registrationType: registrationType, // using registrationType here
     }))
   }
-
-  // Update formData when institution changes
-  const handleInstitutionSelect = (institutionId: string) => {
-    onInstitutionChange(institutionId)
-    setFormData((prev) => ({
-      ...prev,
-      institution: institutionId,
-      registeredBy: registeredBy, // using registeredBy here
-    }))
-  }
-
   return (
     <div className="rounded-3xl border border-white/10 bg-white/95 p-6 shadow-[0_20px_50px_rgba(7,19,31,0.18)] sm:p-8">
       <div className="space-y-6 animate-fade-in">
@@ -160,34 +149,6 @@ export default function DelegationFormStep({
                 </p>
               )}
             </div>
-          </div>
-        </div>
-
-        {isDelegateAccount && (
-          <div className="rounded-2xl border border-[#85c226]/20 bg-[#85c226]/10 p-4 text-sm text-[#104179]">
-            This is an individual delegate registration. The same payment and account flow is used,
-            but the portal keeps the wording focused on a single student.
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Institution <span className="text-red-500">*</span>
-            </label>
-            <select
-              value={formData.institution || selectedInstitutionId} // read directly from formData
-              onChange={(e) => handleInstitutionSelect(e.target.value)}
-              className="w-full rounded-2xl border text-black border-[#104179]/15 px-4 py-3 transition focus:border-[#85c226] focus:ring-2 focus:ring-[#85c226]/20"
-              title="Select an institution"
-            >
-              <option value="">Select an institution</option>
-              {institutions.map((school) => (
-                <option key={school.id} value={school.id}>
-                  {school.name}
-                </option>
-              ))}
-            </select>
           </div>
         </div>
       </div>

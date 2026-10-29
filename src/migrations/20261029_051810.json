@@ -190,6 +190,18 @@
           "notNull": true,
           "default": "'Unknown'"
         },
+        "institution_id": {
+          "name": "institution_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "institution_name": {
+          "name": "institution_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -249,6 +261,21 @@
         }
       },
       "indexes": {
+        "users_institution_idx": {
+          "name": "users_institution_idx",
+          "columns": [
+            {
+              "expression": "institution_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "users_updated_at_idx": {
           "name": "users_updated_at_idx",
           "columns": [
@@ -295,7 +322,21 @@
           "with": {}
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "users_institution_id_institutions_id_fk": {
+          "name": "users_institution_id_institutions_id_fk",
+          "tableFrom": "users",
+          "tableTo": "institutions",
+          "columnsFrom": [
+            "institution_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -2548,12 +2589,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "institution_id": {
-          "name": "institution_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
         "registration_state": {
           "name": "registration_state",
           "type": "enum_registrations_registration_state",
@@ -2619,21 +2654,6 @@
           "columns": [
             {
               "expression": "registered_by_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "registrations_institution_idx": {
-          "name": "registrations_institution_idx",
-          "columns": [
-            {
-              "expression": "institution_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2710,17 +2730,11 @@
           "method": "btree",
           "with": {}
         },
-        "event_institution_idx": {
-          "name": "event_institution_idx",
+        "event_idx": {
+          "name": "event_idx",
           "columns": [
             {
               "expression": "event_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "institution_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2752,19 +2766,6 @@
           "tableTo": "users",
           "columnsFrom": [
             "registered_by_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "registrations_institution_id_institutions_id_fk": {
-          "name": "registrations_institution_id_institutions_id_fk",
-          "tableFrom": "registrations",
-          "tableTo": "institutions",
-          "columnsFrom": [
-            "institution_id"
           ],
           "columnsTo": [
             "id"
@@ -3841,10 +3842,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "institution_type": {
-          "name": "institution_type",
-          "type": "enum_institutions_institution_type",
-          "typeSchema": "public",
+        "normalized_name": {
+          "name": "normalized_name",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -3864,6 +3864,21 @@
         }
       },
       "indexes": {
+        "institutions_normalized_name_idx": {
+          "name": "institutions_normalized_name_idx",
+          "columns": [
+            {
+              "expression": "normalized_name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "institutions_updated_at_idx": {
           "name": "institutions_updated_at_idx",
           "columns": [
@@ -3893,164 +3908,9 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
-        },
-        "name_idx": {
-          "name": "name_idx",
-          "columns": [
-            {
-              "expression": "name",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
         }
       },
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.institution_memberships": {
-      "name": "institution_memberships",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "institution_id": {
-          "name": "institution_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "role": {
-          "name": "role",
-          "type": "enum_institution_memberships_role",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "institution_memberships_user_idx": {
-          "name": "institution_memberships_user_idx",
-          "columns": [
-            {
-              "expression": "user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "institution_memberships_institution_idx": {
-          "name": "institution_memberships_institution_idx",
-          "columns": [
-            {
-              "expression": "institution_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "institution_memberships_updated_at_idx": {
-          "name": "institution_memberships_updated_at_idx",
-          "columns": [
-            {
-              "expression": "updated_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "institution_memberships_created_at_idx": {
-          "name": "institution_memberships_created_at_idx",
-          "columns": [
-            {
-              "expression": "created_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "institution_memberships_user_id_users_id_fk": {
-          "name": "institution_memberships_user_id_users_id_fk",
-          "tableFrom": "institution_memberships",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "institution_memberships_institution_id_institutions_id_fk": {
-          "name": "institution_memberships_institution_id_institutions_id_fk",
-          "tableFrom": "institution_memberships",
-          "tableTo": "institutions",
-          "columnsFrom": [
-            "institution_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -6239,12 +6099,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "institution_memberships_id": {
-          "name": "institution_memberships_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
         "secretariat_id": {
           "name": "secretariat_id",
           "type": "integer",
@@ -6616,21 +6470,6 @@
           "method": "btree",
           "with": {}
         },
-        "payload_locked_documents_rels_institution_memberships_id_idx": {
-          "name": "payload_locked_documents_rels_institution_memberships_id_idx",
-          "columns": [
-            {
-              "expression": "institution_memberships_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "payload_locked_documents_rels_secretariat_id_idx": {
           "name": "payload_locked_documents_rels_secretariat_id_idx",
           "columns": [
@@ -6959,19 +6798,6 @@
           "tableTo": "institutions",
           "columnsFrom": [
             "institutions_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "payload_locked_documents_rels_institution_memberships_fk": {
-          "name": "payload_locked_documents_rels_institution_memberships_fk",
-          "tableFrom": "payload_locked_documents_rels",
-          "tableTo": "institution_memberships",
-          "columnsFrom": [
-            "institution_memberships_id"
           ],
           "columnsTo": [
             "id"
@@ -7471,24 +7297,6 @@
         "other"
       ]
     },
-    "public.enum_institutions_institution_type": {
-      "name": "enum_institutions_institution_type",
-      "schema": "public",
-      "values": [
-        "school",
-        "university",
-        "organization"
-      ]
-    },
-    "public.enum_institution_memberships_role": {
-      "name": "enum_institution_memberships_role",
-      "schema": "public",
-      "values": [
-        "student",
-        "teacher",
-        "administrator"
-      ]
-    },
     "public.enum_forms_confirmation_type": {
       "name": "enum_forms_confirmation_type",
       "schema": "public",
@@ -7508,6 +7316,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "cb53631c-42cf-4869-a3e6-7f6aeb957ea7",
+  "id": "5a5eedfc-3290-45b6-990c-4178a405c8ad",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }

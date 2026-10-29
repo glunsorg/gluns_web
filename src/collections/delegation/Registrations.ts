@@ -62,12 +62,6 @@ export const Registrations: CollectionConfig = {
     },
 
     {
-      name: 'institution',
-      type: 'relationship',
-      relationTo: 'institutions',
-    },
-
-    {
       name: 'registrationState',
       type: 'select',
       required: true,
@@ -95,7 +89,7 @@ export const Registrations: CollectionConfig = {
       unique: true,
     },
     {
-      fields: ['event', 'institution'],
+      fields: ['event'],
     },
   ],
 }

@@ -1,15 +1,15 @@
-import * as migration_20261013_080750 from './20261013_080750';
-import * as migration_20261013_131611_add_recipient_to_receipts from './20261013_131611_add_recipient_to_receipts';
+import * as migration_20261029_032513 from './20261029_032513';
+import * as migration_20261029_051810 from './20261029_051810';
 
 export const migrations = [
   {
-    up: migration_20261013_080750.up,
-    down: migration_20261013_080750.down,
-    name: '20261013_080750',
+    up: migration_20261029_032513.up,
+    down: migration_20261029_032513.down,
+    name: '20261029_032513',
   },
   {
-    up: migration_20261013_131611_add_recipient_to_receipts.up,
-    down: migration_20261013_131611_add_recipient_to_receipts.down,
-    name: '20261013_131611_add_recipient_to_receipts'
+    up: migration_20261029_051810.up,
+    down: migration_20261029_051810.down,
+    name: '20261029_051810'
   },
 ];

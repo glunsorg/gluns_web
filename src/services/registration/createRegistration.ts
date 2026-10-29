@@ -6,6 +6,7 @@ async function generateRegistrationNumber(payload: any) {
     sort: '-createdAt',
     limit: 1,
     depth: 0,
+    overrideAccess: true,
   })
 
   const lastNumber = lastRegistration.docs[0]?.registrationNumber ?? 'GLUNSREG-0000'
@@ -24,52 +25,48 @@ const normalizeId = (id: string | number) => {
 export async function createRegistration({
   payload,
   eventId,
-  registrationType,
-  institutionId,
   userId,
 }: {
   payload: any
   eventId: string
-  registrationType: 'individual' | 'institution'
-  institutionId?: string
   userId: string
 }) {
+  // Find event
   const event = await payload.findByID({
     collection: 'events',
     id: normalizeId(eventId),
     depth: 0,
-  })
-
-  const user = await payload.findByID({
-    collection: 'users',
-    id: normalizeId(userId),
-    depth: 0,
+    overrideAccess: true,
   })
 
   if (!event) {
     throw new Error(`Event ${eventId} not found`)
   }
 
+  // Find registering user
+  const user = await payload.findByID({
+    collection: 'users',
+    id: normalizeId(userId),
+    depth: 0,
+    overrideAccess: true,
+  })
+
   if (!user) {
     throw new Error(`User ${userId} not found`)
   }
 
-  let institution
+  // Determine registration type from the user's institution relationship.
+  const registrationType = user.institution ? 'institution' : 'individual'
 
-  if (registrationType === 'institution') {
-    if (!institutionId) {
-      throw new Error('Institution is required for institution registration')
-    }
+  const institutionId = user.institution
+    ? typeof user.institution === 'object'
+      ? user.institution.id
+      : user.institution
+    : undefined
 
-    institution = await payload.findByID({
-      collection: 'institutions',
-      id: normalizeId(institutionId),
-      depth: 0,
-    })
-
-    if (!institution) {
-      throw new Error(`Institution ${institutionId} not found`)
-    }
+  // Validate institution for institutional registration.
+  if (registrationType === 'institution' && !institutionId) {
+    throw new Error('Institution is required for institution registration')
   }
 
   const registrationNumber = await generateRegistrationNumber(payload)
@@ -82,6 +79,7 @@ export async function createRegistration({
     registrationState: 'draft',
   }
 
+  // Link institution when registering institutionally.
   if (registrationType === 'institution' && institutionId) {
     data.institution = normalizeId(institutionId)
   }
@@ -92,5 +90,6 @@ export async function createRegistration({
     collection: 'registrations',
     depth: 0,
     data,
+    overrideAccess: true,
   })
 }

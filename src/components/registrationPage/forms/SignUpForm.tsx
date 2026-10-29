@@ -39,10 +39,14 @@ function RoleOption({
   value,
   title,
   description,
+  checked,
+  onChange,
 }: {
   value: 'delegate' | 'teacher'
   title: string
   description: string
+  checked: boolean
+  onChange: (value: 'delegate' | 'teacher') => void
 }) {
   return (
     <label className="flex cursor-pointer items-start gap-3 border border-[#104179]/15 bg-white px-4 py-3.5 transition hover:border-[#85c226] hover:bg-[#85c226]/5 has-checked:border-[#85c226] has-checked:bg-[#85c226]/10">
@@ -50,9 +54,11 @@ function RoleOption({
         type="radio"
         name="roles"
         value={value}
+        checked={checked}
+        onChange={() => onChange(value)}
         className="mt-1 h-4 w-4 border-[#104179]/30 text-[#85c226] focus:ring-[#85c226]"
-        defaultChecked={value === 'delegate'}
       />
+
       <span className="space-y-1">
         <span className="block text-sm font-semibold text-[#104179]">{title}</span>
         <span className="block text-sm leading-6 text-[#104179]/70">{description}</span>
@@ -63,6 +69,8 @@ function RoleOption({
 
 export default function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
   const [state, action, pending] = useActionState(signUp, undefined)
+  const [role, setRole] = React.useState<'delegate' | 'teacher'>('delegate')
+
   return (
     <section id="signup" className="relative isolate overflow-hidden  px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
@@ -96,6 +104,11 @@ export default function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
           </div>
 
           <form className="space-y-5" action={action}>
+            {state?.message && (
+              <p role="alert" className="text-sm text-red-600">
+                {state.message}
+              </p>
+            )}
             <fieldset className="space-y-3">
               <div className="space-y-1">
                 <label className="block text-sm font-semibold text-[#104179]">
@@ -113,14 +126,18 @@ export default function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
                   value="delegate"
                   title="Delegate"
                   description="For individual delegates registering for conferences and events."
+                  checked={role === 'delegate'}
+                  onChange={setRole}
                 />
+
                 <RoleOption
                   value="teacher"
                   title="Teacher"
                   description="For school staff managing a delegation or institution account."
+                  checked={role === 'teacher'}
+                  onChange={setRole}
                 />
               </div>
-
               {state?.errors?.roles && (
                 <p className="text-sm text-red-600">{state.errors.roles.join(', ')}</p>
               )}
@@ -136,6 +153,52 @@ export default function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
               />
               {state?.errors?.fullName && (
                 <p className="text-sm text-red-600">{state.errors.fullName.join(', ')}</p>
+              )}
+
+              {role === 'teacher' && (
+                <div className="space-y-2">
+                  <label
+                    htmlFor="institutionName"
+                    className="block text-sm font-semibold text-[#104179]"
+                  >
+                    Institution Name
+                  </label>
+
+                  <input
+                    id="institutionName"
+                    name="institutionName"
+                    type="text"
+                    required
+                    placeholder="Enter your school's full name"
+                    autoComplete="organization"
+                    className="w-full border border-[#104179]/15 bg-white px-4 py-3.5 text-[#104179] placeholder:text-[#104179]/35 shadow-sm outline-none transition duration-300 focus:border-[#85c226] focus:ring-4 focus:ring-[#85c226]/15"
+                  />
+
+                  <p className="text-sm leading-6 text-[#104179]/70">
+                    If your institution is already registered, please contact the secretariat for
+                    assistance.
+                  </p>
+                </div>
+              )}
+
+              {role === 'delegate' && (
+                <div className="space-y-2">
+                  <label
+                    htmlFor="institutionName"
+                    className="block text-sm font-semibold text-[#104179]"
+                  >
+                    Institution Name
+                  </label>
+
+                  <input
+                    id="institutionName"
+                    name="institutionName"
+                    type="text"
+                    placeholder="Enter your school or organization"
+                    autoComplete="organization"
+                    className="w-full border border-[#104179]/15 bg-white px-4 py-3.5 text-[#104179] placeholder:text-[#104179]/35 shadow-sm outline-none transition duration-300 focus:border-[#85c226] focus:ring-4 focus:ring-[#85c226]/15"
+                  />
+                </div>
               )}
 
               <Field

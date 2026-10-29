@@ -125,6 +125,19 @@ export async function POST(req: Request) {
         )
       }
 
+      // ensure the delegate's full name matches the logged-in user's full name.
+      const accountFullName = user.fullName?.trim().toLowerCase()
+      const delegateFullName = String(body?.fullName ?? '')
+        .trim()
+        .toLowerCase()
+
+      if (!accountFullName || delegateFullName !== accountFullName) {
+        return NextResponse.json(
+          { message: 'Please use the full name associated with your account.' },
+          { status: 403 },
+        )
+      }
+
       // Ensure the delegate's email matches the logged-in user's email.
       const accountEmail = user.email?.trim().toLowerCase()
       const delegateEmail = String(body?.email ?? '')
@@ -169,7 +182,7 @@ export async function POST(req: Request) {
       gradeLevel: body?.gradeLevel,
       registration: normalizedRegistration,
       batch,
-      institution: toRelationshipId(body?.institution),
+      institution: toRelationshipId(body?.user?.institution),
       delegateState: body?.delegateState ?? 'pending',
     }
 

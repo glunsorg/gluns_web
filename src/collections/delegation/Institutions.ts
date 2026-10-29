@@ -2,6 +2,16 @@
 import { CollectionConfig } from 'payload'
 import { AccessArgs } from 'payload'
 
+function normalizeInstitutionName(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/\b(high\s*school|highschool|schools?|school)\b/g, '')
+    .replace(/[^\p{L}\p{N}\s]/gu, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 export const Institutions: CollectionConfig = {
   slug: 'institutions',
   admin: {
@@ -18,7 +28,16 @@ export const Institutions: CollectionConfig = {
       return !!(req.user && 'roles' in req.user && req.user.roles.includes('admin'))
     },
   },
-  hooks: {},
+  hooks: {
+    beforeValidate: [
+      async ({ data }) => {
+        if (data?.name && typeof data.name === 'string') {
+          data.normalizedName = normalizeInstitutionName(data.name)
+        }
+        return data
+      },
+    ],
+  },
 
   fields: [
     {
@@ -27,30 +46,14 @@ export const Institutions: CollectionConfig = {
       required: true,
     },
     {
-      name: 'institutionType',
-      type: 'select',
+      name: 'normalizedName',
+      type: 'text',
       required: true,
-      options: [
-        {
-          label: 'School',
-          value: 'school',
-        },
-        {
-          label: 'University',
-          value: 'university',
-        },
-        {
-          label: 'Organization',
-          value: 'organization',
-        },
-      ],
-    },
-  ],
-
-  indexes: [
-    {
-      fields: ['name'],
       unique: true,
+      admin: {
+        readOnly: true,
+        description: 'Automatically normalized institution name.',
+      },
     },
   ],
 }

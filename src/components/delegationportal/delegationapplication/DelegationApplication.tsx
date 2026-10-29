@@ -171,14 +171,9 @@ export default function DelegationPortal() {
                 />
 
                 <div className="mt-6">
-                  <h3 className="text-lg font-semibold">Your registrations</h3>
                   <div className="mt-4">
                     <RegistrationsList
                       registrations={registrations}
-                      onEdit={(id) => {
-                        setEditingRegistrationId(id)
-                        setActiveSection('register')
-                      }}
                       onCreate={() => {
                         setEditingRegistrationId(null)
                         setActiveSection('register')
@@ -197,7 +192,7 @@ export default function DelegationPortal() {
                   events={events}
                   institutions={institutions}
                   registeredBy={user?.id || ''}
-                  showDelegateManagement={false}
+                  registrationType={isDelegateAccount ? 'individual' : 'institution'}
                   isDelegateAccount={isDelegateAccount}
                   onSaved={() => {
                     refetch()

@@ -22,7 +22,6 @@ import { Events } from './collections/administration/Events'
 import { Registrations } from './collections/delegation/Registrations'
 import { RegistrationBatches } from './collections/delegation/RegistrationBatches'
 import { Institutions } from './collections/delegation/Institutions'
-import { InstitutionMemberships } from './collections/delegation/InstitutionMembership'
 import { Delegates } from './collections/delegation/Delegates'
 import { DelegateAssignments } from './collections/delegation/DelegateAssignments'
 import { Countries } from './collections/delegation/Countries'
@@ -104,13 +103,12 @@ export default buildConfig({
     EventCommittees,
     Organs,
     Institutions,
-    InstitutionMemberships,
     Secretariat,
     Countries,
   ],
   // serverURL: process.env.PAYLOAD_URL,
-  serverURL: 'http://localhost:3001',
-  cors: [process.env.NEXT_PUBLIC_CORS_ORIGIN || '', 'http://localhost:3001'],
+  serverURL: 'http://localhost:3000',
+  cors: [process.env.NEXT_PUBLIC_CORS_ORIGIN || '', 'http://localhost:3000'],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

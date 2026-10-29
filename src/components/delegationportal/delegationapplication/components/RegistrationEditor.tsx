@@ -12,7 +12,7 @@ interface Props {
   institutions: InstitutionOption[]
   isDelegateAccount?: boolean
   registeredBy: string
-  showDelegateManagement?: boolean
+  registrationType: 'individual' | 'institution'
   onSaved: (reg: any) => void
 }
 
@@ -21,8 +21,8 @@ export default function RegistrationEditor({
   events,
   institutions,
   registeredBy,
-  showDelegateManagement = true,
   isDelegateAccount,
+  registrationType,
   onSaved,
 }: Props) {
   const [registration, setRegistration] = useState<any>(EMPTY_REGISTRATION)
@@ -65,27 +65,6 @@ export default function RegistrationEditor({
     }
   }
 
-  const startPayment = async () => {
-    try {
-      if (!registration?.id) {
-        alert('Save the registration before starting payment')
-        return
-      }
-
-      const res = await apiFetch('/api/paystack/initiate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ delegateSlotsPurchased: 1, delegationId: Number(registration.id) }),
-      })
-
-      const data = await res.json()
-      if (data?.authorization_url) window.open(data.authorization_url, '_blank')
-    } catch (err) {
-      console.error(err)
-      alert('Failed to start payment')
-    }
-  }
-
   return (
     <div className="space-y-6">
       <DelegationFormStep
@@ -99,8 +78,8 @@ export default function RegistrationEditor({
         selectedInstitutionId={String(registration?.institution || '')}
         isDelegateAccount={isDelegateAccount}
         registeredBy={registeredBy}
+        registrationType={registrationType}
         onEventChange={(id) => setRegistration((r: any) => ({ ...r, event: id }))}
-        onInstitutionChange={(id) => setRegistration((r: any) => ({ ...r, institution: id }))}
       />
     </div>
   )

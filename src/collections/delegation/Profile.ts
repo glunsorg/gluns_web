@@ -20,10 +20,5 @@ export const Profile: CollectionConfig = {
       required: true,
       unique: true,
     },
-    {
-      name: 'institution',
-      type: 'relationship',
-      relationTo: 'institutions',
-    },
   ],
 }

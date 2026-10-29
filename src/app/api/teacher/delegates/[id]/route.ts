@@ -57,7 +57,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       gender: body?.gender,
       registration: toRelationshipId(body?.registration),
       batch: toRelationshipId(body?.batch),
-      institution: toRelationshipId(body?.institution),
+      institution: toRelationshipId(body?.user?.institution),
       delegateState: body?.delegateState,
     }
 

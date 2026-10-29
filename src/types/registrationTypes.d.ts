@@ -21,7 +21,6 @@ export interface DelegateData {
   gradeLevel: string
   registration: string
   batch: string
-  institution: string
   delegateState: string
 }
 
@@ -31,7 +30,6 @@ export interface Registration {
   event: string
   registrationType: 'individual' | 'institution'
   registeredBy: string
-  institution?: string
   registrationState: 'draft' | 'submitted' | 'approved' | 'rejected'
 }
 
