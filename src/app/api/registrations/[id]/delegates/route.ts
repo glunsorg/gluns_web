@@ -2,12 +2,13 @@ import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const payload = await getPayload({ config })
 
   try {
-    const numericId = Number(params.id)
-    const registrationEquals = Number.isNaN(numericId) ? params.id : numericId
+    const { id } = await params
+    const numericId = Number(id)
+    const registrationEquals = Number.isNaN(numericId) ? id : numericId
 
     const delegates = await payload.find({
       collection: 'delegates',

@@ -27,7 +27,56 @@ export const Users: CollectionConfig = {
     defaultColumns: ['email', 'fullName', 'roles', 'institutionName', 'institution'],
   },
 
-  auth: true,
+  auth: {
+    forgotPassword: {
+      expiration: 60 * 60 * 1000,
+
+      generateEmailSubject: () => {
+        return 'Reset Your Password'
+      },
+
+      generateEmailHTML: (args) => {
+        if (!args) {
+          return '<p>Password reset requested.</p>'
+        }
+
+        const { token, user } = args
+
+        const resetURL = `${process.env.NEXT_PUBLIC_SERVER_URL}/reset-password?token=${encodeURIComponent(token ?? '')}`
+
+        return `
+    <!DOCTYPE html>
+    <html>
+      <body>
+        <h2>Password Reset Request</h2>
+
+        <p>Hello ${user?.email ?? 'User'},</p>
+
+        <p>
+          We received a request to reset your password.
+        </p>
+
+        <p>
+          Click the link below to reset your password.
+        </p>
+
+        <a href="${resetURL}">
+          Reset Password
+        </a>
+
+        <p>
+          This link expires in one hour.
+        </p>
+
+        <p>
+          If you did not request this, you can ignore this email.
+        </p>
+      </body>
+    </html>
+  `
+      },
+    },
+  },
 
   access: {
     create: () => true,
@@ -46,6 +95,7 @@ export const Users: CollectionConfig = {
       hasMany: true,
       required: true,
       defaultValue: ['delegate'],
+
       options: [
         {
           label: 'Teacher',
@@ -65,7 +115,6 @@ export const Users: CollectionConfig = {
         },
       ],
 
-      // Prevent non-admin users from changing their roles.
       access: {
         read: () => true,
         update: canUpdateRoles,

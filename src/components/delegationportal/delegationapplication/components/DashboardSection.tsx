@@ -2,7 +2,6 @@
 
 import { ArrowRight } from 'lucide-react'
 import { DelegationSection } from '@/lib/registration'
-import { RegistrationSelector } from '../components/RegistrationSelector'
 
 interface DashboardSectionProps {
   isDelegateAccount: boolean

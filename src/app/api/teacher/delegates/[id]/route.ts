@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
@@ -32,7 +33,7 @@ function toRelationshipId(value: unknown): number | undefined {
   return undefined
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const payload = await getPayload({ config })
   const { user } = await payload.auth({ headers: req.headers })
 
@@ -41,6 +42,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
 
   try {
+    const { id } = await params
     const body = await req.json()
 
     const fullName =
@@ -63,7 +65,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
     const updated = await payload.update({
       collection: 'delegates',
-      id: params.id,
+      id: id,
       depth: 0,
       data,
     })

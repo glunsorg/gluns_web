@@ -40,7 +40,6 @@ export default function DelegateForm({
   onClose,
   onSaved,
   registrationId,
-  isIndividual,
   batchId, // 1. Fixed: destructure batchId from props
 }: Props) {
   const { setUser } = useAuthStore()

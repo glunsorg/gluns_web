@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react'
 import { EventOption, InstitutionOption } from './DelegationFormStep'
 import DelegationFormStep from './DelegationFormStep'
-import DelegatesManager from './DelegatesManager'
 import { EMPTY_REGISTRATION } from '@/lib/registration'
 import { apiFetch } from '@/app/utils/apiFetch'
-import { Button } from '@/components/ui/button'
 
 interface Props {
   registrationId?: string | number | null
@@ -26,8 +25,8 @@ export default function RegistrationEditor({
   onSaved,
 }: Props) {
   const [registration, setRegistration] = useState<any>(EMPTY_REGISTRATION)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(false)
-  const [editingDelegates, setEditingDelegates] = useState(false)
 
   useEffect(() => {
     if (!registrationId) return

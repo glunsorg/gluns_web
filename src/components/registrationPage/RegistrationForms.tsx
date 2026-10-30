@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useState } from 'react'
-import SignInForm from '@/components/registrationPage/forms/SignInForm'
-import SignUpForm from '@/components/registrationPage/forms/SignUpForm'
+import SignInForm from './forms/SignInForm'
+import SignUpForm from './forms/SignUpForm'
 
 type AuthView = 'signin' | 'signup'
 

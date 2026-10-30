@@ -1,10 +1,7 @@
 import React from 'react'
-import { IoLocationSharp } from 'react-icons/io5'
-import Image from 'next/image'
 import Link from 'next/link'
 import { GrLinkNext } from 'react-icons/gr'
 import { fetchEvents } from '@/data/eventFetch'
-import { HiArrowRight } from 'react-icons/hi2'
 
 export default async function Events() {
   const { events } = await fetchEvents()
@@ -92,11 +89,15 @@ export default async function Events() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   {' '}
-                  <span className="text-white/65 font-semibold text-sm lg:text-xl">
-                    {event.date
-                      ? new Date(event.date).toLocaleDateString('en-US', dateOptions)
-                      : ''}
-                  </span>
+                  <div className="flex flex-col md:flex-row justify-center items-center gap-2">
+                    <span className="text-white/65 text-lg md:text-xl 2xl:text-3xl ml-1">
+                      {new Date(event.startDate).toLocaleDateString('en-US', dateOptions)}
+                    </span>
+                    <span className="text-white/65 text-lg md:text-xl 2xl:text-3xl ml-1">-</span>
+                    <span className="text-white/65 text-lg md:text-xl 2xl:text-3xl ml-1">
+                      {new Date(event.endDate).toLocaleDateString('en-US', dateOptions)}
+                    </span>
+                  </div>
                 </div>
                 <Link href={`/events/${event.slug}`} target="_blank" rel="noopener noreferrer">
                   <h3 className="text-2xl lg:text-4xl 2xl:text-4xl font-bold text-white mb-2 uppercase">
@@ -104,7 +105,7 @@ export default async function Events() {
                   </h3>
                 </Link>
                 <h2 className="flex items-center gap-1 text-[#85c226] text-sm 2xl:text-2xl">
-                  {event.location}
+                  {event.venue}
                 </h2>
               </div>
             </div>

@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server'
 import { getPayload, Payload } from 'payload'
 import config from '@payload-config'
 
-export async function GET(req: Request) {
+export async function GET() {
   const payload: Payload = await getPayload({ config })
 
   try {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/app/portal/components/RegistrationSelector.tsx
 import React from 'react'
 import { Plus, Calendar, CheckCircle } from 'lucide-react'

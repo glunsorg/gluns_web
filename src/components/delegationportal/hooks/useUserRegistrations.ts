@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/hooks/useUserRegistrations.ts
 import { useState, useEffect, useCallback } from 'react'
 

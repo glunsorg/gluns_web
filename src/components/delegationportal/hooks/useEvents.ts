@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react'
 import { apiFetch } from '@/app/utils/apiFetch'
 import { EventOption } from '@/types/registrationTypes'

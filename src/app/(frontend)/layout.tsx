@@ -2,8 +2,6 @@ export const dynamic = 'force-dynamic'
 
 import React from 'react'
 import './styles.css'
-import Navbar from '@/components/navigation/Navbar'
-import Footer from '@/components/navigation/Footer'
 import { Barlow_Condensed } from 'next/font/google'
 import SiteChrome from '@/components/navigation/SiteChrome'
 

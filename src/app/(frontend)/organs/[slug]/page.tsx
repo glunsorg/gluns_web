@@ -5,7 +5,6 @@ import config from '@/payload.config'
 import { getPayload } from 'payload'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
-import { RichText } from '@payloadcms/richtext-lexical/react'
 import { SlashIcon } from 'lucide-react'
 import {
   Breadcrumb,

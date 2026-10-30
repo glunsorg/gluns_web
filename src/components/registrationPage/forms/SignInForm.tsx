@@ -3,6 +3,7 @@
 import React from 'react'
 import { useActionState } from 'react'
 import { signIn } from '@/app/actions/auth'
+import Link from 'next/link'
 
 type SignInFormProps = {
   onSwitchToSignUp: () => void
@@ -141,9 +142,12 @@ export default function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
             )}
 
             <div className="flex items-center justify-between gap-4 text-sm">
-              <a href="#" className="font-semibold text-[#104179] transition hover:text-[#85c226]">
+              <Link
+                href="/forgot-password"
+                className="font-semibold text-[#104179] transition hover:text-[#85c226]"
+              >
                 Forgot password?
-              </a>
+              </Link>
             </div>
 
             <button
