@@ -6,7 +6,6 @@ import {
   SettingsIcon,
   LayoutDashboard,
   Home,
-  UserCircle,
   ReceiptText,
 } from 'lucide-react'
 import Link from 'next/link'
@@ -41,7 +40,6 @@ export function Sidebar({
       icon: ReceiptText,
     },
     { id: 'assignments', label: 'Assignments', icon: Globe, requiresApproval: true },
-    { id: 'profile', label: 'Profile', icon: UserCircle },
 
     { id: 'account', label: 'Account Settings', icon: SettingsIcon },
   ]
@@ -140,7 +138,6 @@ export function Sidebar({
                           {item.id === 'register' && 'Pick an event'}
                           {item.id === 'delegations' && 'Add students and pay'}
                           {item.id === 'assignments' && 'Countries and committees'}
-                          {item.id === 'profile' && 'View your account details'}
                           {item.id === 'dashboard' && 'Overview and shortcuts'}
                           {item.id === 'account' && 'Password and security'}
                         </span>

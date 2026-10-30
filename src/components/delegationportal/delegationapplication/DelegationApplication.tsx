@@ -23,6 +23,7 @@ import { Sidebar } from './Sidebar'
 import DashboardSection from './components/DashboardSection'
 import { useUserRegistrations } from '../hooks/useUserRegistrations'
 import PaymentHistory from './components/PaymentHistory'
+import { AccountSettings } from './AccountSettings'
 
 type UserRegistration = {
   id: string | number
@@ -321,6 +322,22 @@ export default function DelegationPortal() {
 
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/70">
                   <PaymentHistory />{' '}
+                </div>
+              </div>
+            )}
+
+            {/* account settings */}
+            {activeSection === 'account' && (
+              <div className="space-y-6">
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <h3 className="text-lg font-semibold text-white">Account Settings</h3>
+                  <p className="mt-1 text-sm text-white/70">
+                    Manage your account details and security settings.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/70">
+                  <AccountSettings />
                 </div>
               </div>
             )}
