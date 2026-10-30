@@ -27,10 +27,11 @@ export function useDelegates(registrationId?: string | number) {
       }
 
       const data = await res.json()
+
       setDelegates(data.delegates ?? [])
     } catch (err) {
       console.error('Failed to fetch delegates:', err)
-      setDelegates([])
+
       setError(err instanceof Error ? err.message : 'Failed to fetch delegates')
     } finally {
       setLoading(false)

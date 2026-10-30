@@ -1,19 +1,26 @@
 import React, { useState } from 'react'
 import DelegateForm from '../DelegateForm'
 import { Button } from '@/components/ui/button'
-import { useDelegates } from '../../hooks/useDelegates'
 import { DelegateData } from '@/types/registrationTypes'
 
 interface DelegatesManagerProps {
   registrationId?: string | number
   isIndividual?: boolean
+  delegates: DelegateData[]
+  loadingDelegates: boolean
+  onDelegateChange: () => void
 }
 
-export default function DelegatesManager({ registrationId, isIndividual }: DelegatesManagerProps) {
-  const { delegates = [], loadingDelegates, refetchDelegates } = useDelegates(registrationId)
-
+export default function DelegatesManager({
+  registrationId,
+  isIndividual,
+  delegates,
+  loadingDelegates,
+  onDelegateChange,
+}: DelegatesManagerProps) {
   const [open, setOpen] = useState(false)
   const [editing, setEditing] = useState<DelegateData | null>(null)
+
   const canAddDelegate = !isIndividual || delegates.length === 0
 
   function normalizeDelegate(
@@ -22,11 +29,11 @@ export default function DelegatesManager({ registrationId, isIndividual }: Deleg
     return {
       ...delegate,
       id: delegate.id ?? '',
-      fullName: delegate?.fullName ?? '',
-      gender: delegate?.gender ?? '',
-      gradeLevel: delegate?.gradeLevel ?? '',
-      email: delegate?.email ?? '',
-      phoneNumber: delegate?.phoneNumber ?? '',
+      fullName: delegate.fullName ?? '',
+      gender: delegate.gender ?? '',
+      gradeLevel: delegate.gradeLevel ?? '',
+      email: delegate.email ?? '',
+      phoneNumber: delegate.phoneNumber ?? '',
     } as DelegateData
   }
 
@@ -35,9 +42,11 @@ export default function DelegatesManager({ registrationId, isIndividual }: Deleg
     setEditing(null)
   }
 
-  const handleSaved = () => {
-    refetchDelegates()
+  const handleSaved = async () => {
     handleClose()
+
+    // Refresh the delegate list owned by the parent.
+    await onDelegateChange()
   }
 
   return (
@@ -54,6 +63,7 @@ export default function DelegatesManager({ registrationId, isIndividual }: Deleg
             <div key={d.id ?? index} className="flex items-center justify-between p-2">
               <div>
                 <div className="text-sm text-white">{d.fullName}</div>
+
                 <div className="text-xs text-white/70">
                   {[d.gradeLevel, d.email, d.phoneNumber].filter(Boolean).join(' • ')}
                 </div>

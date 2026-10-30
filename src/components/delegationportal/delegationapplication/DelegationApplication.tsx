@@ -49,7 +49,9 @@ export default function DelegationPortal() {
     string | number | null
   >(null)
 
-  const { delegates, loadingDelegates } = useDelegates(activeDelegationRegistrationId ?? undefined)
+  const { delegates, loadingDelegates, refetchDelegates } = useDelegates(
+    activeDelegationRegistrationId ?? undefined,
+  )
 
   const [activeSection, setActiveSection] = useState('dashboard')
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -297,6 +299,9 @@ export default function DelegationPortal() {
                         <DelegatesManager
                           registrationId={activeDelegationRegistrationId}
                           isIndividual={selectedRegistration?.registrationType === 'individual'}
+                          delegates={delegates}
+                          loadingDelegates={loadingDelegates}
+                          onDelegateChange={refetchDelegates}
                         />
                       </div>
                     )}
