@@ -61,6 +61,29 @@ async function resolveBatchId(payload: any, registrationId: number | string) {
   return createdBatch.id
 }
 
+async function validateOrganCommittee(
+  payload: any,
+  organId: number | undefined,
+  committeeId: number | undefined,
+) {
+  if (committeeId == null) return
+
+  if (organId == null) {
+    throw new Error('Select an organ before choosing a committee.')
+  }
+
+  const committee = await payload.findByID({
+    collection: 'committees',
+    id: committeeId,
+    depth: 0,
+  })
+
+  const committeeOrganId = toRelationshipId(committee.organ)
+  if (String(committeeOrganId) !== String(organId)) {
+    throw new Error('The selected committee does not belong to the selected organ.')
+  }
+}
+
 export async function GET(req: Request) {
   const payload = await getPayload({ config })
   const url = new URL(req.url)
@@ -68,7 +91,7 @@ export async function GET(req: Request) {
     url.searchParams.get('registrationId') ?? url.searchParams.get('delegationId')
 
   try {
-    const findOpts: any = { collection: 'delegates', limit: 0, depth: 0 }
+    const findOpts: any = { collection: 'delegates', limit: 0, depth: 1 }
     if (registrationId) {
       const maybeNumber = Number(registrationId)
       findOpts.where = {
@@ -115,6 +138,13 @@ export async function POST(req: Request) {
     })
 
     const registeredById = toRelationshipId(registrationRecord.registeredBy)
+    const registeredBy = registeredById
+      ? await payload.findByID({
+          collection: 'users',
+          id: registeredById,
+          depth: 1,
+        })
+      : null
 
     if (registrationRecord.registrationType === 'individual') {
       // Confirm the individual registration belongs to the logged-in user.
@@ -173,6 +203,15 @@ export async function POST(req: Request) {
 
     const incomingBatch = toRelationshipId(body?.batch)
     const batch = incomingBatch ?? (await resolveBatchId(payload, normalizedRegistration))
+    const organ = toRelationshipId(body?.organ)
+    const committee = toRelationshipId(body?.committee)
+    const institution = toRelationshipId(registeredBy?.institution) ?? toRelationshipId(user?.institution)
+    const institutionName =
+      typeof registeredBy?.institution === 'object' && registeredBy.institution
+        ? String(registeredBy.institution.name || '')
+        : String(registeredBy?.institutionName || user?.institutionName || '')
+
+    await validateOrganCommittee(payload, organ, committee)
 
     const delegateData = {
       fullName: body?.fullName,
@@ -182,7 +221,10 @@ export async function POST(req: Request) {
       gradeLevel: body?.gradeLevel,
       registration: normalizedRegistration,
       batch,
-      institution: toRelationshipId(body?.user?.institution),
+      institution,
+      institutionName: institutionName || undefined,
+      organ,
+      committee,
       delegateState: body?.delegateState ?? 'pending',
     }
 

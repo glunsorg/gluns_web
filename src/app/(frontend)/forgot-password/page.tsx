@@ -143,7 +143,7 @@ export default function ForgotPasswordPage() {
                     required
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
-                    placeholder="you@example.com"
+                    placeholder="Enter your GLUNS account email"
                     className="w-full rounded-lg border border-gray-300 bg-gray-50 py-3 pl-11 pr-4 text-base text-gray-900 placeholder:text-gray-400 outline-none hover:border-gray-400 focus:border-[#104179] focus:bg-white focus:ring-4 focus:ring-[#104179]/15 sm:text-sm"
                   />
                 </div>
@@ -161,7 +161,7 @@ export default function ForgotPasswordPage() {
             {/* Footer */}
             <div className="mt-8 border-t border-gray-200 pt-6 text-center">
               <Link
-                href="/signin"
+                href="/registration"
                 className="inline-flex items-center gap-1.5 rounded text-sm font-semibold text-[#104179] hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#104179]/20"
               >
                 <svg

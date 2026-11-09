@@ -41,7 +41,7 @@ export default function SecList({ block }: TeamBlockProps) {
           <div className="w-80 h-80 mb-6">
             <Image
               src="/icons/nogeneral.png"
-              alt="No Events"
+              alt="GLUNS Secretariat"
               width={800}
               height={800}
               className="object-contain"
@@ -50,12 +50,12 @@ export default function SecList({ block }: TeamBlockProps) {
 
           {/* Text Content */}
           <h3 className="text-4xl md:text-6xl font-bold text-white mb-3 uppercase">
-            No Secretariat Members Found
+            Meet the GLUNS Secretariat
           </h3>
           <p className="text-white/70 text-center text-base md:text-xl mb-8 px-4">
-            We{"'"}re currently in the process of updating our Secretariat team. Please check back
-            later for the latest information on our dedicated team members who help make GLUNS a
-            success!
+            Our Secretariat profiles are being updated. Contact GLUNS to learn more about the team
+            coordinating our Model UN conferences, delegate experience, and youth leadership
+            programmes.
           </p>
 
           {/* Call to Action */}

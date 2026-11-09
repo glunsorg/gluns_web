@@ -38,7 +38,7 @@ export async function signUp(
   }
 
   try {
-    const response = await fetch(`${baseUrl}/api/signup`, {
+    const response = await fetch(`${baseUrl}/apiup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

@@ -148,7 +148,7 @@ export default function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
                 name="fullName"
                 label="Full name"
                 type="text"
-                placeholder="Jane Doe"
+                placeholder="Enter your full name"
                 autoComplete="name"
               />
               {state?.errors?.fullName && (
@@ -169,7 +169,7 @@ export default function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
                     name="institutionName"
                     type="text"
                     required
-                    placeholder="Enter your school's full name"
+                    placeholder="Enter the school or institution name"
                     autoComplete="organization"
                     className="w-full border border-[#104179]/15 bg-white px-4 py-3.5 text-[#104179] placeholder:text-[#104179]/35 shadow-sm outline-none transition duration-300 focus:border-[#85c226] focus:ring-4 focus:ring-[#85c226]/15"
                   />
@@ -194,7 +194,7 @@ export default function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
                     id="institutionName"
                     name="institutionName"
                     type="text"
-                    placeholder="Enter your school or organization"
+                    placeholder="Enter your school or organisation"
                     autoComplete="organization"
                     className="w-full border border-[#104179]/15 bg-white px-4 py-3.5 text-[#104179] placeholder:text-[#104179]/35 shadow-sm outline-none transition duration-300 focus:border-[#85c226] focus:ring-4 focus:ring-[#85c226]/15"
                   />
@@ -205,7 +205,7 @@ export default function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
                 name="email"
                 label="Email address"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="Enter an email address for your GLUNS account"
                 autoComplete="email"
               />
               {state?.errors?.email && (
@@ -218,7 +218,7 @@ export default function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
                 name="password"
                 label="Password"
                 type="password"
-                placeholder="Create a password"
+                placeholder="Create a password for your GLUNS account"
                 autoComplete="new-password"
               />
               {state?.errors?.password && (
@@ -235,7 +235,7 @@ export default function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
                 name="confirmPassword"
                 label="Confirm password"
                 type="password"
-                placeholder="Repeat your password"
+                placeholder="Confirm your GLUNS account password"
                 autoComplete="new-password"
               />
               {state?.errors?.confirmPassword && (
@@ -278,16 +278,16 @@ export default function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
                 Get started
               </p>
               <h1 className="max-w-xl text-4xl font-bold leading-tight text-white sm:text-5xl">
-                Create a polished GLUNS account in a few steps.
+                Create your GLUNS account and prepare for your next conference.
               </h1>
               <p className="max-w-xl text-base leading-7 text-white/78 sm:text-lg">
-                The form is styled to match the rest of the website, with strong contrast, soft
-                surfaces, and a clear path back to sign in.
+                Register as an individual delegate or set up an institution account to manage your
+                school delegation, event registration, and delegate details.
               </p>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-3">
-              {['Simple setup', 'Brand aligned', 'Easy switching'].map((item) => (
+              {['Delegate registration', 'School delegations', 'Event access'].map((item) => (
                 <div
                   key={item}
                   className="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm font-medium text-white/90 backdrop-blur"

@@ -55,6 +55,7 @@ export default function Navbar() {
     { name: 'Events', link: '/events' },
     { name: 'Organs', link: '/organs' },
     { name: 'Contact', link: '/contact' },
+    { name: 'Merchandise Shop', link: 'https://shop.gluns.org/', external: true },
   ]
 
   return (
@@ -84,6 +85,7 @@ export default function Navbar() {
               <Link
                 key={item.name}
                 href={item.link}
+                {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                 className="mx-2 font-semibold text-white tracking-wide text-lg 2xl:text-xl hover:text-[#85c226] transition-colors duration-300 uppercase"
               >
                 {item.name}
@@ -149,6 +151,7 @@ export default function Navbar() {
                     <Link
                       key={item.name}
                       href={item.link}
+                      {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                       onClick={() => setMenuOpen(false)}
                       className="text-white font-semibold border-b-2 pb-2 border-white hover:scale-105 transition-all duration-300 uppercase"
                     >

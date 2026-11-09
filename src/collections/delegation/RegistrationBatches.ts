@@ -1,9 +1,11 @@
 // src/collections/RegistrationBatches.ts
 
 import type { CollectionConfig } from 'payload'
+import { ownRegistrationReadAccess } from '@/lib/access'
 
 export const RegistrationBatches: CollectionConfig = {
   slug: 'registration-batches',
+  access: ownRegistrationReadAccess('registration'),
 
   admin: {
     useAsTitle: 'batchNumber',

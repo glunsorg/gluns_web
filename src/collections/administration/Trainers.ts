@@ -1,21 +1,10 @@
 import { CollectionConfig } from 'payload'
-import { AccessArgs } from 'payload'
 import slugify from 'slugify'
+import { adminAccess } from '@/lib/access'
 
 export const Trainers: CollectionConfig = {
   slug: 'trainers',
-  access: {
-    read: () => true,
-    create: ({ req }: AccessArgs) => {
-      return !!(req.user && 'roles' in req.user && req.user.roles.includes('admin'))
-    },
-    update: ({ req }: AccessArgs) => {
-      return !!(req.user && 'roles' in req.user && req.user.roles.includes('admin'))
-    },
-    delete: ({ req }: AccessArgs) => {
-      return !!(req.user && 'roles' in req.user && req.user.roles.includes('admin'))
-    },
-  },
+  access: adminAccess,
   admin: {
     useAsTitle: 'full_name',
     description: 'Add trainer records for QR badge verification',

@@ -1,5 +1,6 @@
-import { AccessArgs, CollectionConfig } from 'payload'
+import { CollectionConfig } from 'payload'
 import slugify from 'slugify'
+import { adminAccess } from '@/lib/access'
 
 export const Events: CollectionConfig = {
   slug: 'events',
@@ -8,18 +9,7 @@ export const Events: CollectionConfig = {
     description: 'Add Event',
     group: 'Administration',
   },
-  access: {
-    create: ({ req }: AccessArgs) => {
-      return !!(req.user && 'roles' in req.user && req.user.roles.includes('admin'))
-    },
-    update: ({ req }: AccessArgs) => {
-      return !!(req.user && 'roles' in req.user && req.user.roles.includes('admin'))
-    },
-    delete: ({ req }: AccessArgs) => {
-      return !!(req.user && 'roles' in req.user && req.user.roles.includes('admin'))
-    },
-    read: () => true,
-  },
+  access: adminAccess,
   fields: [
     {
       name: 'title',

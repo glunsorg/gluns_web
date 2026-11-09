@@ -21,8 +21,8 @@ export default function DashboardSection({
               <p className="text-xs uppercase tracking-[0.35em] text-white/40">Overview</p>
               <h2 className="mt-2 text-3xl font-semibold">Welcome to the delegation portal</h2>
               <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/70">
-                Use the sidebar to move from event registration to delegation management, country
-                assignments, profile details, and account settings.
+                Use the sidebar to move from event registration to delegation management, profile
+                details, and account settings.
               </p>
             </div>
             <div className="rounded-2xl border border-[#85c226]/20 bg-[#85c226]/10 px-4 py-3 text-sm font-semibold text-[#85c226]">
@@ -56,7 +56,8 @@ export default function DashboardSection({
                 <div>
                   <p className="text-lg font-bold text-white">Manage delegates</p>
                   <p className="mt-1 text-sm text-white/65">
-                    Add members, then complete payment and assignments.
+                    Add members, then complete payment. Organ and committee choices are saved with
+                    each delegate.
                   </p>
                 </div>
                 <ArrowRight className="h-5 w-5 text-[#85c226] transition group-hover:translate-x-1" />
@@ -80,12 +81,6 @@ export default function DashboardSection({
               <p className="font-semibold">2. Add delegates and pay</p>
               <p className="mt-1 text-[#104179]/70">
                 Payment unlocks the delegate list for institutional registrations.
-              </p>
-            </div>
-            <div className="rounded-2xl bg-[#104179]/5 p-4">
-              <p className="font-semibold">3. Build assignments</p>
-              <p className="mt-1 text-[#104179]/70">
-                GA country selection is self-service; ICJ and ILC stay secretariat-managed.
               </p>
             </div>
           </div>

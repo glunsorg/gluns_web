@@ -1,17 +1,13 @@
 // profile collection
 import { CollectionConfig } from 'payload'
+import { adminAccess } from '@/lib/access'
 
 export const Profile: CollectionConfig = {
   slug: 'profile',
   admin: {
     useAsTitle: 'user',
   },
-  access: {
-    read: () => true,
-    create: () => false,
-    update: ({ req: { user } }) => !!user,
-    delete: () => false,
-  },
+  access: adminAccess,
   fields: [
     {
       name: 'user',

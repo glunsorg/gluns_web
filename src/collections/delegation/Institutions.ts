@@ -1,6 +1,6 @@
 // institutions collection
 import { CollectionConfig } from 'payload'
-import { AccessArgs } from 'payload'
+import { adminAccess } from '@/lib/access'
 
 function normalizeInstitutionName(name: string): string {
   return name
@@ -20,14 +20,7 @@ export const Institutions: CollectionConfig = {
     defaultColumns: ['name', 'institutionType', 'email'],
     enableRichTextLink: false,
   },
-  access: {
-    read: ({ req }: AccessArgs) => !!req.user,
-    create: ({ req }: AccessArgs) => !!req.user,
-    update: ({ req }: AccessArgs) => !!req.user,
-    delete: ({ req }: AccessArgs) => {
-      return !!(req.user && 'roles' in req.user && req.user.roles.includes('admin'))
-    },
-  },
+  access: adminAccess,
   hooks: {
     beforeValidate: [
       async ({ data }) => {

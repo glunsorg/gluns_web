@@ -1,9 +1,11 @@
 // src/collections/InvoiceItems.ts
 
 import type { CollectionConfig } from 'payload'
+import { ownRegistrationReadAccess } from '@/lib/access'
 
 export const InvoiceItems: CollectionConfig = {
   slug: 'invoice-items',
+  access: ownRegistrationReadAccess('invoice.registration'),
 
   admin: {
     useAsTitle: 'description',

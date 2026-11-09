@@ -209,7 +209,7 @@ export function AccountSettings() {
                     </label>
                     <Input
                       type="password"
-                      placeholder="Enter new password"
+                      placeholder="Enter a new GLUNS account password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
@@ -225,7 +225,7 @@ export function AccountSettings() {
                     </label>
                     <Input
                       type="password"
-                      placeholder="Confirm new password"
+                      placeholder="Confirm the new GLUNS account password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required

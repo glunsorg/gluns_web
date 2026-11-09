@@ -1,4 +1,5 @@
 import { CollectionConfig } from 'payload'
+import { adminAccess } from '@/lib/access'
 
 export const Countries: CollectionConfig = {
   slug: 'countries',
@@ -6,12 +7,7 @@ export const Countries: CollectionConfig = {
     useAsTitle: 'name',
     group: 'Delegation Management',
   },
-  access: {
-    read: () => true,
-    create: () => true,
-    update: () => true,
-    delete: () => true,
-  },
+  access: adminAccess,
 
   fields: [
     {

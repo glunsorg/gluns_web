@@ -1,9 +1,11 @@
 // src/collections/Receipts.ts
 
 import type { CollectionConfig } from 'payload'
+import { ownRecipientReadAccess } from '@/lib/access'
 
 export const Receipts: CollectionConfig = {
   slug: 'receipts',
+  access: ownRecipientReadAccess,
 
   admin: {
     useAsTitle: 'receiptNumber',

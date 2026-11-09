@@ -46,11 +46,12 @@ export default async function Events() {
 
           {/* Text Content */}
           <h3 className="text-2xl md:text-3xl font-bold uppercase text-white mb-3">
-            No Events Scheduled Yet
+            The GLUNS Calendar Is Being Prepared
           </h3>
           <p className="text-white/70 text-center text-base md:text-lg mb-8 px-4">
-            We{"'"}re currently planning exciting new Model UN events. Check back soon for updates
-            on upcoming conferences and workshops!
+            Our team is preparing the next Model UN conferences, leadership workshops, and
+            diplomacy experiences. Contact GLUNS if you would like information about upcoming
+            opportunities.
           </p>
 
           {/* Call to Action */}

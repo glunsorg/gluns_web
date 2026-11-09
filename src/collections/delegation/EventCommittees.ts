@@ -1,7 +1,9 @@
 import type { CollectionConfig } from 'payload'
+import { adminAccess } from '@/lib/access'
 
 export const EventCommittees: CollectionConfig = {
   slug: 'event-committees',
+  access: adminAccess,
 
   admin: {
     useAsTitle: 'name',

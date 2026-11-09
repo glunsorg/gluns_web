@@ -1,21 +1,10 @@
 import type { CollectionConfig } from 'payload'
 import { OurTeam } from '@/app/blocks/committee/schema'
-import { AccessArgs } from 'payload'
+import { adminAccess } from '@/lib/access'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
-  access: {
-    create: ({ req }: AccessArgs) => {
-      return !!(req.user && 'roles' in req.user && req.user.roles.includes('admin'))
-    },
-    read: () => true,
-    update: ({ req }: AccessArgs) => {
-      return !!(req.user && 'roles' in req.user && req.user.roles.includes('admin'))
-    },
-    delete: ({ req }: AccessArgs) => {
-      return !!(req.user && 'roles' in req.user && req.user.roles.includes('admin'))
-    },
-  },
+  access: adminAccess,
   fields: [
     {
       name: 'title',

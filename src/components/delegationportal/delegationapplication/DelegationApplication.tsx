@@ -33,6 +33,7 @@ type UserRegistration = {
   paymentStatus?: string
   batch?: string | number | { id?: string | number }
   event?: {
+    id?: number | string
     title?: string
   }
 }

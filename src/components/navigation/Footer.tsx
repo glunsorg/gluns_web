@@ -69,10 +69,12 @@ export default function Footer() {
                   { name: 'Register', href: '/registration' },
                   { name: 'Sponsorship', href: '/sponsors' },
                   { name: 'FAQs', href: '/faqs' },
+                  { name: 'Merchandise Shop', href: 'https://shop.gluns.org/', external: true },
                 ].map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
+                      {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                       className="text-gray-600 hover:text-[#104179] transition-colors duration-200 text-lg md:text-xl 2xl:text-2xl flex items-center gap-2 group"
                     >
                       <span className="w-0 h-px bg-[#104179] group-hover:w-4 transition-all duration-300"></span>

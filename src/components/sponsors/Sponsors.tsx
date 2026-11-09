@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Handshake, Mail, Phone, FileText } from 'lucide-react'
+import { Handshake, Mail, FileText } from 'lucide-react'
 import { fetchSponsor } from '@/data/sponsorFetch'
 
 export default async function Sponsorship() {
@@ -133,15 +133,15 @@ export default async function Sponsorship() {
                 <div className="bg-white/10 backdrop-blur-sm border-2 border-white/30 rounded-2xl p-6 hover:bg-white/20 transition-all duration-300">
                   <div className="flex items-center space-x-4 mb-3">
                     <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shrink-0">
-                      <Phone className="w-6 h-6 text-[#104179]" />
+                      <Mail className="w-6 h-6 text-[#104179]" />
                     </div>
-                    <h5 className="text-white font-bold text-lg">Call Us</h5>
+                    <h5 className="text-white font-bold text-lg">Partnership enquiries</h5>
                   </div>
                   <a
-                    href="tel:+254700000000"
+                    href="mailto:info@gluns.org"
                     className="text-white/90 hover:text-white text-base md:text-lg transition-colors"
                   >
-                    +254 700 000 000
+                    info@gluns.org
                   </a>
                 </div>
               </div>

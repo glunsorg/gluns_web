@@ -1,6 +1,6 @@
 import { CollectionConfig } from 'payload'
 import slugify from 'slugify'
-import { AccessArgs } from 'payload'
+import { adminAccess } from '@/lib/access'
 
 export const Committees: CollectionConfig = {
   slug: 'committees',
@@ -8,18 +8,7 @@ export const Committees: CollectionConfig = {
     useAsTitle: 'name',
     group: 'Committee Management',
   },
-  access: {
-    read: () => true,
-    create: ({ req }: AccessArgs) => {
-      return !!(req.user && 'roles' in req.user && req.user.roles.includes('admin'))
-    },
-    update: ({ req }: AccessArgs) => {
-      return !!(req.user && 'roles' in req.user && req.user.roles.includes('admin'))
-    },
-    delete: ({ req }: AccessArgs) => {
-      return !!(req.user && 'roles' in req.user && req.user.roles.includes('admin'))
-    },
-  },
+  access: adminAccess,
   fields: [
     {
       name: 'name',
@@ -30,6 +19,15 @@ export const Committees: CollectionConfig = {
       name: 'description',
       type: 'textarea',
       required: true,
+    },
+    {
+      name: 'organ',
+      type: 'relationship',
+      relationTo: 'organs',
+      required: false,
+      admin: {
+        description: 'Organ that this committee belongs to.',
+      },
     },
     {
       name: 'committee_photo',

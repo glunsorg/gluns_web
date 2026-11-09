@@ -318,6 +318,12 @@ export interface Delegate {
   registration: number | Registration;
   batch: number | RegistrationBatch;
   institution?: (number | null) | Institution;
+  /**
+   * Institution name captured for the delegate.
+   */
+  institutionName?: string | null;
+  organ?: (number | null) | Organ;
+  committee?: (number | null) | Committee;
   delegateState: 'pending' | 'confirmed' | 'cancelled';
   updatedAt: string;
   createdAt: string;
@@ -387,6 +393,42 @@ export interface RegistrationBatch {
   registration: number | Registration;
   batchState: 'draft' | 'pending_payment' | 'partially_paid' | 'paid' | 'cancelled';
   sequence: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "organs".
+ */
+export interface Organ {
+  id: number;
+  name: string;
+  code: string;
+  organType: 'committee_based' | 'court' | 'commission' | 'other';
+  active?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "committees".
+ */
+export interface Committee {
+  id: number;
+  name: string;
+  description: string;
+  /**
+   * Organ that this committee belongs to.
+   */
+  organ?: (number | null) | Organ;
+  committee_photo?: (number | null) | Media;
+  /**
+   * This field is auto-generated from the Title field. Please do not edit manually.
+   */
+  slug?: string | null;
+  committee_code: string;
+  summary?: string | null;
+  active?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -490,6 +532,7 @@ export interface DelegateAssignment {
   country: number | Country;
   eventCommittee: number | EventCommittee;
   assignmentState: 'pending' | 'assigned' | 'confirmed';
+  positionPaper?: (number | null) | Document;
   updatedAt: string;
   createdAt: string;
 }
@@ -531,25 +574,6 @@ export interface EventCommittee {
   createdAt: string;
 }
 /**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "committees".
- */
-export interface Committee {
-  id: number;
-  name: string;
-  description: string;
-  committee_photo?: (number | null) | Media;
-  /**
-   * This field is auto-generated from the Title field. Please do not edit manually.
-   */
-  slug?: string | null;
-  committee_code: string;
-  summary?: string | null;
-  active?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
  * Add Sponsor
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -575,19 +599,6 @@ export interface Trainer {
   organ: string;
   photo?: (number | null) | Portrait;
   gender: 'male' | 'female';
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "organs".
- */
-export interface Organ {
-  id: number;
-  name: string;
-  code: string;
-  organType: 'committee_based' | 'court' | 'commission' | 'other';
-  active?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1062,6 +1073,9 @@ export interface DelegatesSelect<T extends boolean = true> {
   registration?: T;
   batch?: T;
   institution?: T;
+  institutionName?: T;
+  organ?: T;
+  committee?: T;
   delegateState?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1187,6 +1201,7 @@ export interface DelegateAssignmentsSelect<T extends boolean = true> {
   country?: T;
   eventCommittee?: T;
   assignmentState?: T;
+  positionPaper?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1232,6 +1247,7 @@ export interface RegistrationBatchesSelect<T extends boolean = true> {
 export interface CommitteesSelect<T extends boolean = true> {
   name?: T;
   description?: T;
+  organ?: T;
   committee_photo?: T;
   slug?: T;
   committee_code?: T;

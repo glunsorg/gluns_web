@@ -1,7 +1,9 @@
 import type { CollectionConfig } from 'payload'
+import { adminAccess } from '@/lib/access'
 
 export const Organs: CollectionConfig = {
   slug: 'organs',
+  access: adminAccess,
 
   admin: {
     useAsTitle: 'name',

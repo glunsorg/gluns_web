@@ -1,9 +1,11 @@
 // src/collections/DelegateAssignments.ts
 
 import type { CollectionConfig } from 'payload'
+import { assignmentAccess } from '@/lib/access'
 
 export const DelegateAssignments: CollectionConfig = {
   slug: 'delegate-assignments',
+  access: assignmentAccess,
 
   admin: {
     useAsTitle: 'id',
@@ -43,6 +45,12 @@ export const DelegateAssignments: CollectionConfig = {
         { label: 'Assigned', value: 'assigned' },
         { label: 'Confirmed', value: 'confirmed' },
       ],
+    },
+    {
+      name: 'positionPaper',
+      type: 'relationship',
+      relationTo: 'documents',
+      required: false,
     },
   ],
 

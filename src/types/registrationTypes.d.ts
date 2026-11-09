@@ -21,6 +21,10 @@ export interface DelegateData {
   gradeLevel: string
   registration: string
   batch: string
+  institution?: string | number | { id?: string | number; name?: string }
+  institutionName?: string
+  organ?: string | number | { id?: string | number; name?: string }
+  committee?: string | number | { id?: string | number; name?: string }
   delegateState: string
 }
 

@@ -65,7 +65,14 @@ export default function DelegatesManager({
                 <div className="text-sm text-white">{d.fullName}</div>
 
                 <div className="text-xs text-white/70">
-                  {[d.gradeLevel, d.email, d.phoneNumber].filter(Boolean).join(' • ')}
+                  {[
+                    typeof d.institution === 'object' ? d.institution?.name : undefined,
+                    d.gradeLevel,
+                    d.email,
+                    d.phoneNumber,
+                  ]
+                    .filter(Boolean)
+                    .join(' • ')}
                 </div>
               </div>
 

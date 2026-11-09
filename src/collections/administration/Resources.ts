@@ -1,7 +1,9 @@
 import { CollectionConfig } from 'payload'
+import { adminAccess } from '@/lib/access'
 
 export const Resources: CollectionConfig = {
   slug: 'resources',
+  access: adminAccess,
   admin: {
     useAsTitle: 'title',
     description: 'Add Resource',

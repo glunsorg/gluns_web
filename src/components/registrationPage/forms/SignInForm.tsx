@@ -51,8 +51,8 @@ export default function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
                 Sign in to continue your GLUNS journey.
               </h1>
               <p className="max-w-xl text-base leading-7 text-white/78 sm:text-lg">
-                Return to your delegation tools, registration details, and event updates in a calm
-                interface built with the project&apos;s core blue and green palette.
+                Return to your delegation tools, registration details, and GLUNS event updates from
+                one secure account.
               </p>
             </div>
 
@@ -103,7 +103,7 @@ export default function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
               name="email"
               label="Email address"
               type="email"
-              placeholder="you@example.com"
+              placeholder="Enter your GLUNS account email"
               autoComplete="email"
             />
             {state?.errors?.email && (
@@ -121,7 +121,7 @@ export default function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
               name="password"
               label="Password"
               type="password"
-              placeholder="Enter your password"
+              placeholder="Enter your GLUNS account password"
               autoComplete="current-password"
             />
             {state?.errors?.password && (

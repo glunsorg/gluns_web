@@ -1,7 +1,9 @@
 import type { CollectionConfig } from 'payload'
+import { ownRegistrationReadAccess } from '@/lib/access'
 
 export const Payments: CollectionConfig = {
   slug: 'payments',
+  access: ownRegistrationReadAccess('registration'),
 
   admin: {
     useAsTitle: 'paymentNumber',

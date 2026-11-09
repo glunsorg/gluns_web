@@ -13,6 +13,5 @@ export type DelegationSection =
   | 'dashboard'
   | 'register'
   | 'delegations'
-  | 'assignments'
   | 'profile'
   | 'account'

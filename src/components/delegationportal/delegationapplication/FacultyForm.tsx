@@ -153,7 +153,7 @@ export default function FacultyForm({ open, advisor, onClose, onSaved }: Props) 
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleChange}
-                  placeholder="Enter first name"
+                  placeholder="Enter the faculty advisor's first name"
                   required
                   disabled={saving}
                   className="border-2 border-[#104179]/20 focus:border-[#85c226] h-12 rounded-xl text-[#104179] placeholder:text-[#104179]/40"
@@ -173,7 +173,7 @@ export default function FacultyForm({ open, advisor, onClose, onSaved }: Props) 
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleChange}
-                  placeholder="Enter last name"
+                  placeholder="Enter the faculty advisor's last name"
                   required
                   disabled={saving}
                   className="border-2 border-[#104179]/20 focus:border-[#85c226] h-12 rounded-xl text-[#104179] placeholder:text-[#104179]/40"
@@ -195,7 +195,7 @@ export default function FacultyForm({ open, advisor, onClose, onSaved }: Props) 
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="example@email.com"
+                  placeholder="Enter the faculty advisor's email"
                   required
                   disabled={saving}
                   className="border-2 border-[#104179]/20 focus:border-[#85c226] h-12 rounded-xl text-[#104179] placeholder:text-[#104179]/40"
@@ -217,7 +217,7 @@ export default function FacultyForm({ open, advisor, onClose, onSaved }: Props) 
                   type="tel"
                   value={formData.phoneNumber}
                   onChange={handleChange}
-                  placeholder="+254 700 000 000"
+                  placeholder="Enter the faculty advisor's phone number"
                   required
                   disabled={saving}
                   className="border-2 border-[#104179]/20 focus:border-[#85c226] h-12 rounded-xl text-[#104179] placeholder:text-[#104179]/40"

@@ -233,7 +233,7 @@ export default function RegisterForm({ event }: { event: string }) {
                       ? 'border-red-300 focus:border-red-500'
                       : 'border-gray-200 dark:border-gray-700 focus:border-[#85c226]'
                   } focus:outline-none`}
-                placeholder="Greenwood High School"
+                placeholder="Enter the participating school name"
               />
               {errors.school_name && (
                 <motion.div
@@ -266,7 +266,7 @@ export default function RegisterForm({ event }: { event: string }) {
                       ? 'border-red-300 focus:border-red-500'
                       : 'border-gray-200 dark:border-gray-700 focus:border-[#85c226]'
                   } focus:outline-none`}
-                placeholder="Jane Smith"
+                placeholder="Enter the faculty advisor's full name"
               />
               {errors.contact_person && (
                 <motion.div
@@ -302,7 +302,7 @@ export default function RegisterForm({ event }: { event: string }) {
                       ? 'border-red-300 focus:border-red-500'
                       : 'border-gray-200 dark:border-gray-700 focus:border-[#85c226]'
                   } focus:outline-none`}
-                placeholder="jane@greenwood.edu"
+                placeholder="Enter the faculty advisor's email"
               />
               {errors.email && (
                 <motion.div
@@ -330,7 +330,7 @@ export default function RegisterForm({ event }: { event: string }) {
                 value={formData.phone_number}
                 onChange={handleChange}
                 className="w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-gray-200 dark:border-gray-700 focus:border-[#85c226] transition-all duration-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none"
-                placeholder="+254 700 000 000"
+                placeholder="Enter the faculty advisor's phone number"
               />
             </div>
           </motion.div>
@@ -347,7 +347,7 @@ export default function RegisterForm({ event }: { event: string }) {
               type="text"
               name="event"
               value={formData.event}
-              placeholder="Event Name"
+              placeholder="The selected GLUNS event"
               readOnly
               className="w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 cursor-not-allowed focus:outline-none"
             />
@@ -376,7 +376,7 @@ export default function RegisterForm({ event }: { event: string }) {
                     ? 'border-red-300 focus:border-red-500'
                     : 'border-gray-200 dark:border-gray-700 focus:border-[#85c226]'
                 } focus:outline-none`}
-              placeholder="e.g. 30"
+              placeholder="Enter the expected number of delegates"
             />
             {errors.students && (
               <motion.div

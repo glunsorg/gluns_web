@@ -1,5 +1,4 @@
 import {
-  Globe,
   FileText,
   Users,
   X,
@@ -20,6 +19,13 @@ type SidebarProps = {
   userName?: string
 }
 
+type MenuItem = {
+  id: string
+  label: string
+  icon: typeof LayoutDashboard
+  requiresApproval?: boolean
+}
+
 export function Sidebar({
   isOpen,
   onClose,
@@ -30,7 +36,7 @@ export function Sidebar({
 }: SidebarProps) {
   const portalLabel = isDelegateAccount ? 'Individual delegate' : 'Institution account'
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'register', label: 'Register', icon: FileText },
     { id: 'delegations', label: 'Delegations', icon: Users },
@@ -39,8 +45,6 @@ export function Sidebar({
       label: 'Payments & Receipts',
       icon: ReceiptText,
     },
-    { id: 'assignments', label: 'Assignments', icon: Globe, requiresApproval: true },
-
     { id: 'account', label: 'Account Settings', icon: SettingsIcon },
   ]
   return (
@@ -137,7 +141,6 @@ export function Sidebar({
                         <span className="text-xs text-white/35">
                           {item.id === 'register' && 'Pick an event'}
                           {item.id === 'delegations' && 'Add students and pay'}
-                          {item.id === 'assignments' && 'Countries and committees'}
                           {item.id === 'dashboard' && 'Overview and shortcuts'}
                           {item.id === 'account' && 'Password and security'}
                         </span>

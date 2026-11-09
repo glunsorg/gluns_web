@@ -197,7 +197,7 @@ function ResetPasswordForm() {
                 minLength={8}
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                placeholder="At least 8 characters"
+                placeholder="Create a secure GLUNS account password"
                 className={inputClasses}
               />
 
@@ -251,7 +251,7 @@ function ResetPasswordForm() {
                 minLength={8}
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}
-                placeholder="Re-enter your password"
+                placeholder="Confirm your new GLUNS account password"
                 className={inputClasses}
               />
             </div>

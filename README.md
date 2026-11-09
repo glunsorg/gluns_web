@@ -1,67 +1,103 @@
-# Payload Blank Template
+# GLUNS Website
 
-This template comes configured with the bare minimum to get started on anything you need.
+The official website and delegation portal for the **Global Leaders United Nations
+Symposium (GLUNS)**.
 
-## Quick start
+GLUNS connects students, schools, and youth leaders through Model United Nations
+conferences, diplomacy education, leadership programmes, and international
+collaboration.
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+## What the platform provides
 
-## Quick Start - local setup
+- Public information about GLUNS, its organs, Secretariat, events, FAQs, sponsors,
+  and contact channels
+- Event and school delegation registration
+- Individual delegate registration
+- Secure sign-in, account recovery, and account settings
+- Delegation management, delegate records, assignments, payments, and receipts
+- Payload CMS administration for managing events, profiles, media, and site content
 
-To spin up this template locally, follow these steps:
+## Technology
 
-### Clone
+- Next.js and React
+- TypeScript
+- Payload CMS
+- PostgreSQL
+- Tailwind CSS
+- Vitest and Playwright
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+## Local development
 
-### Development
+### Requirements
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URI` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+- Node.js 18.20.2 or newer
+- npm or pnpm
+- PostgreSQL
 
-3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+### Setup
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+1. Install dependencies:
 
-#### Docker (Optional)
+   ```bash
+   npm install
+   ```
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
+2. Create a local environment file:
 
-To do so, follow these steps:
+   ```bash
+   cp .env.example .env
+   ```
 
-- Modify the `MONGODB_URI` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URI` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
+3. Configure the database, Payload secret, application URL, and payment/email
+   settings in `.env`.
 
-## How it works
+4. Start the development server:
 
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
+   ```bash
+   npm run dev
+   ```
 
-### Collections
+5. Open [http://localhost:3000](http://localhost:3000).
 
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
+The Payload admin panel is available at `/admin`.
 
-- #### Users (Authentication)
+## Useful commands
 
-  Users are auth-enabled collections that have access to the admin panel.
+```bash
+npm run dev       # Start the development server
+npm run build     # Create a production build
+npm run start     # Serve the production build
+npm run lint      # Run ESLint
+npm run test:int  # Run integration tests
+npm run test:e2e  # Run Playwright end-to-end tests
+```
 
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/main/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
+## Docker
 
-- #### Media
+Docker support is available through the project’s `docker-compose.yml`. Configure
+the required environment variables first, then run:
 
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
+```bash
+docker compose up
+```
 
-### Docker
+## Project structure
 
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
+- `src/app/(frontend)` — public GLUNS pages and authenticated portal routes
+- `src/components` — reusable page sections, forms, and portal components
+- `src/collections` — Payload CMS collections
+- `src/data` — data fetching helpers for events, committees, Secretariat members,
+  and sponsors
+- `src/app/api` — application API routes
+- `tests` — integration and end-to-end tests
 
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
+## Content management
 
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
+Site administrators manage GLUNS content through Payload CMS. Keep event details,
+committee descriptions, Secretariat profiles, sponsor information, and media
+updated so the public website reflects the current programme.
 
-## Questions
+## Support
 
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+For GLUNS website or registration support, contact the relevant team through the
+official contact channels listed on the website.

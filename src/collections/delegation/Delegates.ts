@@ -1,18 +1,21 @@
 import type { CollectionConfig } from 'payload'
+import { delegateAccess } from '@/lib/access'
 
 export const Delegates: CollectionConfig = {
   slug: 'delegates',
 
   admin: {
     useAsTitle: 'fullName',
-    defaultColumns: ['fullName', 'registration', 'batch', 'delegateState'],
+    defaultColumns: [
+      'fullName',
+      'institution',
+      'institutionName',
+      'registration',
+      'batch',
+      'delegateState',
+    ],
   },
-  access: {
-    read: () => true,
-    create: () => true,
-    update: ({ req: { user } }) => !!user,
-    delete: ({ req: { user } }) => !!user,
-  },
+  access: delegateAccess,
 
   fields: [
     {
@@ -67,6 +70,28 @@ export const Delegates: CollectionConfig = {
       name: 'institution',
       type: 'relationship',
       relationTo: 'institutions',
+    },
+
+    {
+      name: 'institutionName',
+      type: 'text',
+      admin: {
+        description: 'Institution name captured for the delegate.',
+      },
+    },
+
+    {
+      name: 'organ',
+      type: 'relationship',
+      relationTo: 'organs',
+      required: false,
+    },
+
+    {
+      name: 'committee',
+      type: 'relationship',
+      relationTo: 'committees',
+      required: false,
     },
 
     {

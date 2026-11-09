@@ -202,7 +202,7 @@ export default function ContactForm() {
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
                       : 'border-gray-200 dark:border-gray-700 focus:border-[#85c226]'
                   } focus:outline-none`}
-                placeholder="John Doe"
+                placeholder="Enter your full name"
               />
               {errors.full_name && (
                 <motion.div
@@ -234,7 +234,7 @@ export default function ContactForm() {
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
                       : 'border-gray-200 focus:border-[#85c226]'
                   } focus:outline-none`}
-                placeholder="john@example.com"
+                placeholder="Enter your contact email"
               />
               {errors.email && (
                 <motion.div
@@ -266,7 +266,7 @@ export default function ContactForm() {
                   ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
                   : 'border-gray-200 focus:border-[#85c226]'
               } focus:outline-none`}
-            placeholder="What is your inquiry about?"
+            placeholder="Tell us whether your enquiry is about registration, partnerships, events, or media"
           />
           {errors.subject && (
             <motion.div
@@ -298,7 +298,7 @@ export default function ContactForm() {
                     ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
                     : 'border-gray-200 focus:border-[#85c226]'
                 } focus:outline-none`}
-              placeholder="Provide details about your inquiry or request"
+              placeholder="Share the details GLUNS should know about your request"
             />
             {errors.message && (
               <motion.div

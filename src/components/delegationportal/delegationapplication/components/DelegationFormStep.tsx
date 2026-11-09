@@ -166,7 +166,7 @@ export default function DelegationFormStep({
               }
             }}
             disabled={saving}
-            className="flex flex-1 items-center justify-center gap-2 bg-[#85c226] px-6 py-3 font-medium text-white shadow-md transition-colors hover:bg-[#104179] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none"
+            className="flex flex-1 items-center cursor-pointer justify-center gap-2 bg-[#85c226] px-6 py-3 font-medium text-white shadow-md transition-colors hover:bg-[#104179] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none"
           >
             <Save className="w-4 h-4" />
             {saving ? 'Saving...' : 'Save & Continue'}

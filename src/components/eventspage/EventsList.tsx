@@ -21,7 +21,7 @@ export default async function EventsList() {
           <div className="w-80 h-80 mb-6">
             <Image
               src="/icons/nolist.png"
-              alt="No Events"
+              alt="GLUNS event calendar"
               width={800}
               height={800}
               className="object-contain"
@@ -30,11 +30,11 @@ export default async function EventsList() {
 
           {/* Text Content */}
           <h3 className="text-4xl md:text-6xl font-bold text-white mb-3 uppercase">
-            No Events Scheduled Yet
+            The GLUNS Calendar Is Being Prepared
           </h3>
           <p className="text-white/70 text-center text-base md:text-xl mb-8 px-4">
-            We{"'"}re currently planning exciting new Model UN events. Check back soon for updates
-            on upcoming conferences and workshops!
+            We are preparing the next GLUNS Model UN conferences, leadership workshops, and
+            diplomacy experiences. Contact our team for information about upcoming opportunities.
           </p>
 
           {/* Call to Action */}

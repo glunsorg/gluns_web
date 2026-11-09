@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { adminAccess } from '@/lib/access'
 
 export const Portraits: CollectionConfig = {
   slug: 'portraits',
@@ -6,9 +7,7 @@ export const Portraits: CollectionConfig = {
     description: 'Media',
     group: 'Media & File Uploads',
   },
-  access: {
-    read: () => true,
-  },
+  access: adminAccess,
   fields: [
     {
       name: 'alt',

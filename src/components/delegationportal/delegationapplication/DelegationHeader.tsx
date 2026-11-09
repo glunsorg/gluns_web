@@ -19,7 +19,6 @@ export default function DelegationHeader({
     register: 'Register for an Event',
     delegations: 'Delegation Management',
     payments: 'Payments & Receipts',
-    assignments: 'Country Assignments',
     profile: 'Profile',
     account: 'Account Settings',
   }
@@ -29,7 +28,6 @@ export default function DelegationHeader({
     register: 'Choose your event and complete the registration form',
     delegations: 'Add delegates, manage payment, and prepare the team',
     payments: 'View payment history and download receipts',
-    assignments: 'Assign organs, committees, and countries for your delegates',
     profile: 'Review your account and registration details',
     account: 'Manage password and account security',
   }

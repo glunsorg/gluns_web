@@ -34,6 +34,20 @@ type Props = {
   isIndividual?: boolean
 }
 
+type Option = {
+  id: string | number
+  name: string
+  maxCapacity?: number | null
+}
+
+function relationshipId(value: unknown): string {
+  if (typeof value === 'object' && value !== null && 'id' in value) {
+    return String(value.id)
+  }
+
+  return value == null ? '' : String(value)
+}
+
 export default function DelegateForm({
   open,
   delegate,
@@ -52,7 +66,12 @@ export default function DelegateForm({
     gradeLevel: '',
     email: '',
     phoneNumber: '',
+    organ: '',
+    committee: '',
   })
+  const [organs, setOrgans] = useState<Option[]>([])
+  const [committees, setCommittees] = useState<Option[]>([])
+  const [loadingOptions, setLoadingOptions] = useState(false)
 
   const gradeOptions = Array.from({ length: 12 }, (_, i) => `Grade ${i + 1}`)
 
@@ -65,6 +84,8 @@ export default function DelegateForm({
           gradeLevel: delegate.gradeLevel ?? '',
           email: delegate.email ?? '',
           phoneNumber: delegate.phoneNumber ?? (delegate as any).phone ?? '',
+          organ: relationshipId(delegate.organ),
+          committee: relationshipId(delegate.committee),
         })
       } else {
         setFormData({
@@ -73,11 +94,59 @@ export default function DelegateForm({
           gradeLevel: '',
           email: '',
           phoneNumber: '',
+          organ: '',
+          committee: '',
         })
       }
       setError(null)
     }
-  }, [delegate, open])
+  }, [delegate, open, registrationId])
+
+  useEffect(() => {
+    if (!open) return
+
+    const loadOrgans = async () => {
+      setLoadingOptions(true)
+      try {
+        const organId = relationshipId(delegate?.organ)
+        const response = await fetch(
+          organId
+            ? `/api/delegate-options?organId=${encodeURIComponent(organId)}&registrationId=${encodeURIComponent(String(registrationId ?? ''))}`
+            : `/api/delegate-options?registrationId=${encodeURIComponent(String(registrationId ?? ''))}`,
+          { cache: 'no-store' },
+        )
+        const data = await response.json()
+        if (!response.ok) throw new Error(data.message || 'Failed to load organ options')
+        setOrgans(data.organs ?? [])
+        setCommittees(data.committees ?? [])
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load organ options')
+      } finally {
+        setLoadingOptions(false)
+      }
+    }
+
+    loadOrgans()
+  }, [delegate, open, registrationId])
+
+  const loadCommittees = async (organId: string) => {
+    if (!organId) {
+      setCommittees([])
+      return
+    }
+
+    try {
+      const response = await fetch(
+        `/api/delegate-options?organId=${encodeURIComponent(organId)}&registrationId=${encodeURIComponent(String(registrationId ?? ''))}`,
+        { cache: 'no-store' },
+      )
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.message || 'Failed to load committees')
+      setCommittees(data.committees ?? [])
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load committees')
+    }
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
@@ -90,6 +159,17 @@ export default function DelegateForm({
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+
+    if (!formData.organ) {
+      setError('Please select an organ before choosing a committee.')
+      return
+    }
+
+    if (committees.length > 0 && !formData.committee) {
+      setError('Please select a committee.')
+      return
+    }
+
     setSaving(true)
 
     try {
@@ -107,6 +187,8 @@ export default function DelegateForm({
         ...(registrationId != null ? { registration: Number(registrationId) } : {}),
 
         ...(batchId != null ? { batch: Number(batchId) } : {}),
+        ...(formData.organ ? { organ: Number(formData.organ) } : { organ: null }),
+        ...(formData.committee ? { committee: Number(formData.committee) } : { committee: null }),
       }
 
       console.log('Creating delegate with:', bodyToSend)
@@ -198,7 +280,7 @@ export default function DelegateForm({
                   name="fullName"
                   value={formData.fullName} // Using fullName for the input
                   onChange={handleChange}
-                  placeholder="Enter full name"
+                  placeholder="Enter the delegate's full name"
                   required
                   disabled={saving}
                   className="border-2 border-[#104179]/20 focus:border-[#85c226] h-12 rounded-xl text-[#104179] placeholder:text-[#104179]/40"
@@ -250,7 +332,7 @@ export default function DelegateForm({
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="example@email.com"
+                  placeholder="Enter the delegate's email"
                   required
                   disabled={saving}
                   className="border-2 border-[#104179]/20 focus:border-[#85c226] h-12 rounded-xl text-[#104179] placeholder:text-[#104179]/40"
@@ -272,7 +354,7 @@ export default function DelegateForm({
                   type="tel"
                   value={formData.phoneNumber}
                   onChange={handleChange}
-                  placeholder="+254 700 000 000"
+                  placeholder="Enter the delegate's phone number"
                   required
                   disabled={saving}
                   className="border-2 border-[#104179]/20 focus:border-[#85c226] h-12 rounded-xl text-[#104179] placeholder:text-[#104179]/40"
@@ -312,6 +394,75 @@ export default function DelegateForm({
                 </select>
               </div>
             </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="organ" className="text-sm font-bold text-[#104179]">
+                  Organ <span className="text-red-500">*</span>
+                </Label>
+                <select
+                  id="organ"
+                  value={formData.organ}
+                  onChange={(e) => {
+                    const organ = e.target.value
+                    setFormData((prev) => ({ ...prev, organ, committee: '' }))
+                    setCommittees([])
+                    setError(null)
+                    void loadCommittees(organ)
+                  }}
+                  disabled={saving || loadingOptions}
+                  required
+                  className="w-full border-2 border-[#104179]/20 focus:border-[#85c226] focus:outline-none h-12 rounded-xl text-[#104179] px-4 bg-white disabled:opacity-50"
+                >
+                  <option value="">Select an organ</option>
+                  {organs.map((organ) => (
+                    <option key={organ.id} value={organ.id}>
+                      {organ.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {formData.organ && committees.length > 0 && (
+                <div className="space-y-2">
+                  <Label htmlFor="committee" className="text-sm font-bold text-[#104179]">
+                    Committee <span className="text-red-500">*</span>
+                  </Label>
+                  <select
+                    id="committee"
+                    value={formData.committee}
+                    onChange={(e) => {
+                      setFormData((prev) => ({ ...prev, committee: e.target.value }))
+                      setError(null)
+                    }}
+                    disabled={saving || loadingOptions}
+                    required
+                    className="w-full border-2 border-[#104179]/20 focus:border-[#85c226] focus:outline-none h-12 rounded-xl text-[#104179] px-4 bg-white disabled:opacity-50"
+                  >
+                    <option value="">Select a committee</option>
+                    {committees.map((committee) => (
+                      <option key={committee.id} value={committee.id}>
+                        {committee.name}
+                        {committee.maxCapacity ? ` (maximum ${committee.maxCapacity} delegates)` : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
+
+            {formData.organ && committees.length === 0 && !loadingOptions && (
+              <p className="text-sm text-[#104179]/70">
+                This organ does not currently have committees available for selection.
+              </p>
+            )}
+
+            {formData.organ && committees.some((committee) => committee.maxCapacity) && (
+              <p className="text-sm text-[#104179]/70">
+                Capacity limits are set for this event. The maximum shown beside a committee is
+                the number of delegates GLUNS can place in that committee.
+              </p>
+            )}
 
             {/* Info Box */}
             <div className="bg-[#104179]/5 border-2 border-[#104179]/20 rounded-xl p-4">
