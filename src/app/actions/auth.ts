@@ -1,7 +1,38 @@
 'use server'
 
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { SignUpFormSchema, SignInFormSchema, FormState } from '@/lib/definitions'
+
+async function setSessionCookie(response: Response) {
+  const setCookieHeader = response.headers.get('set-cookie')
+
+  if (!setCookieHeader) {
+    return
+  }
+
+  const [cookiePair] = setCookieHeader.split(';')
+  const separatorIndex = cookiePair.indexOf('=')
+
+  if (separatorIndex === -1) {
+    return
+  }
+
+  const name = cookiePair.slice(0, separatorIndex).trim()
+  const value = cookiePair.slice(separatorIndex + 1).trim()
+
+  if (!name) {
+    return
+  }
+
+  const cookieStore = await cookies()
+  cookieStore.set(name, value, {
+    httpOnly: true,
+    path: '/',
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  })
+}
 
 export async function signUp(
   _state: FormState | undefined,
@@ -66,6 +97,8 @@ export async function signUp(
         message: result.message,
       }
     }
+
+    await setSessionCookie(response)
   } catch (error) {
     console.error('Signup request failed:', error)
     return { message: 'Unable to complete signup. Please try again.' }
@@ -87,18 +120,32 @@ export async function signIn(state: FormState, formData: FormData) {
   }
 
   const { email, password } = validatedFields.data
+  const baseUrl = process.env.PAYLOAD_URL || process.env.NEXT_PUBLIC_PAYLOAD_URL
 
-  const response = await fetch('/api/users/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
-  })
+  if (!baseUrl) {
+    console.error('PAYLOAD_URL or NEXT_PUBLIC_PAYLOAD_URL is not configured.')
+    return { message: 'Login is temporarily unavailable. Please try again later.' }
+  }
 
-  if (!response.ok) {
-    const data = await response.json()
-    return {
-      message: data.message || 'Login failed',
+  try {
+    const response = await fetch(`${baseUrl}/api/users/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+      cache: 'no-store',
+    })
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}))
+      return {
+        message: data.message || 'Login failed',
+      }
     }
+
+    await setSessionCookie(response)
+  } catch (error) {
+    console.error('Login request failed:', error)
+    return { message: 'Unable to complete login. Please try again.' }
   }
 
   redirect('/delegation-portal')
