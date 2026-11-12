@@ -67,7 +67,7 @@ export default function Navbar() {
         }`}
       >
         <div className="flex justify-between items-center">
-          {/* Logo */}
+          {/* GLUNS Logo */}
           <Link href="/">
             <Image
               src="/logos/white.png"
