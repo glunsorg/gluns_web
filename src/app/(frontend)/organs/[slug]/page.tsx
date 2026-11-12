@@ -5,7 +5,7 @@ import config from '@/payload.config'
 import { getPayload } from 'payload'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
-import { SlashIcon } from 'lucide-react'
+import { ArrowUpRight, SlashIcon } from 'lucide-react'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -29,16 +29,16 @@ export async function generateMetadata({
   const payload = await getPayload({ config: payloadConfig })
 
   const { docs } = await payload.find({
-    collection: 'committees',
+    collection: 'organs',
     where: {
       slug: { equals: slug },
     },
     depth: 2,
   })
 
-  const committee = docs[0]
+  const organ = docs[0]
 
-  if (!committee) {
+  if (!organ) {
     return {
       title: 'Organ Not Found | GLUNS',
       description:
@@ -46,15 +46,13 @@ export async function generateMetadata({
     }
   }
 
-  const title = `${committee.name} | GLUNS Organ`
+  const title = `${organ.name} | GLUNS Organ`
   const description =
-    committee.description ||
-    `Discover the ${committee.name} organ at GLUNS, a Model United Nations simulation empowering students in Kenya, Africa, and around the world.`
+    organ.description ||
+    `Discover the ${organ.name} organ at GLUNS, a Model United Nations simulation empowering students in Kenya, Africa, and around the world.`
 
   const imageUrl =
-    typeof committee?.committee_photo === 'object' && committee.committee_photo?.url
-      ? committee.committee_photo.url
-      : '/seo/committee.jpg'
+    typeof organ.image === 'object' && organ.image?.url ? organ.image.url : '/seo/committee.jpg'
 
   const url = `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/organs/${slug}`
 
@@ -76,7 +74,7 @@ export async function generateMetadata({
           secureUrl: imageUrl,
           width: 1200,
           height: 630,
-          alt: committee.name,
+          alt: organ.name,
         },
       ],
       type: 'article',
@@ -120,7 +118,7 @@ export default async function CommitteePage({ params }: { params: Promise<{ slug
   const payload = await getPayload({ config: payloadConfig })
 
   const { docs } = await payload.find({
-    collection: 'committees',
+    collection: 'organs',
     where: {
       slug: {
         equals: slug,
@@ -129,115 +127,157 @@ export default async function CommitteePage({ params }: { params: Promise<{ slug
     depth: 2,
   })
 
-  const committee = docs[0]
-  if (!committee) {
+  const organ = docs[0]
+  if (!organ) {
     notFound()
   }
 
+  const { docs: committees } =
+    organ.organType === 'committee_based'
+      ? await payload.find({
+          collection: 'committees',
+          where: {
+            organ: {
+              equals: organ.id,
+            },
+            active: {
+              equals: true,
+            },
+          },
+          sort: 'name',
+        })
+      : { docs: [] }
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Top Navigation Bar */}
-      <div className="bg-[#104179] border-b-4 border-[#85c226] shadow-lg">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="min-h-screen bg-[#0d0d0d]">
+      <header className="relative overflow-hidden bg-[#104179] px-6 pb-20 pt-32 md:px-12 lg:px-16 lg:pb-28">
+        {typeof organ.image === 'object' && organ.image?.url && (
+          <Image
+            src={organ.image.url}
+            alt=""
+            fill
+            priority
+            className="object-cover opacity-20 mix-blend-screen"
+          />
+        )}
+        <div className="absolute inset-0 bg-[#104179]/75" />
+        <div className="absolute -right-24 -top-32 h-96 w-96 rounded-full bg-[#85c226]/10 blur-3xl" />
+        <div className="absolute bottom-0 left-0 h-px w-full bg-[#85c226]" />
+        <div className="relative mx-auto max-w-7xl">
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
                   <Link
                     href="/"
-                    className="text-white hover:text-[#85c226] transition-all duration-300 font-medium"
+                    className="text-sm font-medium uppercase tracking-[0.18em] text-white/65 transition-colors hover:text-[#85c226]"
                   >
                     Home
                   </Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator>
-                <SlashIcon className="text-[#85c226]" />
+                <SlashIcon className="size-3 text-[#85c226]" />
               </BreadcrumbSeparator>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
                   <Link
                     href="/organs"
-                    className="text-white/90 hover:text-[#85c226] transition-all duration-300 font-medium"
+                    className="text-sm font-medium uppercase tracking-[0.18em] text-white/65 transition-colors hover:text-[#85c226]"
                   >
                     Organs
                   </Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator>
-                <SlashIcon className="text-[#85c226]" />
+                <SlashIcon className="size-3 text-[#85c226]" />
               </BreadcrumbSeparator>
               <BreadcrumbItem>
-                <BreadcrumbPage className="text-[#85c226] font-semibold">
-                  {committee.name}
+                <BreadcrumbPage className="max-w-40 truncate text-sm font-semibold uppercase tracking-[0.18em] text-[#85c226] sm:max-w-none">
+                  {organ.name}
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-        </div>
-      </div>
 
-      {/* Committee Hero */}
-      <div className="relative h-[500px] w-full overflow-hidden">
-        {typeof committee.committee_photo === 'object' && committee.committee_photo ? (
-          <Image
-            src={committee.committee_photo.url || ''}
-            alt={committee.name}
-            fill
-            className="object-cover"
-            priority
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full w-full bg-[#104179]">
-            <span className="text-white text-xl font-medium">No Image Available</span>
-          </div>
-        )}
-
-        {/* Overlay with Pattern */}
-        <div className="absolute inset-0 bg-[#104179]/80"></div>
-
-        {/* Decorative Elements */}
-        <div className="absolute top-0 left-0 w-32 h-32 border-t-8 border-l-8 border-[#85c226]"></div>
-        <div className="absolute bottom-0 right-0 w-32 h-32 border-b-8 border-r-8 border-[#85c226]"></div>
-
-        {/* Content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
-          <div className="max-w-4xl w-full text-center space-y-6">
-            <div className="inline-block">
-              <h1 className="text-5xl md:text-7xl font-black text-white tracking-tight mb-4">
-                {committee.name}
+          <div className="mt-14 grid items-end gap-12 lg:gap-20">
+            <div>
+              <p className="mb-5 text-sm font-semibold uppercase tracking-[0.28em] text-[#85c226]">
+                GLUNS organ
+              </p>
+              <h1 className="max-w-4xl text-6xl font-semibold uppercase leading-[0.88] tracking-tight text-white sm:text-7xl lg:text-9xl">
+                {organ.name}
               </h1>
-              <div className="h-2 bg-[#85c226] w-3/4 mx-auto"></div>
+              <div className="mt-8 h-1 w-24 bg-[#85c226]" />
             </div>
-            <p className="text-white text-xl md:text-2xl font-light max-w-3xl mx-auto leading-relaxed">
-              {committee.description}
-            </p>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Committee Content */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10">
-        {/* Summary Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 lg:p-16 mb-16 border-t-8 border-[#104179]">
-          <div className="flex items-center justify-center mb-12">
-            <div className="flex items-center space-x-4">
-              <div className="h-1 w-16 bg-[#85c226]"></div>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#104179] tracking-tight">
-                Organ Summary
+      <main className="relative z-10 -mt-8 rounded-t-[2rem] bg-[#0d1a0d] px-6 py-16 md:px-12 lg:px-16 lg:py-24">
+        <div className="mx-auto max-w-7xl">
+          <section className="grid gap-12 border-b border-white/10 pb-16 lg:grid-cols-[0.7fr_1.3fr] lg:gap-24 lg:pb-24">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#85c226]">
+                About the organ
+              </p>
+              <h2 className="mt-5 max-w-sm text-4xl font-semibold uppercase leading-none text-white md:text-6xl">
+                A space for <span className="text-[#85c226]">global</span> dialogue.
               </h2>
-              <div className="h-1 w-16 bg-[#85c226]"></div>
             </div>
-          </div>
+            <div className="max-w-3xl text-lg leading-relaxed text-white/65 md:text-2xl">
+              <p>{organ.description}</p>
+            </div>
+          </section>
 
-          <article className="prose prose-xl max-w-none prose-headings:text-[#104179] prose-headings:font-bold prose-a:text-[#104179] prose-a:no-underline hover:prose-a:text-[#85c226] prose-a:transition-colors prose-img:rounded-xl prose-img:shadow-lg prose-p:text-gray-700 prose-p:leading-relaxed">
-            <p>{committee.summary}</p>
-          </article>
+          {organ.organType === 'committee_based' && (
+            <section className="pt-16 lg:pt-24">
+              <div className="mb-10 flex items-end justify-between gap-6">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#85c226]">
+                    Explore the structure
+                  </p>
+                  <h2 className="mt-3 text-5xl font-semibold uppercase leading-none text-white md:text-7xl">
+                    Committees<span className="text-[#85c226]">.</span>
+                  </h2>
+                </div>
+                <span className="hidden text-sm uppercase tracking-[0.2em] text-white/40 sm:block">
+                  {committees.length} {committees.length === 1 ? 'committee' : 'committees'}
+                </span>
+              </div>
+              {committees.length > 0 ? (
+                <div className="grid gap-px overflow-hidden border border-white/10 bg-white/10 md:grid-cols-2">
+                  {committees.map((committee, index) => (
+                    <div
+                      key={committee.id}
+                      className="group bg-[#0d1a0d] p-6 transition-colors duration-300 hover:bg-[#104179] md:p-8"
+                    >
+                      <div className="mb-14 flex items-start justify-between">
+                        <span className="font-mono text-sm text-[#85c226]">
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                        <ArrowUpRight className="size-5 text-white/35 transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[#85c226]" />
+                      </div>
+                      <h3 className="max-w-sm text-2xl font-semibold uppercase leading-tight text-white md:text-3xl">
+                        {committee.name}
+                      </h3>
+                      {committee.description && (
+                        <p className="mt-4 max-w-md text-base leading-relaxed text-white/55">
+                          {committee.description}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="border border-dashed border-white/20 p-10 text-center text-white/55">
+                  No committees have been listed yet.
+                </div>
+              )}
+            </section>
+          )}
         </div>
-      </div>
-
-      {/* Bottom Spacer */}
-      <div className="h-16"></div>
+      </main>
     </div>
   )
 }

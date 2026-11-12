@@ -403,6 +403,12 @@ export interface RegistrationBatch {
 export interface Organ {
   id: number;
   name: string;
+  /**
+   * This field is auto-generated from the name.
+   */
+  slug: string;
+  description: string;
+  image?: (number | null) | Media;
   code: string;
   organType: 'committee_based' | 'court' | 'commission' | 'other';
   active?: boolean | null;
@@ -421,7 +427,6 @@ export interface Committee {
    * Organ that this committee belongs to.
    */
   organ?: (number | null) | Organ;
-  committee_photo?: (number | null) | Media;
   /**
    * This field is auto-generated from the Title field. Please do not edit manually.
    */
@@ -1248,7 +1253,6 @@ export interface CommitteesSelect<T extends boolean = true> {
   name?: T;
   description?: T;
   organ?: T;
-  committee_photo?: T;
   slug?: T;
   committee_code?: T;
   summary?: T;
@@ -1277,6 +1281,9 @@ export interface EventCommitteesSelect<T extends boolean = true> {
  */
 export interface OrgansSelect<T extends boolean = true> {
   name?: T;
+  slug?: T;
+  description?: T;
+  image?: T;
   code?: T;
   organType?: T;
   active?: T;

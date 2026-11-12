@@ -3,13 +3,13 @@ export const dynamic = 'force-dynamic'
 import React from 'react'
 import { GrLinkNext } from 'react-icons/gr'
 import Link from 'next/link'
-import { fetchCommittee } from '@/data/committeeFetch'
+import { fetchOrgans } from '@/data/committeeFetch'
 import { HiArrowRight } from 'react-icons/hi2'
 
 export default async function Committee() {
-  const { committee } = await fetchCommittee()
+  const { organs } = await fetchOrgans()
 
-  if (!committee || committee.length === 0) {
+  if (!organs || organs.length === 0) {
     return (
       <section className="relative bg-[#0D1A0D] min-h-screen md:min-h-[60vh] lg:min-h-auto 2xl:min-h-auto rounded-t-3xl -mt-7 z-30 px-6 md:px-12 2xl:px-16 py-20 overflow-hidden">
         <div className="flex flex-col justify-center items-center text-center mb-16">
@@ -55,28 +55,28 @@ export default async function Committee() {
 
       {/* Organs Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-        {committee
+        {organs
           .slice(0, 3)
           .reverse()
-          .map((committee, index) => (
+          .map((organ, index) => (
             <div
-              key={committee.id}
+              key={organ.id}
               className="group relative transition-all duration-500 overflow-hidden border-l border-gray-100"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {/* Content */}
               <div className="p-6 md:p-8 flex flex-col gap-4">
                 <h3 className="text-2xl md:text-3xl font-bold text-[#85c226] leading-tight uppercase">
-                  {committee.name}
+                  {organ.name}
                 </h3>
 
                 <p className="text-white/65 text-sm md:text-base leading-relaxed line-clamp-3">
-                  {committee.description}
+                  {organ.description}
                 </p>
 
                 {/* CTA Link */}
                 <Link
-                  href={`/organs/${committee.slug}`}
+                  href={`/organs/${organ.slug}`}
                   className="inline-flex items-center gap-2 text-white font-semibold mt-2 group-hover:gap-4 transition-all duration-300"
                 >
                   <span>Learn More</span>

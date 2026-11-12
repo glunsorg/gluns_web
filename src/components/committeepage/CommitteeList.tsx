@@ -3,15 +3,14 @@ export const dynamic = 'force-dynamic'
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { FaUsers } from 'react-icons/fa6'
 import { HiArrowRight } from 'react-icons/hi2'
-import { fetchCommittee } from '@/data/committeeFetch'
+import { fetchOrgans } from '@/data/committeeFetch'
 import { GrLinkNext } from 'react-icons/gr'
 
 export default async function CommitteeList() {
-  const { committee } = await fetchCommittee()
+  const { organs } = await fetchOrgans()
 
-  if (!committee || committee.length === 0) {
+  if (!organs || organs.length === 0) {
     return (
       <section className="relative bg-[#0D1A0D] min-h-screen md:min-h-[60vh] lg:min-h-auto 2xl:min-h-auto rounded-t-3xl -mt-7 z-30 px-6 md:px-12 2xl:px-16 py-20 overflow-hidden">
         <div className="flex flex-col justify-center items-center text-center mb-16">
@@ -49,55 +48,35 @@ export default async function CommitteeList() {
 
       {/* Cards Grid */}
       <div className="max-w-7xl 2xl:max-w-full mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {committee.reverse().map((committee, index) => (
-          <div
-            key={committee.id}
+        {organs.map((organ, index) => (
+          <Link
+            href={`/organs/${organ.slug}`}
+            key={organ.id}
             className="group relative bg-white transition-all border border-[#104179] duration-500 overflow-hidden"
             style={{ animationDelay: `${index * 100}ms` }}
           >
-            {/* Image Container with Overlay */}
-            <div className="relative w-full h-56 overflow-hidden">
-              {typeof committee.photo === 'object' && committee.photo ? (
+            {typeof organ.image === 'object' && organ.image?.url ? (
+              <div className="relative h-48 w-full overflow-hidden">
                 <Image
-                  src={committee.photo?.url || '/images/committee-placeholder.jpg'}
-                  alt={committee.name}
+                  src={organ.image.url}
+                  alt={organ.name}
                   fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-700"
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-              ) : (
-                <div className="flex items-center justify-center h-full w-full bg-gray-300">
-                  <span className="text-gray-500">No Image Available</span>
-                </div>
-              )}
-
-              {/* Icon Badge */}
-              <div className="absolute top-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                <FaUsers className="text-[#104179] text-xl" />
               </div>
-            </div>
+            ) : null}
 
             {/* Content */}
             <div className="p-6 md:p-8 flex flex-col gap-4">
-              <Link href={`/organs/${committee.slug}`}>
-                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#104179] leading-tight uppercase">
-                  {committee.name}
-                </h3>
-              </Link>
+              <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#104179] leading-tight uppercase">
+                {organ.name}
+              </h3>
 
-              <p className="text-gray-600 text-lg md:text-xl lg:text-2xl leading-relaxed line-clamp-3">
-                {committee.description}
-              </p>
-
-              {/* CTA Link */}
-              <Link
-                href={`/organs/${committee.slug}`}
-                className="inline-flex items-center gap-2 text-[#104179] font-semibold mt-2 group-hover:gap-4 transition-all duration-300"
-              >
-                <span>Learn More</span>
-                <HiArrowRight className="text-xl group-hover:translate-x-1 transition-transform duration-300" />
-              </Link>
+              <p className="text-gray-600 line-clamp-3">{organ.description}</p>
+              <span>Learn More</span>
+              <HiArrowRight className="text-xl group-hover:translate-x-1 transition-transform duration-300" />
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 

@@ -30,13 +30,6 @@ export const Committees: CollectionConfig = {
       },
     },
     {
-      name: 'committee_photo',
-      label: 'Committee BG',
-      type: 'upload',
-      relationTo: 'media',
-      required: false,
-    },
-    {
       name: 'slug',
       label: 'Slug',
       type: 'text',

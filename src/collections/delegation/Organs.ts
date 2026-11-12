@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import slugify from 'slugify'
 import { adminAccess } from '@/lib/access'
 
 export const Organs: CollectionConfig = {
@@ -14,6 +15,37 @@ export const Organs: CollectionConfig = {
       name: 'name',
       type: 'text',
       required: true,
+    },
+
+    {
+      name: 'slug',
+      type: 'text',
+      required: true,
+      unique: true,
+      admin: {
+        position: 'sidebar',
+        description: 'This field is auto-generated from the name.',
+      },
+      hooks: {
+        beforeValidate: [
+          ({ data }) => {
+            if (data?.name) return slugify(data.name, { lower: true, strict: true })
+          },
+        ],
+      },
+    },
+
+    {
+      name: 'description',
+      type: 'textarea',
+      required: true,
+    },
+
+    {
+      name: 'image',
+      type: 'upload',
+      relationTo: 'media',
+      required: false,
     },
 
     {
