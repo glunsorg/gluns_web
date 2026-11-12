@@ -30,10 +30,10 @@ export async function signUp(
     return { message: 'Institution name is required for teachers.' }
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+  const baseUrl = process.env.PAYLOAD_URL
 
   if (!baseUrl) {
-    console.error('NEXT_PUBLIC_BASE_URL is not configured.')
+    console.error('PAYLOAD_URL is not configured.')
     return { message: 'Signup is temporarily unavailable. Please try again later.' }
   }
 

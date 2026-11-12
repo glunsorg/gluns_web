@@ -181,7 +181,7 @@ export async function POST(req: Request) {
         currency,
         reference: transactionReference,
 
-        callback_url: `${process.env.NEXT_PUBLIC_APP_URL}/api/paystack/verify`,
+        callback_url: `${process.env.PAYLOAD_URL}/api/paystack/verify`,
 
         metadata: {
           paymentId: payment.id,

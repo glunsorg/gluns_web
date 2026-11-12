@@ -36,7 +36,7 @@ function redirectTo(appUrl: string, path: string) {
 }
 
 export async function GET(req: Request) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL
+  const appUrl = process.env.PAYLOAD_URL
   const secretKey = process.env.PAYSTACK_SECRET_KEY
 
   if (!appUrl) {

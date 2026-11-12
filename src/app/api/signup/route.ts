@@ -124,10 +124,10 @@ export async function POST(req: Request) {
     // The user now exists, so do not delete the institution if login fails.
     createdInstitutionId = undefined
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+    const baseUrl = process.env.PAYLOAD_URL
 
     if (!baseUrl) {
-      console.error('NEXT_PUBLIC_BASE_URL is not configured.')
+      console.error('PAYLOAD_URL is not configured.')
 
       return NextResponse.json(
         {
