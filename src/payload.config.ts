@@ -50,6 +50,13 @@ const smtpConfigured =
   !!process.env.SMTP_PORT &&
   !!process.env.SMTP_USER &&
   !!process.env.SMTP_PASS
+// src/payload.config.ts
+const corsOrigins = [
+  process.env.NEXT_PUBLIC_CORS_ORIGIN,
+  process.env.NEXT_PUBLIC_FRONTEND_URL,
+  'https://gluns-web.vercel.app',
+  'http://localhost:3000',
+].filter((origin): origin is string => Boolean(origin))
 
 export default buildConfig({
   admin: {
@@ -108,7 +115,7 @@ export default buildConfig({
   ],
   serverURL: process.env.PAYLOAD_URL,
   // serverURL: 'http://localhost:3000',
-  cors: [process.env.NEXT_PUBLIC_CORS_ORIGIN || '', 'http://localhost:3000'],
+  cors: corsOrigins,
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

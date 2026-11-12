@@ -1,3 +1,5 @@
+'use server'
+
 import { redirect } from 'next/navigation'
 import { SignUpFormSchema, SignInFormSchema, FormState } from '@/lib/definitions'
 
@@ -38,7 +40,7 @@ export async function signUp(
   }
 
   try {
-    const response = await fetch(`${baseUrl}/apiup`, {
+    const response = await fetch(`${baseUrl}/api/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
