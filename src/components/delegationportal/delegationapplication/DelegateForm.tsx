@@ -38,6 +38,7 @@ type Option = {
   id: string | number
   name: string
   maxCapacity?: number | null
+  remainingCapacity?: number | null
 }
 
 function relationshipId(value: unknown): string {
@@ -111,8 +112,8 @@ export default function DelegateForm({
         const organId = relationshipId(delegate?.organ)
         const response = await fetch(
           organId
-            ? `/api/delegate-options?organId=${encodeURIComponent(organId)}&registrationId=${encodeURIComponent(String(registrationId ?? ''))}`
-            : `/api/delegate-options?registrationId=${encodeURIComponent(String(registrationId ?? ''))}`,
+            ? `/api/delegate-options?organId=${encodeURIComponent(organId)}&registrationId=${encodeURIComponent(String(registrationId ?? ''))}&delegateId=${encodeURIComponent(String(delegate?.id ?? ''))}`
+            : `/api/delegate-options?registrationId=${encodeURIComponent(String(registrationId ?? ''))}&delegateId=${encodeURIComponent(String(delegate?.id ?? ''))}`,
           { cache: 'no-store' },
         )
         const data = await response.json()
@@ -137,7 +138,7 @@ export default function DelegateForm({
 
     try {
       const response = await fetch(
-        `/api/delegate-options?organId=${encodeURIComponent(organId)}&registrationId=${encodeURIComponent(String(registrationId ?? ''))}`,
+        `/api/delegate-options?organId=${encodeURIComponent(organId)}&registrationId=${encodeURIComponent(String(registrationId ?? ''))}&delegateId=${encodeURIComponent(String(delegate?.id ?? ''))}`,
         { cache: 'no-store' },
       )
       const data = await response.json()
@@ -443,7 +444,9 @@ export default function DelegateForm({
                     {committees.map((committee) => (
                       <option key={committee.id} value={committee.id}>
                         {committee.name}
-                        {committee.maxCapacity ? ` (maximum ${committee.maxCapacity} delegates)` : ''}
+                        {committee.maxCapacity != null
+                          ? ` (${committee.remainingCapacity} of ${committee.maxCapacity} places left)`
+                          : ' (no capacity limit)'}
                       </option>
                     ))}
                   </select>
