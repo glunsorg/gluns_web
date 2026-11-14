@@ -19,7 +19,7 @@ export function useEvents() {
           id: event.id,
           title: event.title,
           subtitle: event.subtitle,
-          location: event.location,
+          venue: event.venue,
           date: event.startDate,
           cost: event.cost,
           currency: event.currency,

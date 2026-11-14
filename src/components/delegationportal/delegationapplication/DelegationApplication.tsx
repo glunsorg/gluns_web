@@ -44,6 +44,7 @@ export default function DelegationPortal() {
   // states
   const { user, checkingAuth, loggingOut, handleLogout } = useAuthGate()
   const { events } = useEvents()
+  console.log('Events fetched:', events) // Debugging line to check if events are fetched correctly
   const { institutions } = useInstitutions()
   const { registrations, loading: regsLoading, refetch } = useUserRegistrations(user?.id)
 

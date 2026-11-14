@@ -8,7 +8,7 @@ export type EventOption = {
   id: number | string
   title: string
   date?: string
-  location?: string
+  venue?: string
   cost?: number | string | null
   currency?: string
 }
@@ -59,6 +59,7 @@ export default function DelegationFormStep({
       registrationType: registrationType, // using registrationType here
     }))
   }
+
   return (
     <div className="rounded-3xl border border-white/10 bg-white/95 p-6 shadow-[0_20px_50px_rgba(7,19,31,0.18)] sm:p-8">
       <div className="space-y-6 animate-fade-in">
@@ -130,11 +131,16 @@ export default function DelegationFormStep({
                 <div className="mt-3 space-y-2">
                   <p className="text-lg font-bold text-[#104179]">{selectedEvent.title}</p>
                   <p className="text-sm text-[#104179]/70">
-                    {selectedEvent.location || 'Location to be announced'}
+                    {selectedEvent.venue || 'Location to be announced'}
                   </p>
                   <p className="text-sm text-[#104179]/70">
                     {selectedEvent.date
-                      ? new Date(selectedEvent.date).toLocaleDateString()
+                      ? new Date(selectedEvent.date).toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })
                       : 'Date pending'}
                   </p>
                   <p className="text-sm font-semibold text-[#85c226]">

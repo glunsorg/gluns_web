@@ -41,7 +41,7 @@ export interface EventOption {
   id: number | string
   title: string
   subtitle?: string
-  location?: string
+  venue?: string
   date?: string
   cost?: number | string | null
   currency?: string
