@@ -33,6 +33,7 @@ export async function GET(request: Request) {
       : { docs: [] }
 
     const capacities = new Map<number, number | null>()
+    const availability = new Map<number, boolean>()
     if (registrationId) {
       const registration = await payload.findByID({
         collection: 'registrations',
@@ -56,6 +57,7 @@ export async function GET(request: Request) {
               ? eventCommittee.committee.id
               : eventCommittee.committee
           capacities.set(Number(committeeId), eventCommittee.capacity ?? null)
+          availability.set(Number(committeeId), eventCommittee.available !== false)
         }
       }
     }
@@ -65,6 +67,7 @@ export async function GET(request: Request) {
       committees: committees.docs.map((committee) => ({
         ...committee,
         maxCapacity: capacities.get(Number(committee.id)) ?? null,
+        eventAvailable: availability.get(Number(committee.id)) ?? false,
       })),
     })
   } catch (error) {

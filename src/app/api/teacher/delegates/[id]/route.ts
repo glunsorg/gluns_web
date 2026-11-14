@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { validateEventCommitteeCapacity } from '@/services/delegation/validateEventCommitteeCapacity'
 
 function toRelationshipId(value: unknown): number | undefined {
   if (value == null) return undefined
@@ -120,6 +121,20 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     }
 
     await validateOrganCommittee(payload, data.organ, data.committee)
+
+    if (data.committee != null && registration) {
+      const eventId = toRelationshipId(registration.event)
+      if (eventId == null) {
+        throw new Error('The registration has no event.')
+      }
+
+      await validateEventCommitteeCapacity({
+        payload,
+        eventId,
+        committeeId: data.committee,
+        delegateId: id,
+      })
+    }
 
     const updated = await payload.update({
       collection: 'delegates',

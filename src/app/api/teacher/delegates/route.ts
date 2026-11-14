@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { validateEventCommitteeCapacity } from '@/services/delegation/validateEventCommitteeCapacity'
 
 function toRelationshipId(value: unknown): number | undefined {
   if (value == null) return undefined
@@ -212,6 +213,19 @@ export async function POST(req: Request) {
         : String(registeredBy?.institutionName || user?.institutionName || '')
 
     await validateOrganCommittee(payload, organ, committee)
+
+    if (committee != null) {
+      const eventId = toRelationshipId(registrationRecord.event)
+      if (eventId == null) {
+        throw new Error('The registration has no event.')
+      }
+
+      await validateEventCommitteeCapacity({
+        payload,
+        eventId,
+        committeeId: committee,
+      })
+    }
 
     const delegateData = {
       fullName: body?.fullName,
