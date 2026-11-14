@@ -49,9 +49,8 @@ export default async function Events() {
             The GLUNS Calendar Is Being Prepared
           </h3>
           <p className="text-white/70 text-center text-base md:text-lg mb-8 px-4">
-            Our team is preparing the next Model UN conferences, leadership workshops, and
-            diplomacy experiences. Contact GLUNS if you would like information about upcoming
-            opportunities.
+            Our team is preparing the next Model UN conferences, leadership workshops, and diplomacy
+            experiences. Contact GLUNS if you would like information about upcoming opportunities.
           </p>
 
           {/* Call to Action */}
@@ -86,9 +85,9 @@ export default async function Events() {
             className="overflow-hidden border-b-2 border-white/65 hover:shadow-xl transition-all duration-300"
           >
             {/* Content */}
-            <div className="p-6 flex justify-center items-center gap-3">
+            <div className="p-6 flex gap-3">
               <div>
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-start justify-between mb-4">
                   {' '}
                   <div className="flex flex-col md:flex-row justify-center items-center gap-2">
                     <span className="text-white/65 text-lg md:text-xl 2xl:text-3xl ml-1">
@@ -118,7 +117,7 @@ export default async function Events() {
       <div className="flex justify-center items-center mt-12">
         <Link
           href="/events"
-          className="flex items-center justify-center gap-2 border border-white/65 text-white/65 text-xl px-6 py-4 hover:scale-105 transition-transform delay-200"
+          className="flex items-center justify-center gap-2 border border-white/65 text-white/65 hover:bg-white hover:text-black text-xl px-6 py-4 hover:scale-105 transition-transform delay-200"
         >
           Explore All Events
           <GrLinkNext className="-rotate-45" />
