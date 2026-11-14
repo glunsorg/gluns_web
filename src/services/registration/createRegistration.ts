@@ -22,6 +22,13 @@ const normalizeId = (id: string | number) => {
   return /^\d+$/.test(value) ? Number(value) : value
 }
 
+export class RegistrationAvailabilityError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'RegistrationAvailabilityError'
+  }
+}
+
 export async function createRegistration({
   payload,
   eventId,
@@ -41,6 +48,20 @@ export async function createRegistration({
 
   if (!event) {
     throw new Error(`Event ${eventId} not found`)
+  }
+
+  const now = Date.now()
+  const registrationOpen = Date.parse(event.registrationOpen)
+  const registrationClose = Date.parse(event.registrationClose)
+
+  if (
+    event.registrationState !== 'open' ||
+    Number.isNaN(registrationOpen) ||
+    Number.isNaN(registrationClose) ||
+    now < registrationOpen ||
+    now > registrationClose
+  ) {
+    throw new RegistrationAvailabilityError('Registration is not open for this event.')
   }
 
   // Find registering user
@@ -67,6 +88,15 @@ export async function createRegistration({
   // Validate institution for institutional registration.
   if (registrationType === 'institution' && !institutionId) {
     throw new Error('Institution is required for institution registration')
+  }
+
+  if (
+    (registrationType === 'institution' && event.allowInstitutionRegistration === false) ||
+    (registrationType === 'individual' && event.allowIndividualRegistration === false)
+  ) {
+    throw new RegistrationAvailabilityError(
+      `This event does not allow ${registrationType} registration.`,
+    )
   }
 
   const registrationNumber = await generateRegistrationNumber(payload)

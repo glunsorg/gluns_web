@@ -20,9 +20,14 @@ export function useEvents() {
           title: event.title,
           subtitle: event.subtitle,
           location: event.location,
-          date: event.date,
+          date: event.startDate,
           cost: event.cost,
           currency: event.currency,
+          registrationState: event.registrationState,
+          registrationOpen: event.registrationOpen,
+          registrationClose: event.registrationClose,
+          allowIndividualRegistration: event.allowIndividualRegistration,
+          allowInstitutionRegistration: event.allowInstitutionRegistration,
         }))
 
         setEvents(eventOptions)

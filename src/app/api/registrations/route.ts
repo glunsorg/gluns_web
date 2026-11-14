@@ -2,7 +2,10 @@
 import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { createRegistration } from '@/services/registration/createRegistration'
+import {
+  createRegistration,
+  RegistrationAvailabilityError,
+} from '@/services/registration/createRegistration'
 
 export async function GET(req: Request) {
   const payload = await getPayload({ config })
@@ -70,6 +73,10 @@ export async function POST(req: Request) {
     )
   } catch (err) {
     console.error('Registrations POST error:', err)
+
+    if (err instanceof RegistrationAvailabilityError) {
+      return NextResponse.json({ message: err.message }, { status: 400 })
+    }
 
     return NextResponse.json({ message: 'Failed to create registration.' }, { status: 500 })
   }

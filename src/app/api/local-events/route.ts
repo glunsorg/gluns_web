@@ -8,13 +8,17 @@ export async function GET() {
   const payload: Payload = await getPayload({ config })
 
   try {
+    const now = new Date().toISOString()
     const events = await payload.find({
       collection: 'events',
       limit: 0,
       where: {
-        eventType: {
-          equals: 'local',
-        },
+        and: [
+          { eventType: { equals: 'local' } },
+          { registrationState: { equals: 'open' } },
+          { registrationOpen: { less_than_equal: now } },
+          { registrationClose: { greater_than_equal: now } },
+        ],
       },
       sort: '-startDate',
       depth: 0,

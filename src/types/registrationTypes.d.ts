@@ -45,4 +45,9 @@ export interface EventOption {
   date?: string
   cost?: number | string | null
   currency?: string
+  registrationState?: 'draft' | 'open' | 'closed'
+  registrationOpen?: string
+  registrationClose?: string
+  allowIndividualRegistration?: boolean
+  allowInstitutionRegistration?: boolean
 }
