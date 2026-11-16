@@ -161,8 +161,6 @@ export default async function CommitteePage({ params }: { params: Promise<{ slug
           />
         )}
         <div className="absolute inset-0 bg-[#104179]/75" />
-        <div className="absolute -right-24 -top-32 h-96 w-96 rounded-full bg-[#85c226]/10 blur-3xl" />
-        <div className="absolute bottom-0 left-0 h-px w-full bg-[#85c226]" />
         <div className="relative mx-auto max-w-7xl">
           <Breadcrumb>
             <BreadcrumbList>
@@ -205,7 +203,7 @@ export default async function CommitteePage({ params }: { params: Promise<{ slug
               <p className="mb-5 text-sm font-semibold uppercase tracking-[0.28em] text-[#85c226]">
                 GLUNS organ
               </p>
-              <h1 className="max-w-4xl text-6xl font-semibold uppercase leading-[0.88] tracking-tight text-white sm:text-7xl lg:text-9xl">
+              <h1 className="max-w-4xl text-5xl md:text-6xl font-semibold uppercase leading-[0.88] tracking-tight text-white sm:text-7xl lg:text-9xl">
                 {organ.name}
               </h1>
               <div className="mt-8 h-1 w-24 bg-[#85c226]" />

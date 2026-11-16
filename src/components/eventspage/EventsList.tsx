@@ -74,7 +74,7 @@ export default async function EventsList() {
               <div className="flex flex-col md:flex-row justify-center items-center gap-4">
                 {/* start date and date */}
                 <div className="flex flex-col md:flex-row justify-center items-center gap-4">
-                  <div className="flex flex-col md:flex-row justify-center items-center gap-2">
+                  <div className="flex justify-center items-center gap-2">
                     <span className="text-white/65 text-lg md:text-xl 2xl:text-3xl ml-1">
                       {new Date(event.startDate).toLocaleDateString('en-US', dateOptions)}
                     </span>

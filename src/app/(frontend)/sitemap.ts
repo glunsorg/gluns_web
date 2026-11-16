@@ -1,16 +1,17 @@
 export const dynamic = 'force-dynamic'
 
 import type { MetadataRoute } from 'next'
+import { getSiteUrl } from '@/lib/utils'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl =
-    process.env.NEXT_PUBLIC_PAYLOAD_URL || process.env.PAYLOAD_URL || 'https://www.gluns.org'
-  const apiUrl = process.env.PAYLOAD_API_URL || process.env.NEXT_PUBLIC_PAYLOAD_URL
+  const siteUrl = getSiteUrl()
+  const apiUrl = (process.env.PAYLOAD_API_URL || siteUrl).replace(/\/$/, '')
+  const payloadApiUrl = apiUrl.endsWith('/api') ? apiUrl : `${apiUrl}/api`
 
   // Fetch multiple collections in parallel
   const [committeesRes, eventsRes] = await Promise.all([
-    fetch(`${apiUrl}/organs`, { next: { revalidate: 3600 } }),
-    fetch(`${apiUrl}/event`, { next: { revalidate: 3600 } }),
+    fetch(`${payloadApiUrl}/organs?limit=1000`, { next: { revalidate: 3600 } }),
+    fetch(`${payloadApiUrl}/events?limit=1000`, { next: { revalidate: 3600 } }),
   ])
 
   if (!committeesRes.ok) throw new Error(`Failed to fetch committees: ${committeesRes.statusText}`)
@@ -38,7 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
     {
-      url: 'https://www.gluns.org',
+      url: siteUrl,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1.0,
@@ -66,12 +67,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.6,
-    },
-    {
-      url: `${siteUrl}/delegation-portal`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.7,
     },
     {
       url: `${siteUrl}/the-secretariat`,

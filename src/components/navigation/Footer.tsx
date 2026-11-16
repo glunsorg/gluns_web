@@ -24,7 +24,7 @@ export default function Footer() {
               />
             </Link>
 
-            <p className="text-gray-600 text-lg md:text-xl 2xl:text-3xl leading-relaxed max-w-sm">
+            <p className="text-gray-400 text-lg md:text-xl 2xl:text-3xl leading-relaxed max-w-sm">
               Empowering the next generation of global leaders through diplomacy, collaboration, and
               world-class Model UN experiences.
             </p>
@@ -48,7 +48,7 @@ export default function Footer() {
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-gray-600 hover:text-[#104179] transition-colors duration-200 text-lg md:text-xl 2xl:text-2xl flex items-center gap-2 group"
+                      className="text-gray-400 hover:text-[#104179] transition-colors duration-200 text-lg md:text-xl 2xl:text-2xl flex items-center gap-2 group"
                     >
                       <span className="w-0 h-px bg-[#104179] group-hover:w-4 transition-all duration-300"></span>
                       {link.name}
@@ -75,7 +75,7 @@ export default function Footer() {
                     <Link
                       href={link.href}
                       {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                      className="text-gray-600 hover:text-[#104179] transition-colors duration-200 text-lg md:text-xl 2xl:text-2xl flex items-center gap-2 group"
+                      className="text-gray-400 hover:text-[#104179] transition-colors duration-200 text-lg md:text-xl 2xl:text-2xl flex items-center gap-2 group"
                     >
                       <span className="w-0 h-px bg-[#104179] group-hover:w-4 transition-all duration-300"></span>
                       {link.name}
@@ -95,7 +95,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="mailto:info@gluns.org"
-                    className="text-gray-600 hover:text-[#104179] transition-colors duration-200 text-lg md:text-xl 2xl:text-2xl flex items-center gap-2 group"
+                    className="text-gray-400 hover:text-[#104179] transition-colors duration-200 text-lg md:text-xl 2xl:text-2xl flex items-center gap-2 group"
                   >
                     <span className="w-0 h-px bg-[#104179] group-hover:w-4 transition-all duration-300"></span>
                     info@gluns.org
@@ -104,7 +104,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="mailto:admin@gluns.org"
-                    className="text-gray-600 hover:text-[#104179] transition-colors duration-200 text-lg md:text-xl 2xl:text-2xl flex items-center gap-2 group"
+                    className="text-gray-400 hover:text-[#104179] transition-colors duration-200 text-lg md:text-xl 2xl:text-2xl flex items-center gap-2 group"
                   >
                     <span className="w-0 h-px bg-[#104179] group-hover:w-4 transition-all duration-300"></span>
                     admin@gluns.org
@@ -113,7 +113,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="#"
-                    className="text-gray-600 hover:text-[#104179] transition-colors duration-200 text-lg md:text-xl 2xl:text-2xl flex items-center gap-2 group"
+                    className="text-gray-400 hover:text-[#104179] transition-colors duration-200 text-lg md:text-xl 2xl:text-2xl flex items-center gap-2 group"
                   >
                     <span className="w-0 h-px bg-[#104179] group-hover:w-4 transition-all duration-300"></span>
                     Luther Plaza, NBO{' '}
@@ -122,7 +122,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="#"
-                    className="text-gray-600 hover:text-[#104179] transition-colors duration-200 text-lg md:text-xl 2xl:text-2xl flex items-center gap-2 group"
+                    className="text-gray-400 hover:text-[#104179] transition-colors duration-200 text-lg md:text-xl 2xl:text-2xl flex items-center gap-2 group"
                   >
                     <span className="w-0 h-px bg-[#104179] group-hover:w-4 transition-all duration-300"></span>
                     Kenya{' '}

@@ -1,16 +1,18 @@
 import { NextResponse } from 'next/server'
+import { getSiteUrl } from '@/lib/utils'
 
 export async function GET() {
-  const base = (process.env.NEXT_PUBLIC_PAYLOAD_URL || process.env.PAYLOAD_URL || '').replace(
-    /\/$/,
-    '',
-  )
-  const sitemap = base ? `${base}/sitemap.xml` : '/sitemap.xml'
+  const base = getSiteUrl()
+  const sitemap = `${base}/sitemap.xml`
 
   const lines = [
     'User-agent: *',
     'Disallow: /api/',
     'Disallow: /admin/',
+    'Disallow: /delegation-portal',
+    'Disallow: /payments/',
+    'Disallow: /forgot-password',
+    'Disallow: /reset-password',
 
     'Allow: /',
     '',

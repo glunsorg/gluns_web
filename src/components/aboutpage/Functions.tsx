@@ -30,9 +30,9 @@ export default function Functions() {
   ]
 
   return (
-    <section className="relative bg-[#0d1a0d] rounded-t-3xl -mt-7 z-30 px-6 md:px-12 py-20 overflow-hidden border-t border-white">
+    <section className="relative bg-[#0d1a0d] rounded-t-3xl -mt-7 z-30 px-6 md:px-12 py-12 md:py-20 overflow-hidden border-t border-white">
       {/* Header */}
-      <div className="flex flex-col justify-center items-center text-center mb-16 md:mb-4 mx-auto">
+      <div className="flex flex-col justify-center items-center md:text-center mb-16 md:mb-4 mx-auto">
         <h2 className="text-white text-4xl md:text-6xl lg:text-7xl 2xl:text-8xl font-bold mt-4 leading-tight uppercase">
           A Complete GLUNS Experience{' '}
         </h2>

@@ -40,7 +40,7 @@ export default function ContactCTA() {
         className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
         {/* Header Section */}
-        <motion.div variants={itemVariants} className="text-center">
+        <motion.div variants={itemVariants} className="md:text-center">
           <h2 className="text-5xl lg:text-7xl font-bold mb-6 uppercase">
             <span className="text-white">
               Ready to Begin Your <span className="text-[#85c226]">GLUNS</span> Journey?{' '}

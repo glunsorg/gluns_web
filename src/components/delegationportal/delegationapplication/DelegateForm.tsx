@@ -223,24 +223,24 @@ export default function DelegateForm({
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] p-0 gap-0 border-2 border-[#104179]/20 overflow-hidden">
-        <form onSubmit={handleSave}>
+      <DialogContent className="!flex max-h-[calc(100dvh-1rem)] w-[calc(100%_-_1rem)] flex-col gap-0 overflow-hidden border-2 border-[#104179]/20 p-0 sm:max-h-[90vh] sm:max-w-2xl">
+        <form onSubmit={handleSave} className="flex min-h-0 flex-1 flex-col">
           {/* Header */}
-          <div className="bg-[#07131f] px-6 py-5 border-b-4 border-[#85c226]">
+          <div className="border-b-4 border-[#85c226] bg-[#07131f] px-4 py-4 sm:px-6 sm:py-5">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-[#85c226] rounded-sm flex items-center justify-center">
+              <div className="flex min-w-0 items-center gap-3 pr-8">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-[#85c226] sm:h-12 sm:w-12">
                   {delegate ? (
-                    <User className="w-6 h-6 text-white" />
+                    <User className="h-5 w-5 text-white sm:h-6 sm:w-6" />
                   ) : (
-                    <UserPlus className="w-6 h-6 text-white" />
+                    <UserPlus className="h-5 w-5 text-white sm:h-6 sm:w-6" />
                   )}
                 </div>
-                <div>
-                  <DialogTitle className="text-xl font-semibold text-white">
+                <div className="min-w-0">
+                  <DialogTitle className="text-lg font-semibold text-white sm:text-xl">
                     {delegate ? 'Edit Delegate' : 'Add New Delegate'}
                   </DialogTitle>
-                  <DialogDescription className="text-white/70 text-sm">
+                  <DialogDescription className="text-sm text-white/70">
                     {delegate
                       ? "Update your delegate's information below"
                       : 'Fill in the details to add a new delegate'}
@@ -251,7 +251,7 @@ export default function DelegateForm({
           </div>
 
           {/* Content */}
-          <div className="p-6 space-y-6 overflow-y-auto flex-1">
+          <div className="min-h-0 flex-1 space-y-6 overflow-y-auto p-4 sm:p-6">
             {/* Error Alert */}
             {error && (
               <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
@@ -462,8 +462,8 @@ export default function DelegateForm({
 
             {formData.organ && committees.some((committee) => committee.maxCapacity) && (
               <p className="text-sm text-[#104179]/70">
-                Capacity limits are set for this event. The maximum shown beside a committee is
-                the number of delegates GLUNS can place in that committee.
+                Capacity limits are set for this event. The maximum shown beside a committee is the
+                number of delegates GLUNS can place in that committee.
               </p>
             )}
 
@@ -483,20 +483,20 @@ export default function DelegateForm({
           </div>
 
           {/* Footer */}
-          <DialogFooter className="bg-[#104179]/5 px-6 py-4 border-t-2 border-[#104179]/10 flex-row justify-end gap-3 sm:gap-3">
+          <DialogFooter className="shrink-0 flex-col gap-3 border-t-2 border-[#104179]/10 bg-[#104179]/5 px-4 py-4 sm:flex-row sm:justify-end sm:px-6">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
               disabled={saving}
-              className="border-2 border-[#104179]/20 text-[#104179] hover:bg-[#104179]/5 rounded-xl h-11 px-6 font-semibold"
+              className="h-11 w-full rounded-xl border-2 border-[#104179]/20 px-6 font-semibold text-[#104179] hover:bg-[#104179]/5 sm:w-auto"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={saving}
-              className="bg-[#85c226] hover:bg-[#104179] text-white rounded-xl h-11 px-6 font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-11 w-full rounded-xl bg-[#85c226] px-6 font-semibold text-white transition-all duration-300 hover:bg-[#104179] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
             >
               {saving ? (
                 <span className="flex items-center gap-2">

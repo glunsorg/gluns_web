@@ -9,6 +9,14 @@ export const metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_PAYLOAD_URL || process.env.PAYLOAD_URL || 'http://localhost:3000',
   ),
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
 
   openGraph: {
     title: 'GLUNS Delegation Portal – Register for Model United Nations Conferences',

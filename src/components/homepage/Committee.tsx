@@ -11,7 +11,7 @@ export default async function Committee() {
 
   if (!organs || organs.length === 0) {
     return (
-      <section className="relative bg-[#0D1A0D] min-h-screen md:min-h-[60vh] lg:min-h-auto 2xl:min-h-auto rounded-t-3xl -mt-7 z-30 px-6 md:px-12 2xl:px-16 py-20 overflow-hidden">
+      <section className="relative bg-[#0D1A0D] min-h-screen md:min-h-[60vh] lg:min-h-auto 2xl:min-h-auto rounded-t-3xl -mt-7 z-30 px-6 md:px-12 2xl:px-16 py-12 md:py-20 overflow-hidden">
         <div className="flex flex-col justify-center items-center text-center mb-16">
           <h2 className="text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl text-white mt-2 font-semibold uppercase">
             Explore the Structure of GLUNS
@@ -40,9 +40,9 @@ export default async function Committee() {
   }
 
   return (
-    <section className="relative bg-[#0D1A0D] min-h-screen md:min-h-[60vh] lg:min-h-auto 2xl:min-h-auto rounded-t-3xl -mt-7 z-30 px-6 md:px-12 2xl:px-16 py-20 overflow-hidden">
+    <section className="relative bg-[#0D1A0D] min-h-screen md:min-h-[60vh] lg:min-h-auto 2xl:min-h-auto rounded-t-3xl -mt-7 z-30 px-6 md:px-12 2xl:px-16 py-12 md:py-20 overflow-hidden">
       {/* Section Header */}
-      <div className="flex flex-col justify-center items-center text-center mb-16">
+      <div className="flex flex-col justify-center items-center md:text-center mb-16">
         <h2 className="text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl text-white mt-2 font-semibold uppercase">
           Explore the Structure of GLUNS
         </h2>

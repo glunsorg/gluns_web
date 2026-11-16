@@ -32,7 +32,7 @@ export default function Hero() {
           </Link>
 
           <Link
-            href="/register"
+            href="/registration"
             className="mt-8 inline-block relative overflow-hidden bg-[#85c226] text-white px-6 md:px-8 py-3 font-semibold transition-colors duration-300"
           >
             <span className="relative z-10 text-lg md:text-xl 2xl:text-2xl">REGISTER NOW</span>

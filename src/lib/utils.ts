@@ -6,5 +6,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getSiteUrl() {
-  return process.env.NEXT_PUBLIC_PAYLOAD_URL || process.env.PAYLOAD_URL || 'http://localhost:3000'
+  return (
+    process.env.NEXT_PUBLIC_PAYLOAD_URL ||
+    process.env.PAYLOAD_URL ||
+    'https://www.gluns.org'
+  ).replace(/\/$/, '')
 }

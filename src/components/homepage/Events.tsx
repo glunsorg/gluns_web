@@ -8,7 +8,7 @@ export default async function Events() {
 
   const dateOptions: Intl.DateTimeFormatOptions = {
     year: 'numeric',
-    month: 'long',
+    month: 'numeric',
     day: 'numeric',
   }
 
@@ -70,7 +70,7 @@ export default async function Events() {
   return (
     <section className="relative bg-[#0d0d0d] min-h-screen md:min-h-[60vh] lg:min-h-auto rounded-t-3xl -mt-7 z-30 px-6 md:px-12 2xl:px-18 py-16 overflow-hidden">
       {/* Header */}
-      <div className="flex flex-col justify-center items-center text-center mb-8">
+      <div className="flex flex-col justify-center margin-auto items-center md:text-center mb-8">
         <h2 className="text-white text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-bold mt-3">
           {' '}
           EVENTS & COMPETITIONS
@@ -89,13 +89,13 @@ export default async function Events() {
               <div>
                 <div className="flex items-start justify-between mb-4">
                   {' '}
-                  <div className="flex flex-col md:flex-row justify-center items-center gap-2">
+                  <div className="flex flex-row md:flex-row justify-center items-center gap-2">
                     <span className="text-white/65 text-lg md:text-xl 2xl:text-3xl ml-1">
-                      {new Date(event.startDate).toLocaleDateString('en-US', dateOptions)}
+                      {new Date(event.startDate).toLocaleDateString('en-UK', dateOptions)}
                     </span>
                     <span className="text-white/65 text-lg md:text-xl 2xl:text-3xl ml-1">-</span>
                     <span className="text-white/65 text-lg md:text-xl 2xl:text-3xl ml-1">
-                      {new Date(event.endDate).toLocaleDateString('en-US', dateOptions)}
+                      {new Date(event.endDate).toLocaleDateString('en-UK', dateOptions)}
                     </span>
                   </div>
                 </div>

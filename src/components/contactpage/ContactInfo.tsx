@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { Mail, MapPin } from 'lucide-react'
 import Link from 'next/link'
 import { FaInstagram, FaLinkedin, FaFacebookF, FaXTwitter } from 'react-icons/fa6'
+import { IoLogoTiktok } from 'react-icons/io5'
 
 export default function ContactInfo() {
   const containerVariants = {
@@ -59,10 +60,13 @@ export default function ContactInfo() {
   ]
 
   const socialLinks = [
-    { name: 'Instagram', href: '#', icon: FaInstagram },
-    { name: 'Twitter', href: '#', icon: FaXTwitter },
-    { name: 'LinkedIn', href: '#', icon: FaLinkedin },
-    { name: 'Facebook', href: '#', icon: FaFacebookF },
+    { name: 'Instagram', href: 'https://www.instagram.com/gluns_org/', icon: FaInstagram },
+    { name: 'TikTok', href: 'https://www.tiktok.com/@gluns_org', icon: IoLogoTiktok },
+    {
+      name: 'LinkedIn',
+      href: 'https://www.linkedin.com/company/global-leaders-un-symposium',
+      icon: FaLinkedin,
+    },
   ]
 
   return (

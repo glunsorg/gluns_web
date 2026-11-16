@@ -8,8 +8,8 @@ import { RiCloseLargeLine } from 'react-icons/ri'
 import { useAuthStore } from '@/app/store/authStore'
 
 // Social Icons
-import { IoLogoTiktok, IoLogoInstagram, IoLogoWhatsapp } from 'react-icons/io5'
-import { FaFacebookF } from 'react-icons/fa6'
+import { IoLogoTiktok, IoLogoInstagram } from 'react-icons/io5'
+import { FaLinkedinIn } from 'react-icons/fa6'
 
 export default function Navbar() {
   const [isMenuOpen, setMenuOpen] = useState(false)
@@ -132,7 +132,7 @@ export default function Navbar() {
               <div className="absolute inset-0 bg-[#104179]/40 backdrop-blur-sm" />
 
               {/* Drawer */}
-              <div className="absolute top-0 left-0 h-screen w-[60%] bg-[#000000]/50 flex flex-col p-4 space-y-6 shadow-lg">
+              <div className="absolute top-0 left-0 flex h-dvh w-full max-w-sm flex-col overflow-y-auto bg-[#000000]/50 p-4 shadow-lg sm:w-80">
                 {/* Close Button */}
                 <div className="flex justify-end">
                   <button
@@ -146,7 +146,7 @@ export default function Navbar() {
                 </div>
 
                 {/* Links */}
-                <div className="flex flex-col gap-8 mt-4">
+                <div className="mt-4 flex flex-col gap-6">
                   {menuItems.map((item) => (
                     <Link
                       key={item.name}
@@ -158,24 +158,36 @@ export default function Navbar() {
                       {item.name}
                     </Link>
                   ))}
+
+                  {!loading && (
+                    <Link
+                      href={user ? '/delegation-portal' : '/registration'}
+                      onClick={() => setMenuOpen(false)}
+                      className="relative flex w-full items-center justify-center overflow-hidden border border-white/65 p-3 text-center font-semibold text-white/65 transition-colors duration-300 before:absolute before:inset-0 before:translate-y-full before:bg-[#104179] before:transition-transform before:duration-300 hover:before:translate-y-0 hover:text-[#fffff6]"
+                    >
+                      <span className="relative z-10 text-base uppercase">
+                        {user ? 'Delegation Portal' : 'Register Now'}
+                      </span>
+                    </Link>
+                  )}
                 </div>
 
                 {/* Social Links */}
-                <div className="flex flex-col items-center mt-auto gap-4 p-4">
+                <div className="mt-8 flex flex-col items-center gap-4 p-4">
                   <h4 className="font-semibold text-lg text-white">Follow Us</h4>
 
                   <div className="grid grid-cols-4 gap-4">
-                    <Link href="/" className="text-white">
+                    <Link href="https://www.tiktok.com/@gluns_org" className="text-white">
                       <IoLogoTiktok size={30} />
                     </Link>
-                    <Link href="/" className="text-white">
-                      <FaFacebookF size={30} />
+                    <Link
+                      href="https://www.linkedin.com/company/global-leaders-un-symposium"
+                      className="text-white"
+                    >
+                      <FaLinkedinIn size={30} />
                     </Link>
-                    <Link href="/" className="text-white">
+                    <Link href="https://www.instagram.com/gluns_org/" className="text-white">
                       <IoLogoInstagram size={30} />
-                    </Link>
-                    <Link href="/" className="text-white">
-                      <IoLogoWhatsapp size={30} />
                     </Link>
                   </div>
                 </div>
