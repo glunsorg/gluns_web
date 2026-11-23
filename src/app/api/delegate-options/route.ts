@@ -35,7 +35,8 @@ export async function GET(request: Request) {
       id: Number(registrationId),
       depth: 0,
     })
-    const eventId = typeof registration.event === 'object' ? registration.event.id : registration.event
+    const eventId =
+      typeof registration.event === 'object' ? registration.event.id : registration.event
 
     if (!eventId) {
       return NextResponse.json({ message: 'The registration has no event.' }, { status: 400 })
@@ -44,10 +45,7 @@ export async function GET(request: Request) {
     const eventCommittees = await payload.find({
       collection: 'event-committees',
       where: {
-        and: [
-          { event: { equals: eventId } },
-          { available: { equals: true } },
-        ],
+        and: [{ event: { equals: eventId } }, { available: { equals: true } }],
       },
       limit: 0,
       depth: 1,
@@ -103,16 +101,15 @@ export async function GET(request: Request) {
       })
     }
 
-    const eventOrganIds = new Set(
-      availableCommittees.map((committee) => String(relationshipId(committee.organ))),
-    )
-
     return NextResponse.json({
-      organs: organs.docs.filter((organ) => eventOrganIds.has(String(organ.id))),
+      organs: organs.docs,
       committees: availableCommittees.sort((a, b) => a.name.localeCompare(b.name)),
     })
   } catch (error) {
     console.error('Failed to fetch delegate options:', error)
-    return NextResponse.json({ message: 'Failed to load organ and committee options.' }, { status: 500 })
+    return NextResponse.json(
+      { message: 'Failed to load organ and committee options.' },
+      { status: 500 },
+    )
   }
 }

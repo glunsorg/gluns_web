@@ -192,8 +192,6 @@ export default function DelegateForm({
         ...(formData.committee ? { committee: Number(formData.committee) } : { committee: null }),
       }
 
-      console.log('Creating delegate with:', bodyToSend)
-
       const res = await fetch(url, {
         method,
         headers: {
