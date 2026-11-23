@@ -8,6 +8,18 @@ const nextConfig = {
   // ("Cannot find module '#standard-fonts/Helvetica'"). Keep it external so
   // it is loaded from node_modules exactly as published.
   serverExternalPackages: ['pdfkit'],
+  // pdfkit loads its font files by name at runtime ("#standard-fonts/..."),
+  // so Vercel's file tracing cannot see that they are needed and leaves them
+  // out of the deployed function ("Cannot find module .../Helvetica.cjs").
+  // List them explicitly for the routes that generate receipt PDFs. The logo
+  // is read from public/ with fs, so it needs the same treatment.
+  outputFileTracingIncludes: {
+    '/api/paystack/*': [
+      './node_modules/pdfkit/package.json',
+      './node_modules/pdfkit/js/**/*',
+      './public/logos/**/*',
+    ],
+  },
   // Your Next.js config here
   webpack: (webpackConfig) => {
     webpackConfig.resolve.extensionAlias = {
