@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * ONE-OFF REPAIR (admin only).
  *
@@ -11,6 +12,7 @@
 import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { uploadReceiptPdf } from '@/lib/receipts/uploadReceiptPdf'
 
 export async function POST(req: Request) {
   const payload = await getPayload({ config })
@@ -83,5 +85,52 @@ export async function POST(req: Request) {
     fixed.push(registrationId)
   }
 
-  return NextResponse.json({ checked: registrationIds.length, fixed })
+  // Retry receipts that were issued but never got their PDF (for example,
+  // when PDF generation failed on the server).
+  const receiptsWithoutPdf = await payload.find({
+    collection: 'receipts',
+    where: { pdf: { exists: false } },
+    limit: 0,
+    depth: 1,
+    overrideAccess: true,
+  })
+
+  const pdfRegenerated: Array<string | number> = []
+  const pdfFailed: Array<string | number> = []
+
+  for (const receipt of receiptsWithoutPdf.docs as any[]) {
+    try {
+      const recipient = typeof receipt.recipient === 'object' ? receipt.recipient : null
+      const registration = typeof receipt.registration === 'object' ? receipt.registration : null
+      const invoice = typeof receipt.invoice === 'object' ? receipt.invoice : null
+      const paymentDoc = typeof receipt.payment === 'object' ? receipt.payment : null
+
+      await uploadReceiptPdf(payload, receipt.id, {
+        receiptNumber: receipt.receiptNumber,
+        payerName: recipient?.fullName || recipient?.email || 'GLUNS registrant',
+        registrationNumber: String(registration?.registrationNumber ?? ''),
+        invoiceNumber: String(invoice?.invoiceNumber ?? ''),
+        amount: Number(receipt.amount),
+        currency: receipt.currency,
+        paymentMethod: receipt.paymentMethod || 'Paystack',
+        transactionReference: String(
+          receipt.transactionReference ?? paymentDoc?.transactionReference ?? '',
+        ),
+        paidAt: String(paymentDoc?.paidAt || receipt.issuedAt),
+        issuedAt: String(receipt.issuedAt),
+      })
+
+      pdfRegenerated.push(receipt.id)
+    } catch (err) {
+      console.error(`Could not regenerate PDF for receipt ${receipt.id}:`, err)
+      pdfFailed.push(receipt.id)
+    }
+  }
+
+  return NextResponse.json({
+    checked: registrationIds.length,
+    fixed,
+    receiptPdfsRegenerated: pdfRegenerated,
+    receiptPdfsStillFailing: pdfFailed,
+  })
 }

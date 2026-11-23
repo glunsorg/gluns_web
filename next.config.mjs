@@ -3,6 +3,11 @@ import { withPayload } from '@payloadcms/next/withPayload'
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  // pdfkit loads its built-in fonts through internal "#standard-fonts/..."
+  // imports. If Next bundles it, those imports break on the server
+  // ("Cannot find module '#standard-fonts/Helvetica'"). Keep it external so
+  // it is loaded from node_modules exactly as published.
+  serverExternalPackages: ['pdfkit'],
   // Your Next.js config here
   webpack: (webpackConfig) => {
     webpackConfig.resolve.extensionAlias = {

@@ -108,7 +108,11 @@ export function finalizeSuccessfulPayment(
   return run
 }
 
-async function runFinalize(payload: Payload, reference: string, data: any): Promise<FinalizeResult> {
+async function runFinalize(
+  payload: Payload,
+  reference: string,
+  data: any,
+): Promise<FinalizeResult> {
   let currentStep = 'initialization'
 
   try {
@@ -353,7 +357,10 @@ async function runFinalize(payload: Payload, reference: string, data: any): Prom
         })
 
         if (confirmed.errors?.length) {
-          console.error('[Payment callback] Some delegates could not be confirmed:', confirmed.errors)
+          console.error(
+            '[Payment callback] Some delegates could not be confirmed:',
+            confirmed.errors,
+          )
         }
       }
 
@@ -437,31 +444,45 @@ async function runFinalize(payload: Payload, reference: string, data: any): Prom
     }
 
     // 10. Generate the PDF if the receipt does not have one.
+    //
+    // By this point the money is received, the registration is completed and
+    // the receipt record exists. A failure while drawing or uploading the PDF
+    // must NOT make the payment look failed (the customer would be sent to
+    // the failed page, and Paystack would keep retrying the webhook). So we
+    // log it and carry on; the receipt can be regenerated later.
     currentStep = 'generate receipt PDF'
 
     const receiptPdfId =
       typeof receipt.pdf === 'object' && receipt.pdf !== null ? receipt.pdf.id : receipt.pdf
 
     if (!receiptPdfId) {
-      const recipient = await payload.findByID({
-        collection: 'users',
-        id: recipientId,
-        depth: 0,
-        overrideAccess: true,
-      })
+      try {
+        const recipient = await payload.findByID({
+          collection: 'users',
+          id: recipientId,
+          depth: 0,
+          overrideAccess: true,
+        })
 
-      await uploadReceiptPdf(payload, receipt.id, {
-        receiptNumber: receipt.receiptNumber,
-        payerName: recipient.fullName || recipient.email || 'GLUNS registrant',
-        registrationNumber: String(registration.registrationNumber),
-        invoiceNumber: String(invoice.invoiceNumber),
-        amount: Number(payment.amount),
-        currency: payment.currency,
-        paymentMethod: 'Paystack',
-        transactionReference: reference,
-        paidAt: String(payment.paidAt || new Date().toISOString()),
-        issuedAt: String(receipt.issuedAt),
-      })
+        await uploadReceiptPdf(payload, receipt.id, {
+          receiptNumber: receipt.receiptNumber,
+          payerName: recipient.fullName || recipient.email || 'GLUNS registrant',
+          registrationNumber: String(registration.registrationNumber),
+          invoiceNumber: String(invoice.invoiceNumber),
+          amount: Number(payment.amount),
+          currency: payment.currency,
+          paymentMethod: 'Paystack',
+          transactionReference: reference,
+          paidAt: String(payment.paidAt || new Date().toISOString()),
+          issuedAt: String(receipt.issuedAt),
+        })
+      } catch (pdfError) {
+        console.error(
+          `[Payment] Receipt ${receipt.receiptNumber} was created but its PDF could not be generated. ` +
+            'Run POST /api/paystack/reconcile to retry.',
+          pdfError,
+        )
+      }
     }
 
     return { status: 'success' }
