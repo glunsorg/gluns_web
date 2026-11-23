@@ -81,7 +81,9 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       id,
       depth: 1,
     })
-    const delegateRegistrationId = toRelationshipId(body?.registration) ?? toRelationshipId(existing.registration)
+    // A delegate always stays in the registration it was created in.
+    // Never accept a different registration from the request body.
+    const delegateRegistrationId = toRelationshipId(existing.registration)
     const registration = delegateRegistrationId
       ? await payload.findByID({
           collection: 'registrations',
@@ -89,13 +91,27 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
           depth: 0,
         })
       : null
-    const registeredById = registration ? toRelationshipId(registration.registeredBy) : undefined
+
+    if (!registration) {
+      return NextResponse.json({ message: 'Registration not found' }, { status: 404 })
+    }
+
+    const registeredById = toRelationshipId(registration.registeredBy)
+    const isAdmin = Array.isArray(user.roles) && user.roles.includes('admin')
+
+    // Only the person who owns the registration (or an admin) may edit
+    // its delegates.
+    if (!isAdmin && String(registeredById) !== String(user.id)) {
+      return NextResponse.json({ message: 'Forbidden' }, { status: 403 })
+    }
+
     const registeredBy = registeredById
       ? await payload.findByID({ collection: 'users', id: registeredById, depth: 1 })
       : null
-    const institution = toRelationshipId(registeredBy?.institution)
-      ?? toRelationshipId(user?.institution)
-      ?? toRelationshipId(existing.institution)
+    const institution =
+      toRelationshipId(registeredBy?.institution) ??
+      toRelationshipId(user?.institution) ??
+      toRelationshipId(existing.institution)
     const institutionName =
       typeof registeredBy?.institution === 'object' && registeredBy.institution
         ? String(registeredBy.institution.name || '')
@@ -106,23 +122,31 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
               '',
           )
 
+    // Once a delegate is confirmed (paid for), their placement is locked.
+    // Organ and committee can only be changed by an admin, otherwise people
+    // could pay and then swap into a different or full committee.
+    const isLocked = existing.delegateState === 'confirmed' && !isAdmin
+
+    // NOTE: delegateState, batch and registration are deliberately NOT taken
+    // from the request. Payment status must only be changed by the payment
+    // flow, never by the browser.
     const data = {
       fullName,
       email: body?.email,
       phone: body?.phone ?? body?.phoneNumber,
       gender: body?.gender,
-      registration: delegateRegistrationId,
-      batch: toRelationshipId(body?.batch),
+      gradeLevel: body?.gradeLevel,
       institution,
       institutionName: institutionName || undefined,
-      organ: toRelationshipId(body?.organ),
-      committee: toRelationshipId(body?.committee),
-      delegateState: body?.delegateState,
+      organ: isLocked ? toRelationshipId(existing.organ) : toRelationshipId(body?.organ),
+      committee: isLocked
+        ? toRelationshipId(existing.committee)
+        : toRelationshipId(body?.committee),
     }
 
     await validateOrganCommittee(payload, data.organ, data.committee)
 
-    if (data.committee != null && registration) {
+    if (!isLocked && data.committee != null && registration) {
       const eventId = toRelationshipId(registration.event)
       if (eventId == null) {
         throw new Error('The registration has no event.')

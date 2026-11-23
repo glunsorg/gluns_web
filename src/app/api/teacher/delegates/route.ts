@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { validateEventCommitteeCapacity } from '@/services/delegation/validateEventCommitteeCapacity'
+import { getOwnedRegistration, getRouteUser, isAdminUser } from '@/lib/routeAuth'
 
 function toRelationshipId(value: unknown): number | undefined {
   if (value == null) return undefined
@@ -44,18 +45,24 @@ async function resolveBatchId(payload: any, registrationId: number | string) {
   })
 
   const batch = existingBatch?.docs?.[0]
-  if (batch?.id) {
+
+  // Reuse the latest batch only while it is still unpaid. Once it is paid,
+  // delegates added later (teacher coming back to add more students) go into
+  // a NEW batch, so payment only covers the newcomers.
+  if (batch?.id && batch.batchState !== 'paid') {
     return batch.id
   }
+
+  const nextSequence = batch?.sequence ? Number(batch.sequence) + 1 : 1
 
   const createdBatch = await payload.create({
     collection: 'registration-batches',
     depth: 0,
     data: {
       registration: registrationId,
-      sequence: 1,
+      sequence: nextSequence,
       batchState: 'draft',
-      batchNumber: `BATCH-${registrationId}-${Date.now()}`,
+      batchNumber: `BATCH-${registrationId}-${nextSequence}-${Date.now()}`,
     },
   })
 
@@ -87,17 +94,28 @@ async function validateOrganCommittee(
 
 export async function GET(req: Request) {
   const payload = await getPayload({ config })
+
+  const user = await getRouteUser(payload, req)
+  if (!user) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+
   const url = new URL(req.url)
   const registrationId =
     url.searchParams.get('registrationId') ?? url.searchParams.get('delegationId')
 
   try {
     const findOpts: any = { collection: 'delegates', limit: 0, depth: 1 }
+
     if (registrationId) {
-      const maybeNumber = Number(registrationId)
-      findOpts.where = {
-        registration: { equals: Number.isNaN(maybeNumber) ? registrationId : maybeNumber },
+      // Must be the caller's own registration (or an admin).
+      const owned = await getOwnedRegistration(payload, user, registrationId)
+      if (!owned) {
+        return NextResponse.json({ message: 'Registration not found' }, { status: 404 })
       }
+
+      findOpts.where = { registration: { equals: owned.id } }
+    } else if (!isAdminUser(user)) {
+      // No registration given: only delegates from the caller's own registrations.
+      findOpts.where = { 'registration.registeredBy': { equals: user.id } }
     }
 
     const delegates = await payload.find(findOpts)
@@ -206,7 +224,8 @@ export async function POST(req: Request) {
     const batch = incomingBatch ?? (await resolveBatchId(payload, normalizedRegistration))
     const organ = toRelationshipId(body?.organ)
     const committee = toRelationshipId(body?.committee)
-    const institution = toRelationshipId(registeredBy?.institution) ?? toRelationshipId(user?.institution)
+    const institution =
+      toRelationshipId(registeredBy?.institution) ?? toRelationshipId(user?.institution)
     const institutionName =
       typeof registeredBy?.institution === 'object' && registeredBy.institution
         ? String(registeredBy.institution.name || '')

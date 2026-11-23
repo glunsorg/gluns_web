@@ -44,6 +44,7 @@ export default function DelegationPortal() {
   // states
   const { user, checkingAuth, loggingOut, handleLogout } = useAuthGate()
   const { events } = useEvents()
+  console.log('Events fetched:', events) // Debugging line to check if events are fetched correctly
   const { institutions } = useInstitutions()
   const { registrations, loading: regsLoading, refetch } = useUserRegistrations(user?.id)
 
@@ -75,8 +76,8 @@ export default function DelegationPortal() {
         return
       }
 
-      if (delegates.length <= 0) {
-        alert('Add at least one delegate before starting payment')
+      if (delegates.filter((d) => d.delegateState === 'pending').length <= 0) {
+        alert('There are no unpaid delegates to pay for')
         return
       }
 
@@ -87,7 +88,6 @@ export default function DelegationPortal() {
         },
         body: JSON.stringify({
           registrationId,
-          delegateCount: delegates.length,
         }),
       })
 
@@ -140,10 +140,11 @@ export default function DelegationPortal() {
 
   const isRegistrationCompleted = selectedRegistration?.registrationState === 'completed'
 
-  const isPaymentSuccessful = selectedRegistration?.paymentStatus === 'success'
+  // Delegates still waiting for payment (e.g. added after the registration
+  // was already completed). Only these are charged.
+  const unpaidDelegates = delegates.filter((d) => d.delegateState === 'pending')
 
-  const shouldShowStartPayment =
-    !!selectedRegistration && !isRegistrationCompleted && !isPaymentSuccessful
+  const shouldShowStartPayment = !!selectedRegistration && unpaidDelegates.length > 0
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white">
@@ -250,32 +251,29 @@ export default function DelegationPortal() {
                 )}
                 {activeDelegationRegistrationId && (
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-                    {isRegistrationCompleted || isPaymentSuccessful ? (
+                    {
                       <div className="space-y-4">
-                        <div className="flex items-start gap-3">
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#85c226]/15">
-                            <span className="text-xl text-[#85c226]">✓</span>
+                        {isRegistrationCompleted && (
+                          <div className="flex flex-wrap items-start justify-between gap-3 rounded-xl border border-[#85c226]/30 bg-[#85c226]/10 p-4">
+                            <div className="flex items-start gap-3">
+                              <span className="text-xl text-[#85c226]">✓</span>
+                              <div>
+                                <h4 className="font-semibold text-white">Registration Completed</h4>
+                                <p className="mt-1 text-sm leading-6 text-white/70">
+                                  {unpaidDelegates.length > 0
+                                    ? `You have ${unpaidDelegates.length} new delegate(s) awaiting payment.`
+                                    : 'You can still add more delegates below; you will only pay for the new ones.'}
+                                </p>
+                              </div>
+                            </div>
+                            <Button
+                              onClick={() => setActiveSection('payments')}
+                              className="bg-[#85c226] text-black hover:bg-[#76ae20]"
+                            >
+                              View Payment History
+                            </Button>
                           </div>
-
-                          <div>
-                            <h4 className="font-semibold text-white">Registration Completed</h4>
-
-                            <p className="mt-1 text-sm leading-6 text-white/70">
-                              Your registration has been completed successfully. You can access your
-                              payment details and receipts in the Payment History tab.
-                            </p>
-                          </div>
-                        </div>
-
-                        <Button
-                          onClick={() => setActiveSection('payments')}
-                          className="bg-[#85c226] text-black hover:bg-[#76ae20]"
-                        >
-                          View Payment History
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
+                        )}
                         <div className="flex flex-wrap items-center justify-between gap-3">
                           <div>
                             <h4 className="text-sm font-semibold text-white">Delegates</h4>
@@ -292,9 +290,10 @@ export default function DelegationPortal() {
                           {shouldShowStartPayment && (
                             <Button
                               onClick={startPaymentForRegistration}
-                              disabled={loadingDelegates || delegates.length === 0}
+                              disabled={loadingDelegates || unpaidDelegates.length === 0}
                             >
-                              Start payment
+                              Pay for {unpaidDelegates.length} delegate
+                              {unpaidDelegates.length === 1 ? '' : 's'}
                             </Button>
                           )}
                         </div>
@@ -306,7 +305,7 @@ export default function DelegationPortal() {
                           onDelegateChange={refetchDelegates}
                         />
                       </div>
-                    )}
+                    }
                   </div>
                 )}
               </div>

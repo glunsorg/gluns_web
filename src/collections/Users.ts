@@ -81,7 +81,11 @@ export const Users: CollectionConfig = {
   access: {
     create: () => true,
 
-    read: () => true,
+    read: ({ req }: AccessArgs) => {
+      if (!req.user) return false
+      if (isAdmin(req)) return true
+      return { id: { equals: req.user.id } }
+    },
 
     update: canUpdateUser,
 

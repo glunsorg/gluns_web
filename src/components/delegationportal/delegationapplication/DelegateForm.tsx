@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -37,6 +37,7 @@ type Props = {
 type Option = {
   id: string | number
   name: string
+  organ?: unknown
   maxCapacity?: number | null
   remainingCapacity?: number | null
 }
@@ -71,8 +72,18 @@ export default function DelegateForm({
     committee: '',
   })
   const [organs, setOrgans] = useState<Option[]>([])
-  const [committees, setCommittees] = useState<Option[]>([])
+  // Every available committee for the event. The list shown in the form is
+  // filtered from this by the selected organ (see `committees` below).
+  const [allCommittees, setAllCommittees] = useState<Option[]>([])
   const [loadingOptions, setLoadingOptions] = useState(false)
+
+  const committees = useMemo(
+    () => allCommittees.filter((c) => relationshipId(c.organ) === String(formData.organ)),
+    [allCommittees, formData.organ],
+  )
+
+  // Confirmed (paid) delegates keep their organ and committee.
+  const placementLocked = delegate?.delegateState === 'confirmed'
 
   const gradeOptions = Array.from({ length: 12 }, (_, i) => `Grade ${i + 1}`)
 
@@ -103,51 +114,41 @@ export default function DelegateForm({
     }
   }, [delegate, open, registrationId])
 
+  // Load organs and committees ONCE when the dialog opens. Picking an organ
+  // then just filters the committees locally, so there is no second request
+  // that can fail, arrive late, or overwrite the list.
   useEffect(() => {
     if (!open) return
 
-    const loadOrgans = async () => {
+    let cancelled = false
+
+    const loadOptions = async () => {
       setLoadingOptions(true)
       try {
-        const organId = relationshipId(delegate?.organ)
         const response = await fetch(
-          organId
-            ? `/api/delegate-options?organId=${encodeURIComponent(organId)}&registrationId=${encodeURIComponent(String(registrationId ?? ''))}&delegateId=${encodeURIComponent(String(delegate?.id ?? ''))}`
-            : `/api/delegate-options?registrationId=${encodeURIComponent(String(registrationId ?? ''))}&delegateId=${encodeURIComponent(String(delegate?.id ?? ''))}`,
+          `/api/delegate-options?registrationId=${encodeURIComponent(String(registrationId ?? ''))}&delegateId=${encodeURIComponent(String(delegate?.id ?? ''))}`,
           { cache: 'no-store' },
         )
         const data = await response.json()
         if (!response.ok) throw new Error(data.message || 'Failed to load organ options')
+        if (cancelled) return
         setOrgans(data.organs ?? [])
-        setCommittees(data.committees ?? [])
+        setAllCommittees(data.committees ?? [])
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load organ options')
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : 'Failed to load organ options')
+        }
       } finally {
-        setLoadingOptions(false)
+        if (!cancelled) setLoadingOptions(false)
       }
     }
 
-    loadOrgans()
+    loadOptions()
+
+    return () => {
+      cancelled = true
+    }
   }, [delegate, open, registrationId])
-
-  const loadCommittees = async (organId: string) => {
-    if (!organId) {
-      setCommittees([])
-      return
-    }
-
-    try {
-      const response = await fetch(
-        `/api/delegate-options?organId=${encodeURIComponent(organId)}&registrationId=${encodeURIComponent(String(registrationId ?? ''))}&delegateId=${encodeURIComponent(String(delegate?.id ?? ''))}`,
-        { cache: 'no-store' },
-      )
-      const data = await response.json()
-      if (!response.ok) throw new Error(data.message || 'Failed to load committees')
-      setCommittees(data.committees ?? [])
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load committees')
-    }
-  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
@@ -191,6 +192,8 @@ export default function DelegateForm({
         ...(formData.organ ? { organ: Number(formData.organ) } : { organ: null }),
         ...(formData.committee ? { committee: Number(formData.committee) } : { committee: null }),
       }
+
+      console.log('Creating delegate with:', bodyToSend)
 
       const res = await fetch(url, {
         method,
@@ -405,11 +408,9 @@ export default function DelegateForm({
                   onChange={(e) => {
                     const organ = e.target.value
                     setFormData((prev) => ({ ...prev, organ, committee: '' }))
-                    setCommittees([])
                     setError(null)
-                    void loadCommittees(organ)
                   }}
-                  disabled={saving || loadingOptions}
+                  disabled={saving || loadingOptions || placementLocked}
                   required
                   className="w-full border-2 border-[#104179]/20 focus:border-[#85c226] focus:outline-none h-12 rounded-xl text-[#104179] px-4 bg-white disabled:opacity-50"
                 >
@@ -434,7 +435,7 @@ export default function DelegateForm({
                       setFormData((prev) => ({ ...prev, committee: e.target.value }))
                       setError(null)
                     }}
-                    disabled={saving || loadingOptions}
+                    disabled={saving || loadingOptions || placementLocked}
                     required
                     className="w-full border-2 border-[#104179]/20 focus:border-[#85c226] focus:outline-none h-12 rounded-xl text-[#104179] px-4 bg-white disabled:opacity-50"
                   >
@@ -451,6 +452,13 @@ export default function DelegateForm({
                 </div>
               )}
             </div>
+
+            {placementLocked && (
+              <p className="text-sm text-[#104179]/70">
+                This delegate is confirmed, so the organ and committee are locked. You can still
+                correct their personal details. Contact the secretariat to change placement.
+              </p>
+            )}
 
             {formData.organ && committees.length === 0 && !loadingOptions && (
               <p className="text-sm text-[#104179]/70">

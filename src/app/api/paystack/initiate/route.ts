@@ -20,7 +20,6 @@ export async function POST(req: Request) {
 
   let body: {
     registrationId?: number | string
-    delegateCount?: number | string
   }
 
   try {
@@ -30,14 +29,9 @@ export async function POST(req: Request) {
   }
 
   const registrationId = Number(body.registrationId)
-  const delegateCount = Number(body.delegateCount)
 
   if (!Number.isInteger(registrationId) || registrationId <= 0) {
     return NextResponse.json({ message: 'Invalid registration ID' }, { status: 400 })
-  }
-
-  if (!Number.isInteger(delegateCount) || delegateCount <= 0) {
-    return NextResponse.json({ message: 'Invalid delegate count' }, { status: 400 })
   }
 
   if (!process.env.PAYSTACK_SECRET_KEY) {
@@ -70,6 +64,45 @@ export async function POST(req: Request) {
     if (String(registeredBy) !== String(user.id)) {
       return NextResponse.json({ message: 'Forbidden' }, { status: 403 })
     }
+
+    /**
+     * 2b. Count billable (unpaid) delegates on the server. Never trust a
+     *     client-supplied count: it decides how much the user is charged.
+     */
+    const delegatesResult = await payload.find({
+      collection: 'delegates',
+      where: {
+        and: [
+          { registration: { equals: registration.id } },
+          // Only delegates that have not been paid for yet. Confirmed
+          // delegates were covered by an earlier payment.
+          { delegateState: { equals: 'pending' } },
+        ],
+      },
+      limit: 0,
+      depth: 0,
+      overrideAccess: true,
+    })
+
+    const delegateCount = delegatesResult.docs.length
+
+    if (delegateCount <= 0) {
+      return NextResponse.json(
+        { message: 'There are no unpaid delegates on this registration' },
+        { status: 400 },
+      )
+    }
+
+    // Link the invoice to the delegates' batch when they all share one, so
+    // the verify step can mark that batch paid.
+    const batchIds = Array.from(
+      new Set(
+        delegatesResult.docs
+          .map((d) => (typeof d.batch === 'object' && d.batch ? d.batch.id : d.batch))
+          .filter((id) => id != null),
+      ),
+    )
+    const invoiceBatchId = batchIds.length === 1 ? (batchIds[0] as number) : undefined
 
     /**
      * 3. Get event
@@ -126,6 +159,7 @@ export async function POST(req: Request) {
       data: {
         invoiceNumber,
         registration: registration.id,
+        batch: invoiceBatchId,
         invoiceState: 'issued',
         issueDate: new Date().toISOString(),
         currency,

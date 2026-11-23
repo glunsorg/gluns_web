@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { getRouteUser, isAdminUser, relationId } from '@/lib/routeAuth'
 
 export const runtime = 'nodejs'
 
@@ -13,6 +14,11 @@ export async function GET(req: Request) {
 
   try {
     const payload = await getPayload({ config })
+
+    const user = await getRouteUser(payload, req)
+    if (!user) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+    }
 
     const payments = await payload.find({
       collection: 'payments',
@@ -44,6 +50,11 @@ export async function GET(req: Request) {
 
     if (!receipt) {
       return NextResponse.json({ message: 'Receipt has not been created yet' }, { status: 404 })
+    }
+
+    // Only the person the receipt was issued to (or an admin) may see it.
+    if (!isAdminUser(user) && String(relationId(receipt.recipient)) !== String(user.id)) {
+      return NextResponse.json({ message: 'Successful payment not found' }, { status: 404 })
     }
 
     const pdf = typeof receipt.pdf === 'object' && receipt.pdf !== null ? receipt.pdf : null

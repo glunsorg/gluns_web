@@ -62,7 +62,18 @@ export default function DelegatesManager({
           delegates.map((d, index) => (
             <div key={d.id ?? index} className="flex items-center justify-between p-2">
               <div>
-                <div className="text-sm text-white">{d.fullName}</div>
+                <div className="flex items-center gap-2 text-sm text-white">
+                  {d.fullName}
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase ${
+                      d.delegateState === 'confirmed'
+                        ? 'bg-[#85c226]/20 text-[#85c226]'
+                        : 'bg-yellow-400/20 text-yellow-300'
+                    }`}
+                  >
+                    {d.delegateState === 'confirmed' ? 'Paid' : 'Awaiting payment'}
+                  </span>
+                </div>
 
                 <div className="text-xs text-white/70">
                   {[
